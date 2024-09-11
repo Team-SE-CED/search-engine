@@ -1,4 +1,4 @@
-# SE-CED Repository - brought to you by N*GGA Corporation 
+# SE-CED Repository - brought to you by Team SE 
 SE-CED stands for **Search Engine - College of Engineering and Design**. This repository is dedicated to providing a platform for students and faculty to access research papers and capstone projects created by engineering students from the College of Engineering and Design.
 
 ## Key Features
@@ -25,4 +25,4 @@ The main branch is reserved for stable and finalized code only. Please adhere to
 Contributions are welcome! If you have ideas, feature requests, or bug reports, feel free to open an issue or submit a pull request.
 
 ## License
-BRAD DE PEN DE PAS SABOT NING DA PI TA
+To be known.
