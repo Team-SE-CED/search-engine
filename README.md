@@ -1,4 +1,4 @@
-# SE-CED Repository - brought to you by Team SE 
+# SE-CED Repository - Developed by Team SE 
 SE-CED stands for **Search Engine - College of Engineering and Design**. This repository is dedicated to providing a platform for students and faculty to access research papers and capstone projects created by engineering students from the College of Engineering and Design.
 
 ## Key Features
@@ -15,11 +15,12 @@ SE-CED stands for **Search Engine - College of Engineering and Design**. This re
 ### Main Branch is Strictly Read-Only
 The main branch is reserved for stable and finalized code only. Please adhere to the following rules:
 
-- DO NOT push directly to the main branch. I will kill u waaaaaaaaaaah!
+- DO NOT push directly to the main branch.
 - Always create and work on a separate branch.
 - Submit a pull request to merge your changes into the main branch.
-- Anas mama nga mo follow daw og rules kay malangit
-- Brad usba ra bitaw ni di pani final
+
+### Installation Guide
+For a detailed guide on installation, including prerequisites and configuration steps, please refer to our [Installation Guide](https://docs.google.com/document/d/1gIQUc2u_p7HNYeICLiWZBhKxuiixqZaB5zIswmBZ19s/edit)
 
 ### Contribution
 Contributions are welcome! If you have ideas, feature requests, or bug reports, feel free to open an issue or submit a pull request.
