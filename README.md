@@ -1,5 +1,7 @@
-# SE-CED Repository - Developed by Team SE 
-SE-CED stands for **Search Engine - College of Engineering and Design**. This repository is dedicated to providing a platform for students and faculty to access research papers and capstone projects created by engineering students from the College of Engineering and Design.
+# OLIS Repository
+Developed by **Team OLIS**
+
+OLIS stands for **Online Library Information System**. This repository is dedicated to providing a platform for students and faculty to access research papers and capstone projects created by engineering students from the College of Engineering and Design.
 
 ## Key Features
 - **Search Engine**: Easily search through various research papers and capstone projects using keywords.
@@ -20,7 +22,11 @@ The main branch is reserved for stable and finalized code only. Please adhere to
 - Submit a pull request to merge your changes into the main branch.
 
 ### Installation Guide
-For a detailed guide on installation, including prerequisites and configuration steps, please refer to our [Installation Guide](https://docs.google.com/document/d/1gIQUc2u_p7HNYeICLiWZBhKxuiixqZaB5zIswmBZ19s/edit)
+For a detailed guide on installation, including prerequisites and configuration steps, 
+please refer to our [Installation Guide](https://docs.google.com/document/d/1gIQUc2u_p7HNYeICLiWZBhKxuiixqZaB5zIswmBZ19s/edit)
+
+### Coding Standards
+Please follow the team’s coding standards outlined in the [Team Olis Coding Standards](https://docs.google.com/document/d/1phrKDuMrYXJS5KsJAnIiMUS36uKmhlyRe355Ovgv-0o/edit#heading=h.5l6vfl3jqzcy)
 
 ### Contribution
 Contributions are welcome! If you have ideas, feature requests, or bug reports, feel free to open an issue or submit a pull request.
