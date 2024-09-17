@@ -9,15 +9,11 @@ import { RouterLink, RouterView } from 'vue-router'
     <!-- <img alt="SU logo" class="img-fluid" src="./assets/su-logo.png" width="125" height="125" /> -->
 
     <div class="container">
-      <!-- <HelloWorld msg="You did it!" /> -->
+      <h1>CED - OLIS</h1>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/account">Account</RouterLink>
-      </nav>
+      <nav></nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
