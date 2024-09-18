@@ -25,8 +25,8 @@ The main branch is reserved for stable and finalized code only. Please adhere to
 For a detailed guide on installation, including prerequisites and configuration steps, 
 please refer to our [Installation Guide](https://docs.google.com/document/d/1gIQUc2u_p7HNYeICLiWZBhKxuiixqZaB5zIswmBZ19s/edit)
 
-### Coding Standards
-Please follow the team’s coding standards outlined in the [Team Olis Coding Standards](https://docs.google.com/document/d/1phrKDuMrYXJS5KsJAnIiMUS36uKmhlyRe355Ovgv-0o/edit#heading=h.5l6vfl3jqzcy)
+### Github Standards
+Please follow the team’s Github standards outlined in the [Team Olis Github Standards](https://docs.google.com/document/d/1phrKDuMrYXJS5KsJAnIiMUS36uKmhlyRe355Ovgv-0o/edit#heading=h.5l6vfl3jqzcy)
 
 ### Contribution
 Contributions are welcome! If you have ideas, feature requests, or bug reports, feel free to open an issue or submit a pull request.
