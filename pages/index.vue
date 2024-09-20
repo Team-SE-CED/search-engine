@@ -1,8 +1,9 @@
 <template>
+    <div class="container">
+        <MainTitle/>
+    </div>
     <div>
-        <h1>
-            <NuxtLink to="/login">Login</NuxtLink>
-        </h1>
+        <SearchArea/>
     </div>
 </template>
 
@@ -11,5 +12,8 @@
 </script>
 
 <style scoped>
-
+.container{
+    padding-top: 15vh;
+    text-align: center;
+}
 </style>
