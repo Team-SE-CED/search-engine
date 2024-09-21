@@ -29,7 +29,7 @@ const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const handleClickOutside = (event) => {
+const handleClickOutside = (event:any) => {
   const dropdownElement = document.querySelector('.dropdown');
   if (dropdownElement && !dropdownElement.contains(event.target)) {
     isOpen.value = false; // Close the dropdown when clicked outside
