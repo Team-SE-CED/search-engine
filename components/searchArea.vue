@@ -12,7 +12,7 @@
             <ul class="dropdown-menu" :class="{ 'show': isOpen }">
                 <li><NuxtLink class="dropdown-item" to="#">Architecture</NuxtLink></li>
                 <li><NuxtLink class="dropdown-item" to="#">Civil</NuxtLink></li>
-                <li><NuxtLink class="dropdown-item" to="/login.vue">Computer</NuxtLink></li>
+                <li><NuxtLink class="dropdown-item" to="/login-page">Computer</NuxtLink></li>
                 <li><NuxtLink class="dropdown-item" to="#">Mechanical</NuxtLink></li>
                 <li><NuxtLink class="dropdown-item" to="#">Electrical</NuxtLink></li>
             </ul>
