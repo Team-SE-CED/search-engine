@@ -3,7 +3,7 @@
     <div class="header"></div>
     <div class="login-container">
       <div class="left-content">
-        <img src="~assets/su-logo.png" class="left-logo" />
+        <img src="~assets/static-images/su-logo.png" class="left-logo" />
       </div>
       <div class="login-box">
         <form @submit.prevent="login">
