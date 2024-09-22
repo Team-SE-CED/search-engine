@@ -21,17 +21,19 @@
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              id="password"
-              v-model="password"
-              class="form-control"
-              placeholder=""
-              required
-            />
-            <span @click="togglePasswordVisibility" class="toggle-password">
-              <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-            </span>
+            <div class="password-input-wrapper">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="password"
+                class="form-control"
+                placeholder=""
+                required
+              />
+              <div class="eye-icon" @click="togglePassword">
+                <img :src="showPassword ? '/assets/static-images/eye-open.png' : '/assets/static-images/eye-close.png'" id="eyeicon" />
+              </div>
+            </div>
             <div class="password-strength-bar">
               <div
                 :class="['strength-indicator', passwordStrengthClass]"
@@ -53,20 +55,20 @@ export default {
     return {
       email: '',
       password: '',
-      showPassword: false,
+      showPassword: false, 
     };
   },
   computed: {
     passwordStrength() {
       const length = this.password.length;
-      if (length > 15) return 'strong';
+      if (length > 16) return 'strong';
       if (length > 12) return 'medium';
       if (length > 8) return 'weak';
       return 'very-weak';
     },
     passwordStrengthPercentage() {
       const length = this.password.length;
-      if (length > 15) return 100;
+      if (length > 16) return 100;
       if (length > 12) return 75;
       if (length > 8) return 50;
       return length > 0 ? 25 : 0;
@@ -76,8 +78,8 @@ export default {
     },
   },
   methods: {
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
+    togglePassword() {
+      this.showPassword = !this.showPassword; 
     },
     login() {
       console.log("Logging in with", this.email, this.password);
@@ -87,6 +89,7 @@ export default {
 </script>
 
 <style scoped>
+
 body, html {
   margin: 0;
   padding: 0;
@@ -135,11 +138,16 @@ body, html {
   margin-bottom: 20px;
 }
 
+.password-input-wrapper {
+  position: relative;
+}
+
 label {
   display: block;
   text-align: left;
   margin-bottom: 8px;
   font-weight: bold;
+  font-family: 'Times New Roman', Times, serif;
   color: #7a1f32;
 }
 
@@ -149,16 +157,15 @@ label {
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   font-size: 16px;
+  font-family: Verdana;
 }
 
-.toggle-password {
+.eye-icon {
   position: absolute;
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px;
-  color: #999;
 }
 
 .login-button {
@@ -171,6 +178,7 @@ label {
   font-size: 18px;
   cursor: pointer;
   margin-top: 20px;
+  font-family: Verdana;
 }
 
 .login-button:hover {
