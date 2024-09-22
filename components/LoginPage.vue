@@ -9,36 +9,22 @@
         <form @submit.prevent="login">
           <div class="form-group">
             <label for="email">Silliman Email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="email"
-              class="form-control"
-              placeholder=""
-              required
-            />
+            <input type="email" id="email" v-model="email" class="form-control" placeholder="" required />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-wrapper">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                v-model="password"
-                class="form-control"
-                placeholder=""
-                required
-              />
+              <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" class="form-control"
+                placeholder="" required />
               <div class="eye-icon" @click="togglePassword">
-                <img :src="showPassword ? '/assets/static-images/eye-open.png' : '/assets/static-images/eye-close.png'" id="eyeicon" />
+                <!-- Dynamically switch between eye-open and eye-close images -->
+                <img :src="showPassword ? eyeOpen : eyeClose" id="eyeicon" />
               </div>
             </div>
             <div class="password-strength-bar">
-              <div
-                :class="['strength-indicator', passwordStrengthClass]"
-                :style="{ width: passwordStrengthPercentage + '%' }"
-              ></div>
+              <div :class="['strength-indicator', passwordStrengthClass]"
+                :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
 
@@ -49,48 +35,53 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-      showPassword: false, 
-    };
-  },
-  computed: {
-    passwordStrength() {
-      const length = this.password.length;
-      if (length > 16) return 'strong';
-      if (length > 12) return 'medium';
-      if (length > 8) return 'weak';
-      return 'very-weak';
-    },
-    passwordStrengthPercentage() {
-      const length = this.password.length;
-      if (length > 16) return 100;
-      if (length > 12) return 75;
-      if (length > 8) return 50;
-      return length > 0 ? 25 : 0;
-    },
-    passwordStrengthClass() {
-      return this.passwordStrength;
-    },
-  },
-  methods: {
-    togglePassword() {
-      this.showPassword = !this.showPassword; 
-    },
-    login() {
-      console.log("Logging in with", this.email, this.password);
-    },
-  },
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+
+// Importing the images
+import eyeOpen from '@/assets/static-images/eye-open.png';
+import eyeClose from '@/assets/static-images/eye-close.png';
+
+// Reactive state
+const email = ref('');
+const password = ref('');
+const showPassword = ref(false);
+
+// Computed properties
+const passwordStrength = computed(() => {
+  const length = password.value.length;
+  if (length > 16) return 'strong';
+  if (length > 12) return 'medium';
+  if (length > 8) return 'weak';
+  return 'very-weak';
+});
+
+const passwordStrengthPercentage = computed(() => {
+  const length = password.value.length;
+  if (length > 16) return 100;
+  if (length > 12) return 75;
+  if (length > 8) return 50;
+  return length > 0 ? 25 : 0;
+});
+
+const passwordStrengthClass = computed(() => {
+  return passwordStrength.value;
+});
+
+// Methods
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const login = () => {
+  console.log("Logging in with", email.value, password.value);
 };
 </script>
 
-<style scoped>
 
-body, html {
+<style scoped>
+body,
+html {
   margin: 0;
   padding: 0;
 }
@@ -125,8 +116,8 @@ body, html {
 }
 
 .left-logo {
-  width: 450px; 
-  height: auto; 
+  width: 450px;
+  height: auto;
   margin-bottom: 20px;
   margin-left: 30px;
 }
