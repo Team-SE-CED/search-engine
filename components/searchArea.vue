@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import "../assets/bootstrap/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import debounce from "lodash/debounce";
 
