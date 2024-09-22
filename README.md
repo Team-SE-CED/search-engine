@@ -2,8 +2,6 @@
 
 Developed by **Team OLIS**
 
-testing
-
 OLIS stands for **Online Library Information System**. This repository is dedicated to providing a platform for students and faculty to access research papers and capstone projects created by engineering students from the College of Engineering and Design.
 
 ## Key Features
