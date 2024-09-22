@@ -101,18 +101,6 @@ body, html {
   background-color: #f8f8f8;
 }
 
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #B70536;
-  color: white;
-  padding: 2.3%;
-  text-align: center;
-  z-index: 1000;
-}
-
 .login-container {
   display: flex;
   justify-content: space-between;
