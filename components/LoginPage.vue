@@ -15,10 +15,11 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-wrapper">
+
               <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" class="form-control"
                 placeholder="" required />
-              <div class="eye-icon" @click="togglePassword">
-                <!-- Dynamically switch between eye-open and eye-close images -->
+
+              <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="showPassword ? eyeOpen : eyeClose" id="eyeicon" />
               </div>
             </div>
@@ -38,16 +39,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-// Importing the images
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
-// Reactive state
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 
-// Computed properties
 const passwordStrength = computed(() => {
   const length = password.value.length;
   if (length > 16) return 'strong';
@@ -56,7 +54,7 @@ const passwordStrength = computed(() => {
   return 'very-weak';
 });
 
-const passwordStrengthPercentage = computed(() => {
+  const passwordStrengthPercentage = computed(() => {
   const length = password.value.length;
   if (length > 16) return 100;
   if (length > 12) return 75;
@@ -68,7 +66,6 @@ const passwordStrengthClass = computed(() => {
   return passwordStrength.value;
 });
 
-// Methods
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
@@ -77,7 +74,6 @@ const login = () => {
   console.log("Logging in with", email.value, password.value);
 };
 </script>
-
 
 <style scoped>
 body,
@@ -102,7 +98,7 @@ html {
   width: 100%;
   background-color: #B70536;
   color: white;
-  padding: 2.3%;
+  padding: 1.5%;
   text-align: center;
   z-index: 1000;
 }
@@ -150,7 +146,7 @@ label {
   text-align: left;
   margin-bottom: 8px;
   font-weight: bold;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Segoe UI;
   color: #7a1f32;
 }
 
@@ -160,15 +156,23 @@ label {
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   font-size: 16px;
-  font-family: Verdana;
+  font-family: Segoe UI;
 }
 
 .eye-icon {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 5px;
   transform: translateY(-50%);
   cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.eye-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .login-button {
