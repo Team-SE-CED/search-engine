@@ -11,8 +11,12 @@ OLIS stands for **Online Library Information System**. This repository is dedica
 - **Student-Friendly Interface**: Built with simplicity and ease of use in mind, offering quick access to necessary resources.
 
 ## Technologies Used
+<<<<<<< HEAD
 
 - **Vue 3**: The progressive JavaScript framework for building the front-end of the application.
+=======
+- **Nuxt 3**: The progressive Vue framework for building the front-end and back-end of the application.
+>>>>>>> 0322b09e61eac5bca9c1902b83e781e6ef8c6ab1
 - **Supabase**: Used as the backend service for handling authentication and database management.
 - **Coolify**: A self-hosting platform for deploying the application in a simple, scalable manner.
 
@@ -34,6 +38,9 @@ please refer to our [Installation Guide](https://docs.google.com/document/d/1gIQ
 ### Github Standards
 
 Please follow the team’s Github standards outlined in the [Team Olis Github Standards](https://docs.google.com/document/d/1phrKDuMrYXJS5KsJAnIiMUS36uKmhlyRe355Ovgv-0o/edit#heading=h.5l6vfl3jqzcy)
+
+### Coding Standards
+To be arranged...
 
 ### Contribution
 
