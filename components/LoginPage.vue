@@ -15,17 +15,13 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-wrapper">
-
-              <input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" class="form-control"
-                placeholder="" required />
-
+              <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder="" required />
               <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
-                <img :src="showPassword ? eyeOpen : eyeClose" id="eyeicon" />
+                <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
             <div class="password-strength-bar">
-              <div :class="['strength-indicator', passwordStrengthClass]"
-                :style="{ width: passwordStrengthPercentage + '%' }"></div>
+              <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
 
@@ -46,25 +42,26 @@ const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 
+const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
+const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
+
 const passwordStrength = computed(() => {
-  const length = password.value.length;
+const length = password.value.length;
   if (length > 16) return 'strong';
   if (length > 12) return 'medium';
   if (length > 8) return 'weak';
   return 'very-weak';
 });
 
-  const passwordStrengthPercentage = computed(() => {
-  const length = password.value.length;
+const passwordStrengthPercentage = computed(() => {
+const length = password.value.length;
   if (length > 16) return 100;
   if (length > 12) return 75;
   if (length > 8) return 50;
   return length > 0 ? 25 : 0;
 });
 
-const passwordStrengthClass = computed(() => {
-  return passwordStrength.value;
-});
+const passwordStrengthClass = computed(() => passwordStrength.value);
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -74,6 +71,7 @@ const login = () => {
   console.log("Logging in with", email.value, password.value);
 };
 </script>
+
 
 <style scoped>
 body,

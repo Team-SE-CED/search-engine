@@ -4,6 +4,11 @@
             <NuxtLink to="/login-page">Login</NuxtLink>
         </h1>
     </div>
+    <div>
+        <h1>
+            <NuxtLink to="/search-tooltip">Login</NuxtLink>
+        </h1>
+    </div>
 </template>
 
 <script setup lang="ts">
