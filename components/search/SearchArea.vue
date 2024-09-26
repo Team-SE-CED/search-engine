@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import "../assets/global_style/bootstrap.min.css";
+import "../assets/global_style1/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import debounce from "lodash/debounce";
 import { createClient } from "@supabase/supabase-js";
