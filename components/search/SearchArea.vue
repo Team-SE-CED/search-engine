@@ -14,7 +14,7 @@
           placeholder="Search..."
           autocomplete="off"
           v-model="searchQuery"
-          @input="fetchSuggestions"
+          @input=""
           @focus="showSuggestions = true"
         />
 
@@ -68,6 +68,13 @@
 import "../assets/bootstrap/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import debounce from "lodash/debounce";
+import { createClient } from "@supabase/supabase-js";
+
+// Initialize Supabase client
+const supabase = createClient(
+  "https://gfbbjwyqfnqpqhkwieyd.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmYmJqd3lxZm5xcHFoa3dpZXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY5NjM2OTMsImV4cCI6MjA0MjUzOTY5M30.5BACw-QIgGSV8HyfcKImuQoIrlAu9ez7w3J0Txf9s-8"
+);
 
 const filters = ref<{ value: string; label: string }[]>([]);
 const isOpen = ref(false);
@@ -77,47 +84,86 @@ const showSuggestions = ref<boolean>(false);
 const shouldShowSuggestions = ref<boolean>(false); // New state for keeping suggestions open
 const suggestions = ref<string[]>([]);
 
-// Debounce input to avoid frequent API calls
 const debouncedFetchSuggestions = debounce(async (query: string) => {
   if (query.trim().length === 0) {
     suggestions.value = [];
     return;
   }
 
-  // Replace this with an actual API call
-  const allSuggestions = await mockApiSearch(query);
+  // Fetch data from Supabase
+  const { data, error } = await supabase
+    .from("research_papers")
+    .select("title")
+    .ilike("title", `%${query}%`); // ilike for case-insensitive partial match
 
-  // Limit suggestions to 9
-  suggestions.value = allSuggestions.slice(0, 5);
-  shouldShowSuggestions.value = true; // Show suggestions if there are matches
+  if (error) {
+    console.error("Error fetching suggestions:", error);
+    suggestions.value = [];
+  } else {
+    const queryLower = query.toLowerCase().trim();
+
+    // Scoring and sorting data based on a more complex relevance system
+    const rankedSuggestions = data
+      .map((paper: { title: string }) => {
+        const titleLower = paper.title.toLowerCase().trim();
+        let score = 0;
+
+        // Exact match (whole title matches query)
+        if (titleLower === queryLower) {
+          score += 100;
+        } else {
+          // Query starts the title (e.g., 'Map', 'Mana')
+          if (titleLower.startsWith(queryLower)) {
+            score += 80;
+          }
+
+          // Query is a whole word at the start of the title
+          const words = titleLower.split(/\s+/); // split title into words
+          if (words[0] === queryLower) {
+            score += 70;
+          }
+
+          // Query is part of the title
+          if (titleLower.includes(queryLower)) {
+            score += 50;
+          }
+
+          // Check for word proximity (closer match gets a higher score)
+          const indexOfQuery = titleLower.indexOf(queryLower);
+          if (indexOfQuery !== -1) {
+            // Closer to the start, higher score
+            score += 30 / (indexOfQuery + 1); // inverse proportional boost
+          }
+
+          // Penalize for distance between query parts (split across words)
+          if (
+            titleLower.split(/\s+/).some((word) => word.includes(queryLower))
+          ) {
+            score += 20;
+          }
+
+          // Shorter titles are given a higher score
+          score += 10 / titleLower.length;
+        }
+
+        return { title: paper.title, score };
+      })
+      // Sort by score first (highest score at the top)
+      .sort((a, b) => b.score - a.score)
+      // Limit results to 5 suggestions
+      .slice(0, 5);
+
+    // Update suggestions with the ranked and sorted titles
+    suggestions.value = rankedSuggestions.map((s) => s.title);
+  }
+
+  shouldShowSuggestions.value = true;
 }, 300);
 
 // Watch for changes in searchQuery and trigger debounced fetch
 watch(searchQuery, (newQuery) => {
   debouncedFetchSuggestions(newQuery);
 });
-
-// Mocked API call function for search suggestions
-const mockApiSearch = async (query: string) => {
-  const data = [
-    "Architecture",
-    "Civil Engineering",
-    "Computer Science",
-    "Mechanical Design",
-    "Electrical Wiring",
-    "Electronics",
-    "Artificial Intelligence",
-    "Data Science",
-    "Cybersecurity",
-    "Machine Learning",
-    "Construction",
-    "Design Engineering",
-  ];
-
-  return data.filter((item) =>
-    item.toLowerCase().includes(query.toLowerCase())
-  );
-};
 
 // Handle selecting a suggestion
 const selectSuggestion = (suggestion: string) => {
@@ -181,7 +227,8 @@ const fetchFilters = async () => {
 };
 </script>
 
-<style scoped>
+<style>
+/* For Main Search Bar @searchArea.vue */
 .container {
   width: 60%;
 }
@@ -219,7 +266,7 @@ input.form-control {
   padding-left: 100px;
   padding-right: 150px;
 }
-input:focus {
+.search-input:focus {
   outline: none;
   border-color: #b70536;
   box-shadow: 0 0 8px rgba(167, 44, 25, 0.931);

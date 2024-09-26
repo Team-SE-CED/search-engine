@@ -1,16 +1,9 @@
 <template>
   <div class="container">
-    <MainTitle />
+    <SearchMainTitle />
   </div>
   <div>
-    <h1>
-      <NuxtLink to="/login-page">Login</NuxtLink>
-    </h1>
-  </div>
-  <div>
-    <h1>
-      <NuxtLink to="/search-tooltip">Login</NuxtLink>
-    </h1>
+    <SearchArea />
   </div>
 </template>
 
