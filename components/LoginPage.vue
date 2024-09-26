@@ -34,8 +34,8 @@
                 <img
                   :src="
                     showPassword
-                      ? '/assets/static-images/eye-open.png'
-                      : '/assets/static-images/eye-close.png'
+                      ? '../assets/static-images/eye-open.png'
+                      : '../assets/static-images/eye-close.png'
                   "
                   id="eyeicon"
                 />
