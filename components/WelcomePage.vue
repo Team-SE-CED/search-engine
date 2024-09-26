@@ -1,5 +1,6 @@
 <template>
-      <div class="container1">
+  <body>
+      <div class="container">
         <div class="image-text">
           <img src="~assets/static-images/su-logo.png" alt="logo" class="animate-logo" />
           <div class="separator animate-separator"></div>
@@ -9,23 +10,28 @@
           </div>
         </div>
       </div>
+    </body>
   </template>
   
   <style scoped>
-  
-  .container1 {
+  .body {
+    background-color: #000000;
+    background: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 90vh;
-    background-color: #B70536;
   }
   
   .image-text {
     display: flex;
     align-items: center;
   }
-  
 
   .animate-logo {
     width: 450px;
