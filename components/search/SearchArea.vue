@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import "../assets/bootstrap/bootstrap.min.css";
+import "../assets/global_style/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import debounce from "lodash/debounce";
 import { createClient } from "@supabase/supabase-js";
@@ -227,7 +227,7 @@ const fetchFilters = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 /* For Main Search Bar @searchArea.vue */
 .container {
   width: 60%;

@@ -265,7 +265,7 @@ const fetchFilters = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .container-sm {
   margin-top: 2%;
   padding-left: 8%;

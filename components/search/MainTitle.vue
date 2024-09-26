@@ -5,7 +5,7 @@
 
 <script lang="ts"></script>
 
-<style>
+<style scoped>
 h2 {
   font-family: "Times New Roman", Times, serif;
 }
