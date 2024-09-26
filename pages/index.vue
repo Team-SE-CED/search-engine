@@ -6,7 +6,7 @@
     </div>
     <div>
         <h1>
-            <NuxtLink to="/search-tooltip">Login</NuxtLink>
+            <NuxtLink to="/welcome-page">Login</NuxtLink>
         </h1>
     </div>
 </template>
