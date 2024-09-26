@@ -14,12 +14,15 @@ OLIS stands for **Online Library Information System**. This repository is dedica
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 - # **Vue 3**: The progressive JavaScript framework for building the front-end of the application.
   =======
 
 > > > > > > > 58ff1b40ac2341486fb4dc1058d419e0a1f70dc3
 
+=======
+>>>>>>> 58ff1b40ac2341486fb4dc1058d419e0a1f70dc3
 - **Nuxt 3**: The progressive Vue framework for building the front-end and back-end of the application.
   > > > > > > > 0322b09e61eac5bca9c1902b83e781e6ef8c6ab1
 - **Supabase**: Used as the backend service for handling authentication and database management.
