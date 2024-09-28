@@ -1,12 +1,7 @@
 <template>
     <div>
         <h1>
-            <NuxtLink to="/login-page">Login</NuxtLink>
-        </h1>
-    </div>
-    <div>
-        <h1>
-            <NuxtLink to="/welcome-page">Login</NuxtLink>
+            <NuxtLink to="/welcome">Login</NuxtLink>
         </h1>
     </div>
 </template>
