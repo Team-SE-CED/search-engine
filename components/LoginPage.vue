@@ -34,13 +34,33 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
+const client = useSupabaseClient();
+const router = useRouter();
 const email = ref('');
 const password = ref('');
+const errorMsg = ref(null);
+const successMsg = ref(null);
 const showPassword = ref(false);
+
+async function login() {
+    try {
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email.value,
+        password: password.value
+      });
+      if (error) throw error;
+      else {
+        console.log(data);
+      }
+      console.log("Logging in with", email.value, password.value);
+      router.push("/search-area");
+    } catch (error: any) {
+      errorMsg.value = error.message;
+    }
+  }
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
@@ -67,9 +87,6 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
-const login = () => {
-  console.log("Logging in with", email.value, password.value);
-};
 </script>
 
 
