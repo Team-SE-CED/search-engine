@@ -24,7 +24,6 @@
               <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
-
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -41,8 +40,8 @@ const client = useSupabaseClient();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-const errorMsg = ref(null);
-const successMsg = ref(null);
+const errorMsg = ref("");
+const successMsg = ref("");
 const showPassword = ref(false);
 
 async function login() {
@@ -55,9 +54,11 @@ async function login() {
       else {
         console.log(data);
       }
-      console.log("Logging in with", email.value, password.value);
       router.push("/search-area");
+      console.log("Logging in with", email.value, password.value);
+      alert("Logged in successfully!"); 
     } catch (error: any) {
+      alert("Invalid Login Credentials!"); 
       errorMsg.value = error.message;
     }
   }
