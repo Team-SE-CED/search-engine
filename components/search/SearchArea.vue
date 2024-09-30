@@ -14,25 +14,21 @@
           placeholder="Search..."
           autocomplete="off"
           v-model="searchQuery"
-          @input=""
           @focus="showSuggestions = true"
         />
 
         <!-- Search Suggestions Dropdown -->
-        <ul
-          v-if="showSuggestions && suggestions.length"
-          class="suggestions-list"
-        >
+        <ul v-if="shouldDisplaySuggestions()" class="suggestions-list">
           <li
-            v-for="suggestion in suggestions"
-            :key="suggestion"
+            v-for="suggestion in researchPaper"
+            :key="suggestion.id"
             @click="selectSuggestion(suggestion)"
           >
             <img
               class="suggestion-search-icon"
               src="/assets/img/search-icon.png"
             />
-            {{ suggestion }}
+            {{ suggestion.title }}
           </li>
         </ul>
 
@@ -68,14 +64,9 @@
 import "../assets/global_style1/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import debounce from "lodash/debounce";
-import { createClient } from "@supabase/supabase-js";
+import { Paper } from "~/server/types/research-paper";
 
-// Initialize Supabase client
-const supabase = createClient(
-  "https://gfbbjwyqfnqpqhkwieyd.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmYmJqd3lxZm5xcHFoa3dpZXlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY5NjM2OTMsImV4cCI6MjA0MjUzOTY5M30.5BACw-QIgGSV8HyfcKImuQoIrlAu9ez7w3J0Txf9s-8"
-);
-
+const { getResearchPaper, getFilteredResearchPaper } = usePaper();
 const filters = ref<{ value: string; label: string }[]>([]);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
@@ -84,104 +75,7 @@ const showSuggestions = ref<boolean>(false);
 const shouldShowSuggestions = ref<boolean>(false); // New state for keeping suggestions open
 const suggestions = ref<string[]>([]);
 
-const debouncedFetchSuggestions = debounce(async (query: string) => {
-  if (query.trim().length === 0) {
-    suggestions.value = [];
-    return;
-  }
-
-  // Fetch data from Supabase
-  const { data, error } = await supabase
-    .from("research_papers")
-    .select("title")
-    .ilike("title", `%${query}%`); // ilike for case-insensitive partial match
-
-  if (error) {
-    console.error("Error fetching suggestions:", error);
-    suggestions.value = [];
-  } else {
-    const queryLower = query.toLowerCase().trim();
-
-    // Scoring and sorting data based on a more complex relevance system
-    const rankedSuggestions = data
-      .map((paper: { title: string }) => {
-        const titleLower = paper.title.toLowerCase().trim();
-        let score = 0;
-
-        // Exact match (whole title matches query)
-        if (titleLower === queryLower) {
-          score += 100;
-        } else {
-          // Query starts the title (e.g., 'Map', 'Mana')
-          if (titleLower.startsWith(queryLower)) {
-            score += 80;
-          }
-
-          // Query is a whole word at the start of the title
-          const words = titleLower.split(/\s+/); // split title into words
-          if (words[0] === queryLower) {
-            score += 70;
-          }
-
-          // Query is part of the title
-          if (titleLower.includes(queryLower)) {
-            score += 50;
-          }
-
-          // Check for word proximity (closer match gets a higher score)
-          const indexOfQuery = titleLower.indexOf(queryLower);
-          if (indexOfQuery !== -1) {
-            // Closer to the start, higher score
-            score += 30 / (indexOfQuery + 1); // inverse proportional boost
-          }
-
-          // Penalize for distance between query parts (split across words)
-          if (
-            titleLower.split(/\s+/).some((word) => word.includes(queryLower))
-          ) {
-            score += 20;
-          }
-
-          // Shorter titles are given a higher score
-          score += 10 / titleLower.length;
-        }
-
-        return { title: paper.title, score };
-      })
-      // Sort by score first (highest score at the top)
-      .sort((a, b) => b.score - a.score)
-      // Limit results to 5 suggestions
-      .slice(0, 5);
-
-    // Update suggestions with the ranked and sorted titles
-    suggestions.value = rankedSuggestions.map((s) => s.title);
-  }
-
-  shouldShowSuggestions.value = true;
-}, 300);
-
-// Watch for changes in searchQuery and trigger debounced fetch
-watch(searchQuery, (newQuery) => {
-  debouncedFetchSuggestions(newQuery);
-});
-
-// Handle selecting a suggestion
-const selectSuggestion = (suggestion: string) => {
-  searchQuery.value = suggestion;
-  shouldShowSuggestions.value = false; // Hide suggestions after selecting one
-};
-
-// Handle opening and closing of the filter dropdown
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
-};
-
-// Handle filter selection
-const selectFilter = (filter: { value: string; label: string }) => {
-  selectedFilter.value = filter;
-  isOpen.value = false;
-};
-
+const researchPaper = ref<Paper[]>([]);
 // Close dropdown, but keep suggestions open if search query exists
 const handleClickOutside = (event: MouseEvent) => {
   const dropdownElement = document.querySelector(".dropdown");
@@ -207,6 +101,7 @@ const handleClickOutside = (event: MouseEvent) => {
 };
 
 onMounted(() => {
+  fetchPaper();
   fetchFilters(); // Fetch filters from backend or API
   document.addEventListener("click", handleClickOutside);
 });
@@ -215,6 +110,16 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 
+async function fetchPaper() {
+  const paper = await getResearchPaper();
+  const filteredPaper = await getFilteredResearchPaper();
+  researchPaper.value = filteredPaper as Paper[];
+  console.log("ninjas" + JSON.stringify(researchPaper.value[0].title));
+}
+
+function getResearchTitleSuggestions() {
+  console.log(searchQuery);
+}
 // Mock fetching filter categories (replace this with real API)
 const fetchFilters = async () => {
   filters.value = [
@@ -225,6 +130,47 @@ const fetchFilters = async () => {
     { value: "electrical", label: "Electrical" },
   ];
 };
+
+function shouldDisplaySuggestions() {
+  console.log("Hello: " + searchQuery.value);
+  searchQuerySuggestions();
+
+  return showSuggestions && searchQuery.value.length;
+}
+
+// Update suggestions dynamically as the user types
+function searchQuerySuggestions() {
+  // If the search query is too short, reset suggestions
+  if (searchQuery.value.length) {
+    suggestions.value = [];
+    shouldShowSuggestions.value = false;
+    return;
+  }
+
+  // Perform a case-insensitive search based on the query
+  const lowerCaseQuery = searchQuery.value.toLowerCase();
+
+  // Filter research papers based on the search query
+  const filteredPapers = researchPaper.value.filter((paper) =>
+    paper.title.toLowerCase().includes(lowerCaseQuery)
+  );
+
+  // Sort or rank the results (e.g., alphabetically for now)
+  const rankedSuggestions = filteredPapers.sort((a, b) =>
+    a.title.localeCompare(b.title)
+  );
+
+  // Update the suggestions list with the filtered paper titles
+  suggestions.value = rankedSuggestions.map((paper) => paper.title);
+
+  // Show suggestions when query length is valid and suggestions are available
+  shouldShowSuggestions.value = suggestions.value.length > 0;
+}
+
+// Watch the searchQuery input and trigger the function whenever it changes
+watch(searchQuery, (newValue) => {
+  searchQuerySuggestions(); // Trigger the search suggestions function immediately on change
+});
 </script>
 
 <style scoped>

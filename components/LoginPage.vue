@@ -32,7 +32,7 @@
               />
               <div
                 class="eye-icon"
-                v-if="password.length > 0"
+                v-if="isPasswordEntered()"
                 @click="togglePassword"
               >
                 <img :src="eyeIcon" id="eyeicon" />
@@ -93,6 +93,10 @@ const togglePassword = () => {
 const login = () => {
   console.log("Logging in with", email.value, password.value);
 };
+
+function isPasswordEntered() {
+  return password.value.length > 0;
+}
 </script>
 
 <style scoped>

@@ -10,3 +10,15 @@ export async function getResearchPaper() {
 
   return research_papers;
 }
+
+export async function getFilteredResearchPaper() {
+  const { data, error } = await supabase
+    .from("research_papers")
+    .select("*")
+    .like("title", "%A%")
+    .order("title", { ascending: true });
+  const filtered_researchPaper = data;
+  if (error) throw new Error("Error Man");
+
+  return filtered_researchPaper;
+}

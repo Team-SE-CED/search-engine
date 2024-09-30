@@ -91,9 +91,8 @@
 </template>
 
 <script setup lang="ts">
-// import "../assets/bootstrap/bootstrap.min.css";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-import debounce from "lodash/debounce";
+
 import { supabase } from "~/server/db/supabaseClient";
 import type { Paper } from "~/server/types/research-paper";
 
@@ -107,10 +106,8 @@ onMounted(() => {
 });
 
 async function fetchPaper() {
-  console.log("hey man");
   const paper = await getResearchPaper();
   research_papers.value = paper;
-  console.log("hello man: ", JSON.stringify(paper[0]));
 }
 //search bar
 
@@ -121,147 +118,66 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const shouldShowSuggestions = ref<boolean>(false); // New state for keeping suggestions open
 const suggestions = ref<string[]>([]);
-
-const debouncedFetchSuggestions = debounce(async (query: string) => {
+const fetchSuggestions = async (query: string) => {
   if (query.trim().length === 0) {
     suggestions.value = [];
     return;
   }
 
-  // Fetch data from Supabase
   const { data, error } = await supabase
     .from("research_papers")
     .select("title")
-    .ilike("title", `%${query}%`); // ilike for case-insensitive partial match
+    .ilike("title", `%${query}%`);
 
   if (error) {
     console.error("Error fetching suggestions:", error);
     suggestions.value = [];
   } else {
     const queryLower = query.toLowerCase().trim();
-
-    // Scoring and sorting data based on a more complex relevance system
     const rankedSuggestions = data
       .map((paper: { title: string }) => {
         const titleLower = paper.title.toLowerCase().trim();
         let score = 0;
 
-        // Exact match (whole title matches query)
         if (titleLower === queryLower) {
           score += 100;
         } else {
-          // Query starts the title (e.g., 'Map', 'Mana')
           if (titleLower.startsWith(queryLower)) {
             score += 80;
           }
 
-          // Query is a whole word at the start of the title
-          const words = titleLower.split(/\s+/); // split title into words
+          const words = titleLower.split(/\s+/);
           if (words[0] === queryLower) {
             score += 70;
           }
 
-          // Query is part of the title
           if (titleLower.includes(queryLower)) {
             score += 50;
           }
 
-          // Check for word proximity (closer match gets a higher score)
           const indexOfQuery = titleLower.indexOf(queryLower);
           if (indexOfQuery !== -1) {
-            // Closer to the start, higher score
-            score += 30 / (indexOfQuery + 1); // inverse proportional boost
+            score += 30 / (indexOfQuery + 1);
           }
 
-          // Penalize for distance between query parts (split across words)
           if (
             titleLower.split(/\s+/).some((word) => word.includes(queryLower))
           ) {
             score += 20;
           }
 
-          // Shorter titles are given a higher score
           score += 10 / titleLower.length;
         }
 
         return { title: paper.title, score };
       })
-      // Sort by score first (highest score at the top)
       .sort((a, b) => b.score - a.score)
-      // Limit results to 5 suggestions
       .slice(0, 5);
 
-    // Update suggestions with the ranked and sorted titles
     suggestions.value = rankedSuggestions.map((s) => s.title);
   }
 
   shouldShowSuggestions.value = true;
-}, 300);
-
-// Watch for changes in searchQuery and trigger debounced fetch
-watch(searchQuery, (newQuery) => {
-  debouncedFetchSuggestions(newQuery);
-});
-
-// Handle selecting a suggestion
-const selectSuggestion = (suggestion: string) => {
-  searchQuery.value = suggestion;
-  shouldShowSuggestions.value = false; // Hide suggestions after selecting one
-};
-
-// Handle opening and closing of the filter dropdown
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
-};
-
-// Handle filter selection
-const selectFilter = (filter: { value: string; label: string }) => {
-  selectedFilter.value = filter;
-  isOpen.value = false;
-};
-
-// Close dropdown, but keep suggestions open if search query exists
-const handleClickOutside = (event: MouseEvent) => {
-  const dropdownElement = document.querySelector(".dropdown");
-  const suggestionsElement = document.querySelector(".suggestions-list");
-  const searchInput = document.querySelector(".search-input");
-
-  // Close dropdown when clicking outside
-  if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
-    isOpen.value = false;
-  }
-
-  // Keep suggestions open if there's a query
-  if (
-    suggestionsElement &&
-    !suggestionsElement.contains(event.target as Node) &&
-    searchInput &&
-    !searchInput.contains(event.target as Node)
-  ) {
-    if (searchQuery.value.trim().length === 0) {
-      shouldShowSuggestions.value = false; // Close suggestions only if search query is empty
-    }
-  }
-};
-
-onMounted(() => {
-  fetchFilters(); // Fetch filters from backend or API
-  document.addEventListener("click", handleClickOutside);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
-
-// Mock fetching filter categories (replace this with real API)
-const fetchFilters = async () => {
-  filters.value = [
-    { value: "architecture", label: "Architecture" },
-    { value: "civil", label: "Civil" },
-    { value: "computer", label: "Computer" },
-    { value: "mechanical", label: "Mechanical" },
-    { value: "electrical", label: "Electrical" },
-  ];
 };
 </script>
 
