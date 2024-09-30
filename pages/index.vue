@@ -12,7 +12,7 @@ definePageMeta({
     function (to, from) {
       // Custom inline middleware
     },
-    'search-area',
+    'welcome',
   ],
 });
 </script>

@@ -12,5 +12,6 @@ export default defineNuxtConfig({
       exclude: [],
       cookieRedirect: false
     }
-  }
+  },
+  css: ['@/assets/global.css']
 })

@@ -1,5 +1,5 @@
 <template>
-  <body class="container" @click="goToPage">
+  <div class="container" @click.native="goToPage">
     <div class="image-text">
       <img src="~assets/static-images/su-logo.png" alt="logo" class="animate-logo" />
       <div class="separator animate-separator"></div>
@@ -8,7 +8,7 @@
         <h1>RESEARCH CATALOG</h1>
       </div>
     </div>
-  </body>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -16,12 +16,15 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const goToPage = () => {
-  router.push('/login-page')
+  router.push('/search-area')
 }
 
 </script>
 
 <style scoped>
+body {
+  margin: 0;
+}
 .container {
   display: flex;
   justify-content: center;

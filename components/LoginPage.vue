@@ -54,7 +54,7 @@ async function login() {
       else {
         console.log(data);
       }
-      router.push("/search-area");
+      router.push("/welcome");
       console.log("Logging in with", email.value, password.value);
       alert("Logged in successfully!"); 
     } catch (error: any) {
