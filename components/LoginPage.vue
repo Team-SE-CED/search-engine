@@ -9,40 +9,21 @@
         <form @submit.prevent="login">
           <div class="form-group">
             <label for="email">Silliman Email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="email"
-              class="form-control"
-              placeholder=""
-              required
-            />
+            <input type="email" id="email" v-model="email" class="form-control" placeholder="" required />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-wrapper">
-              <input
-                :type="passwordInputType"
-                id="password"
-                v-model="password"
-                class="form-control"
-                placeholder=""
-                required
-              />
-              <div
-                class="eye-icon"
-                v-if="isPasswordEntered()"
-                @click="togglePassword"
-              >
+              <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder=""
+                required />
+              <div class="eye-icon" v-if="isPasswordEntered()" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
             <div class="password-strength-bar">
-              <div
-                :class="['strength-indicator', passwordStrengthClass]"
-                :style="{ width: passwordStrengthPercentage + '%' }"
-              ></div>
+              <div :class="['strength-indicator', passwordStrengthClass]"
+                :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
 

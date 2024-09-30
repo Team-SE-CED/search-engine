@@ -1,9 +1,15 @@
 <template>
-  <div class="container">
+  <!-- <div class="container">
     <SearchMainTitle />
   </div>
   <div>
     <SearchArea />
+  </div> -->
+
+  <div>
+    <h1>
+      <NuxtLink to="/welcome">Login</NuxtLink>
+    </h1>
   </div>
 </template>
 
