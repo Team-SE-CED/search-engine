@@ -1,7 +1,7 @@
 <template>
   <div>
-    <LoginPage/>
-    
+    <LoginPage />
+
   </div>
 </template>
 
@@ -9,6 +9,4 @@
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
