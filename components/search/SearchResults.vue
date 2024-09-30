@@ -12,8 +12,8 @@
           autocomplete="off" v-model="searchQuery" @input="" @focus="showSuggestions = true" />
 
         <!-- Search Suggestions Dropdown -->
-        <ul v-if="showSuggestions && suggestions.length" class="suggestions-list">
-          <li v-for="suggestion in suggestions" :key="suggestion" @click="selectSuggestion(suggestion)">
+        <ul v-if="searchQuery.length" class="suggestions-list">
+          <li v-for="suggestion in suggestions" :key="suggestion">
             <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
             {{ suggestion }}
           </li>
@@ -21,12 +21,12 @@
 
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
+          <button class="btn dropdown-toggle" type="button">
             <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
             {{ "Filters" }}
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
-            <li v-for="filter in filters" :key="filter.value" @click="selectFilter(filter)">
+            <li v-for="filter in filters" :key="filter.value">
               <a class="dropdown-item" href="#">{{ filter.label }}</a>
             </li>
           </ul>
@@ -41,7 +41,7 @@
   <div class="container-sm">
     <ul class="img-grid">
       <li class="img-card" v-for="researchPaper in research_papers" :key="researchPaper.id">
-        <img v-if="researchPaper.img_url" :src="researchPaper.img_url" alt="research_img" class="img-poster" />
+        <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
 
         <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
         <div class="img-title">{{ researchPaper.title }}</div>
@@ -51,94 +51,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-
-import { supabase } from "~/server/db/supabaseClient";
-import type { Paper } from "~/server/types/research-paper";
-
-// Declare reactive variable to store the research papers
-
+import { ref, onMounted } from "vue";
+import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
-const research_papers = ref<Paper[]>([]);
-// Fetch data when the component is mounted
-onMounted(() => {
-  fetchPaper();
-});
 
-async function fetchPaper() {
-  const paper = await getResearchPaper();
-  research_papers.value = paper;
-}
-//search bar
-
+// Declarations
+const research_papers = ref<PaperUI[]>([]);
 const filters = ref<{ value: string; label: string }[]>([]);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const shouldShowSuggestions = ref<boolean>(false); // New state for keeping suggestions open
 const suggestions = ref<string[]>([]);
-const fetchSuggestions = async (query: string) => {
-  if (query.trim().length === 0) {
-    suggestions.value = [];
-    return;
-  }
 
-  const { data, error } = await supabase
-    .from("research_papers")
-    .select("title")
-    .ilike("title", `%${query}%`);
+// Functions
+async function fetchPaper() {
+  const paper = await getResearchPaper();
+  research_papers.value = paper;
+}
 
-  if (error) {
-    console.error("Error fetching suggestions:", error);
-    suggestions.value = [];
-  } else {
-    const queryLower = query.toLowerCase().trim();
-    const rankedSuggestions = data
-      .map((paper: { title: string }) => {
-        const titleLower = paper.title.toLowerCase().trim();
-        let score = 0;
-
-        if (titleLower === queryLower) {
-          score += 100;
-        } else {
-          if (titleLower.startsWith(queryLower)) {
-            score += 80;
-          }
-
-          const words = titleLower.split(/\s+/);
-          if (words[0] === queryLower) {
-            score += 70;
-          }
-
-          if (titleLower.includes(queryLower)) {
-            score += 50;
-          }
-
-          const indexOfQuery = titleLower.indexOf(queryLower);
-          if (indexOfQuery !== -1) {
-            score += 30 / (indexOfQuery + 1);
-          }
-
-          if (
-            titleLower.split(/\s+/).some((word) => word.includes(queryLower))
-          ) {
-            score += 20;
-          }
-
-          score += 10 / titleLower.length;
-        }
-
-        return { title: paper.title, score };
-      })
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-
-    suggestions.value = rankedSuggestions.map((s) => s.title);
-  }
-
-  shouldShowSuggestions.value = true;
-};
+onMounted(() => {
+  fetchPaper();
+});
 </script>
 
 <style scoped>

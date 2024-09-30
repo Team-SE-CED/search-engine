@@ -11,8 +11,8 @@
           autocomplete="off" v-model="searchQuery" @focus="showSuggestions = true" />
 
         <!-- Search Suggestions Dropdown -->
-        <ul v-if="showSuggestions && filteredProducts.length > 0" class="suggestions-list">
-          <li v-for="suggestion in filteredProducts" :key="suggestion.id">
+        <ul v-if="hasVisibleSuggestions()" class="suggestions-list">
+          <li v-for="suggestion in filteredPapers" :key="suggestion.id">
             <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
             {{ suggestion.title }}
           </li>
@@ -66,20 +66,14 @@ const selectFilter = (filter: { value: string; label: string }) => {
   isOpen.value = false;
 };
 
-// Fetch Papers
-async function fetchPaper() {
-  const paper = await getResearchPaper();
-  products.value = paper;
-}
-
 // Filter Logic
-const filteredProducts = computed(() => {
+const filteredPapers = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
   if (query.includes(" ")) {
-    const keyword = query.split(" ").pop(); // Take last word after space
+    const keyword = query.split(" ").pop();
     return products.value
       .filter((p) => p.title.toLowerCase().includes(keyword || ""))
-      .slice(0, 8); // Highest priority: Keyword match after space
+      .slice(0, 8);
   } else if (query) {
     return products.value
       .filter((p) => p.title.toLowerCase().startsWith(query)) // First priority: Starts with input
@@ -95,7 +89,7 @@ const filteredProducts = computed(() => {
 });
 
 // Close Suggestions when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
+const handleClickOutsideSuggestions = (event: MouseEvent) => {
   const searchInput = document.querySelector(".search-input");
   const suggestionsElement = document.querySelector(".suggestions-list");
 
@@ -109,13 +103,40 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 };
 
+const handleClickOutsideFilters = (event: MouseEvent) => {
+  const filterDropdown = document.querySelector(".filter-dropdown");
+  const dropdownMenu = document.querySelector(".dropdown-menu");
+
+  if (
+    filterDropdown &&
+    !filterDropdown.contains(event.target as Node) &&
+    dropdownMenu &&
+    !dropdownMenu.contains(event.target as Node)
+  ) {
+    isOpen.value = false;
+  }
+};
+
+
+// Functions
+function hasVisibleSuggestions() {
+  return showSuggestions.value && filteredPapers.value.length > 0;
+}
+
+async function fetchPaper() {
+  const paper = await getResearchPaper();
+  products.value = paper;
+}
+
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
-  document.addEventListener("click", handleClickOutside);
+  document.addEventListener("click", handleClickOutsideSuggestions);
+  document.addEventListener("click", handleClickOutsideFilters);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleClickOutsideSuggestions);
+  document.addEventListener("click", handleClickOutsideFilters);
 });
 </script>
 
