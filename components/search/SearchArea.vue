@@ -11,7 +11,7 @@
           autocomplete="off" v-model="searchQuery" @focus="showSuggestions = true" />
 
         <!-- Search Suggestions Dropdown -->
-        <ul v-if="true" class="suggestions-list">
+        <ul v-if="showSuggestions && filteredProducts.length > 0" class="suggestions-list">
           <li v-for="suggestion in filteredProducts" :key="suggestion.id">
             <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
             {{ suggestion.title }}
@@ -20,13 +20,12 @@
 
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button">
-            <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
-            {{ "Filters" }}
+          <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
+            {{ selectedFilter ? selectedFilter.label : "Filters" }}
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#">{{ filter.label }}</a>
+              <a class="dropdown-item" href="#" @click.prevent="selectFilter(filter)">{{ filter.label }}</a>
             </li>
           </ul>
         </div>
@@ -40,55 +39,78 @@
 
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
 
 // Declarations
-const filters = ref<{ value: string; label: string }[]>([]);
+const filters = ref<{ value: string; label: string }[]>([
+  { value: "relevance", label: "Relevance" },
+  { value: "date", label: "Date" },
+  { value: "popularity", label: "Popularity" }
+]);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
+const products = ref<PaperUI[]>([]);
 const searchQuery = ref("");
 const showSuggestions = ref<boolean>(false);
-const shouldShowSuggestions = ref<boolean>(false);
-const products = ref<PaperUI[]>([]);
 
-// Functions
+// Toggle dropdown
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+// Select filter
+const selectFilter = (filter: { value: string; label: string }) => {
+  selectedFilter.value = filter;
+  isOpen.value = false;
+};
+
+// Fetch Papers
 async function fetchPaper() {
   const paper = await getResearchPaper();
   products.value = paper;
 }
 
-const filteredProducts = computed(() =>
-  products.value.filter((p) =>
-    p.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-);
-
-// Closes Suggestions
-const handleClickOutside = (event: MouseEvent) => {
-  const dropdownElement = document.querySelector(".dropdown");
-  const suggestionsElement = document.querySelector(".suggestions-list");
-  const searchInput = document.querySelector(".search-input");
-
-  if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
-    isOpen.value = false;
+// Filter Logic
+const filteredProducts = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (query.includes(" ")) {
+    const keyword = query.split(" ").pop(); // Take last word after space
+    return products.value
+      .filter((p) => p.title.toLowerCase().includes(keyword || ""))
+      .slice(0, 8); // Highest priority: Keyword match after space
+  } else if (query) {
+    return products.value
+      .filter((p) => p.title.toLowerCase().startsWith(query)) // First priority: Starts with input
+      .concat(
+        products.value.filter(
+          (p) => !p.title.toLowerCase().startsWith(query) && p.title.toLowerCase().includes(query)
+        )
+      )
+      .slice(0, 8); // If no first word match, look for keywords
+  } else {
+    return [];
   }
+});
+
+// Close Suggestions when clicking outside
+const handleClickOutside = (event: MouseEvent) => {
+  const searchInput = document.querySelector(".search-input");
+  const suggestionsElement = document.querySelector(".suggestions-list");
 
   if (
-    suggestionsElement &&
-    !suggestionsElement.contains(event.target as Node) &&
     searchInput &&
-    !searchInput.contains(event.target as Node)
+    !searchInput.contains(event.target as Node) &&
+    suggestionsElement &&
+    !suggestionsElement.contains(event.target as Node)
   ) {
-    if (searchQuery.value.trim().length === 0) {
-      shouldShowSuggestions.value = false;
-    }
+    showSuggestions.value = false;
   }
 };
 
 onMounted(() => {
-  fetchPaper().catch((error) => { console.error(error) })
+  fetchPaper().catch((error) => console.error(error));
   document.addEventListener("click", handleClickOutside);
 });
 
@@ -143,12 +165,6 @@ input.form-control {
   padding-right: 150px;
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: #b70536;
-  box-shadow: 0 0 8px rgba(167, 44, 25, 0.931);
-}
-
 .vertical-line {
   position: absolute;
   right: 130px;
@@ -169,7 +185,6 @@ input.form-control {
   border: 1px solid gray;
   border-radius: 50px;
   z-index: 10;
-  /* max-height: 500px; */
   overflow-y: auto;
   list-style: none;
   padding-top: 10px;

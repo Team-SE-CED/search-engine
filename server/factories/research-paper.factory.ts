@@ -4,7 +4,7 @@ function toResearchPaperFullResponse(expense: Paper[]) {
   return expense.map((expense) => {
     return {
       id: expense.id,
-      date: expense.created_at.toISOString(),
+      date: new Date(expense.created_at).toUTCString(),
       imgUrl: expense.img_url,
       title: expense.title,
     };
