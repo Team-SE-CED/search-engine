@@ -1,4 +1,5 @@
-import type { Paper } from "~/server/types/research-paper";
+import { researchPaperFactory } from "~/server/factories/research-paper.factory";
+import type { Paper } from "~/server/types/research-paper-server";
 
 export function usePaper() {
   async function getResearchPaper() {
@@ -8,20 +9,11 @@ export function usePaper() {
     }
     const data = await response.json();
     const paper = data as Paper[];
+    const paperFactory =
+      researchPaperFactory.toResearchPaperFullResponse(paper);
 
-    return paper;
+    return paperFactory;
   }
 
-  async function getFilteredResearchPaper() {
-    const response = await fetch("/api/get-filtered-paper"); // GET method by default
-    if (!response.ok) {
-      throw new Error("Failed to fetch research paper");
-    }
-    const data = await response.json();
-    const filteredPaper = data as Paper[];
-
-    return filteredPaper;
-  }
-
-  return { getResearchPaper, getFilteredResearchPaper };
+  return { getResearchPaper };
 }

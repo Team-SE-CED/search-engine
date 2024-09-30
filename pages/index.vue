@@ -1,10 +1,10 @@
 <template>
-  <!-- <div class="container">
+  <div class="container">
     <SearchMainTitle />
   </div>
   <div>
     <SearchArea />
-  </div> -->
+  </div>
 
   <div>
     <h1>

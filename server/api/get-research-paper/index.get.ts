@@ -1,11 +1,9 @@
-import { Paper } from "~/server/types/research-paper";
+import { Paper } from "~/server/types/research-paper-server";
 import { getResearchPaperUseCase } from "~/server/use-case/get-paper";
 
-export default defineEventHandler(async (event) => {
-  // Call your use case to fetch the research papers
+export default defineEventHandler(async () => {
   const data = await getResearchPaperUseCase();
-
-  // Return the response, assuming it's an array of Paper objects
   const response = data as Paper[];
+
   return response;
 });
