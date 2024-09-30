@@ -1,9 +1,8 @@
 <template>
-    <div>
-      <SearchTooltip/>
-      
-    </div>
-  </template>
+      <div>
+            <WelcomePage/>  
+      </div>
+</template>
   
   <script setup lang="ts">
   
