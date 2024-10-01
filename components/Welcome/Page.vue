@@ -1,5 +1,5 @@
 <template>
-  <body class="container" @click="goToPage">
+  <div class="container" @click.native="goToPage">
     <div class="image-text">
       <img src="~assets/static-images/su-logo.png" alt="logo" class="animate-logo" />
       <div class="separator animate-separator"></div>
@@ -8,27 +8,26 @@
         <h1>RESEARCH CATALOG</h1>
       </div>
     </div>
-  </body>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
 const goToPage = () => {
-  router.push('/login-page')
+  router.push('/')
 }
+onMounted(() => {
+  setTimeout(() => {
+    router.push('/')
+  }, 5000)
+})
 
 </script>
 
 
 <style scoped>
-
-body,html {
-  margin: 0;
-  padding: 0;
-}
-
 .container {
   display: flex;
   justify-content: center;
@@ -49,7 +48,7 @@ body,html {
   width: 450px;
   margin-right: 20px;
   opacity: 0;
-  transform: scale(0.8); 
+  transform: scale(0.8);
   animation: morphLogo 2.5s ease-out forwards;
   animation-delay: 2s;
 }
@@ -69,7 +68,7 @@ body,html {
   color: white;
   text-align: left;
   opacity: 0;
-  transform: scale(0.9); 
+  transform: scale(0.9);
   animation: morphText 2.5s ease-out forwards;
   animation-delay: 2s;
 }
@@ -85,6 +84,7 @@ h1 {
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -94,15 +94,17 @@ h1 {
 @keyframes morphSeparator {
   0% {
     opacity: 0;
-    transform: scaleY(0); 
+    transform: scaleY(0);
   }
+
   50% {
     opacity: 0.5;
     transform: scaleY(1.2);
   }
+
   100% {
     opacity: 1;
-    transform: scaleY(1); 
+    transform: scaleY(1);
   }
 }
 
@@ -111,6 +113,7 @@ h1 {
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
