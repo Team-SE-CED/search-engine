@@ -32,7 +32,7 @@
               />
               <div
                 class="eye-icon"
-                v-if="password.length > 0"
+                v-if="isPasswordEntered()"
                 @click="togglePassword"
               >
                 <img :src="eyeIcon" id="eyeicon" />

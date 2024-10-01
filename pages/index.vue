@@ -1,4 +1,11 @@
 <template>
+  <!-- <div class="container">
+    <SearchMainTitle />
+  </div>
+  <div>
+    <SearchArea />
+  </div> -->
+
   <div>
     <h1>
       <NuxtLink to="/welcome">Login</NuxtLink>
