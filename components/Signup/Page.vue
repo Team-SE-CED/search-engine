@@ -6,7 +6,7 @@
           <img src="~assets/static-images/su-logo.png" class="left-logo" />
         </div>
         <div class="login-box">
-          <form @submit.prevent="login">
+          <form @submit.prevent="createAccount">
             <div class="form-group">
               <label for="email">Silliman Email</label>
               <input type="email" id="email" v-model="email" class="form-control" placeholder="" required />
@@ -32,46 +32,81 @@
     </div>
   </template>
   
-  <script setup lang="ts">
-  import { ref, computed } from 'vue';
-  
-  import eyeOpen from '@/assets/static-images/eye-open.png';
-  import eyeClose from '@/assets/static-images/eye-close.png';
-  
-  const email = ref('');
-  const password = ref('');
-  const showPassword = ref(false);
-  
-  const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
-  const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
-  
-  const passwordStrength = computed(() => {
-  const length = password.value.length;
-    if (length > 16) return 'strong';
-    if (length > 12) return 'medium';
-    if (length > 8) return 'weak';
-    return 'very-weak';
-  });
-  
-  const passwordStrengthPercentage = computed(() => {
-  const length = password.value.length;
-    if (length > 16) return 100;
-    if (length > 12) return 75;
-    if (length > 8) return 50;
-    return length > 0 ? 25 : 0;
-  });
-  
-  const passwordStrengthClass = computed(() => passwordStrength.value);
-  
-  const togglePassword = () => {
-    showPassword.value = !showPassword.value;
-  };
-  
-  const login = () => {
-    console.log("Logging in with", email.value, password.value);
-  };
-  </script>
-  
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+
+import eyeOpen from '@/assets/static-images/eye-open.png';
+import eyeClose from '@/assets/static-images/eye-close.png';
+
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+const router = useRouter();
+const email = ref('');
+const password = ref('');
+// const errorMsg = ref("");
+// const successMsg = ref("");
+const showPassword = ref(false);
+
+async function createAccount() {
+  try {
+    const { data, error } = await client.auth.signUp({
+    email: email.value,
+    password: password.value,
+    // options: {
+    //   data: {
+    //     first_name: name.value
+    //   }
+    // }
+    })
+    if (error) throw error;
+    // else if (data.user?.id == client.auth.admin.getUserById()) {
+    //   alert("Email already exists!");
+    // }
+    else {
+      console.log(user.value?.email);
+      alert("Sign up Successful! Check your email for confirmation!");
+      getUser();
+    }
+  } catch (error: any) {
+      console.log(error);
+      alert(error);
+  }
+
+}
+
+async function getUser() {
+  const { data, error } = await client.auth.admin.getUserById('c96ae603-e9ea-49db-92ae-af176aabd164');
+  console.log(data);
+
+}
+
+const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
+const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
+
+const passwordStrength = computed(() => {
+const length = password.value.length;
+  if (length > 16) return 'strong';
+  if (length > 12) return 'medium';
+  if (length > 8) return 'weak';
+  return 'very-weak';
+});
+
+const passwordStrengthPercentage = computed(() => {
+const length = password.value.length;
+  if (length > 16) return 100;
+  if (length > 12) return 75;
+  if (length > 8) return 50;
+  return length > 0 ? 25 : 0;
+});
+
+const passwordStrengthClass = computed(() => passwordStrength.value);
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
+</script>
+
   
   <style scoped>
   body,

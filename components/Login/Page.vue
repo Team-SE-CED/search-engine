@@ -40,8 +40,8 @@ const client = useSupabaseClient();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-const errorMsg = ref("");
-const successMsg = ref("");
+// const errorMsg = ref("");
+// const successMsg = ref("");
 const showPassword = ref(false);
 
 async function login() {
@@ -59,7 +59,7 @@ async function login() {
       alert("Logged in successfully!"); 
     } catch (error: any) {
       alert("Invalid Login Credentials!"); 
-      errorMsg.value = error.message;
+      // errorMsg.value = error.message;
     }
   }
 
