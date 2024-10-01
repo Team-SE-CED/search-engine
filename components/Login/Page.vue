@@ -7,21 +7,47 @@
       </div>
       <div class="login-box">
         <form @submit.prevent="login">
+
           <div class="form-group">
-            <label for="email">Silliman Email</label>
-            <input type="email" id="email" v-model="email" class="form-control" placeholder="" required />
+            <div class="input-wrapper">
+              <label :class="{ active: email.length > 0 || isEmailFocused }" for="email">Silliman Email</label>
+              <input
+                type="email"
+                id="email"
+                v-model="email"
+                class="form-control"
+                @focus="isEmailFocused = true"
+                @blur="isEmailFocused = email.length > 0"
+                required
+              />
+            </div>
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
-            <div class="password-input-wrapper">
-              <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder="" required />
+            <div class="input-wrapper">
+              <label :class="{ active: password.length > 0 || isPasswordFocused }" for="password">Password</label>
+              <input
+                :type="passwordInputType"
+                id="password"
+                v-model="password"
+                class="form-control"
+                @focus="isPasswordFocused = true"
+                @blur="isPasswordFocused = password.length > 0"
+                required
+              />
               <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
-            <div class="password-strength-bar">
-              <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
+          </div>
+
+          <div class="form-options">
+            <div class="remember-me">
+              <input type="checkbox" id="rememberMe" v-model="rememberMe" />
+              <label for="rememberMe"> </label> Remember me
+            </div>
+            <div class="forgot-password">
+              <a href="#">Forgot password?</a>
             </div>
           </div>
 
@@ -32,50 +58,36 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed } from 'vue';
 
+<script setup lang="ts">
+
+import { ref, computed } from 'vue';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
+const rememberMe = ref(false); 
+const isEmailFocused = ref(false); 
+const isPasswordFocused = ref(false);
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
-
-const passwordStrength = computed(() => {
-const length = password.value.length;
-  if (length > 16) return 'strong';
-  if (length > 12) return 'medium';
-  if (length > 8) return 'weak';
-  return 'very-weak';
-});
-
-const passwordStrengthPercentage = computed(() => {
-const length = password.value.length;
-  if (length > 16) return 100;
-  if (length > 12) return 75;
-  if (length > 8) return 50;
-  return length > 0 ? 25 : 0;
-});
-
-const passwordStrengthClass = computed(() => passwordStrength.value);
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
 const login = () => {
-  console.log("Logging in with", email.value, password.value);
+  console.log("Logging in with", email.value, password.value, rememberMe.value);
 };
 </script>
 
 
 <style scoped>
-body,
-html {
+
+body,html {
   margin: 0;
   padding: 0;
 }
@@ -123,7 +135,7 @@ html {
 
 .login-box {
   background: white;
-  padding: 30px;
+  padding: 40px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -135,26 +147,83 @@ html {
   margin-bottom: 20px;
 }
 
-.password-input-wrapper {
+.input-wrapper {
   position: relative;
 }
 
-label {
-  display: block;
-  text-align: left;
-  margin-bottom: 8px;
-  font-weight: bold;
-  font-family: Segoe UI;
-  color: #7a1f32;
-}
-
-.form-control {
+input.form-control {
   width: 95%;
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   font-size: 16px;
   font-family: Segoe UI;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  transition: background-color 0.3s ease;
+}
+
+input.form-control:focus {
+  color: rgba(0, 0, 0, 1);
+}
+
+input.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  color: #474747;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: 0.3s ease all;
+}
+
+label.active {
+  top: -10px;
+  font-size: 12px;
+  color: #B70536;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 12px;
+  font-family: Segoe UI;
+  color: #057fe2;
+
+}
+
+.remember-me input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.forgot-password {
+  font-size: 12px;
+  font-family: Segoe UI;
+  color: #057fe2;
+}
+
+.forgot-password a {
+  color: #057fe2;
+  text-decoration: none;
 }
 
 .eye-icon {
@@ -168,54 +237,27 @@ label {
 }
 
 .eye-icon img {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   object-fit: contain;
+  margin-top: 4px;
 }
 
 .login-button {
   background-color: #B70536;
   color: white;
   padding: 10px;
-  width: 100%;
+  width: 40%;
   border: none;
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
   margin-top: 20px;
+  margin-left: 240px;
   font-family: Verdana;
 }
 
 .login-button:hover {
-  background-color: #5f1728;
-}
-
-.password-strength-bar {
-  background-color: #ffffff;
-  height: 5px;
-  border-radius: 5px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-.strength-indicator {
-  height: 100%;
-  border-radius: 5px;
-}
-
-.very-weak {
-  background-color: #ec1a1a;
-}
-
-.weak {
-  background-color: #e67e22;
-}
-
-.medium {
-  background-color: #ddd23d;
-}
-
-.strong {
-  background-color: #2ecc71;
+  background-color: #a00025;
 }
 </style>
