@@ -4,10 +4,10 @@
 
   </div>
   <div>
-        <h1>
-            <NuxtLink to="/login-page" event="" @click.native="logout">Logout</NuxtLink>
-        </h1>
-    </div>
+    <h1>
+      <NuxtLink to="/login" event="" @click.native="logout">Logout</NuxtLink>
+    </h1>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -30,6 +30,4 @@ async function logout() {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
