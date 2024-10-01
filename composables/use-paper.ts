@@ -1,5 +1,7 @@
 import { researchPaperFactory } from "~/server/factories/research-paper.factory";
+// import { useItemStore } from "~/server/stores/research-paper";
 import type { Paper } from "~/server/types/research-paper-server";
+// const { setPaperStores } = useItemStore();
 
 export function usePaper() {
   async function getResearchPaper() {
@@ -11,6 +13,8 @@ export function usePaper() {
     const paper = data as Paper[];
     const paperFactory =
       researchPaperFactory.toResearchPaperFullResponse(paper);
+
+    // setPaperStores();
 
     return paperFactory;
   }

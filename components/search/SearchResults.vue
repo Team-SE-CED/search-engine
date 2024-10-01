@@ -15,7 +15,7 @@
         <ul v-if="searchQuery.length" class="suggestions-list">
           <li v-for="suggestion in suggestions" :key="suggestion">
             <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
-            {{ suggestion }}
+            a{{ suggestion }}
           </li>
         </ul>
 
@@ -38,16 +38,7 @@
     </form>
   </div>
   <!-- search results div -->
-  <div class="container-sm">
-    <ul class="img-grid">
-      <li class="img-card" v-for="researchPaper in research_papers" :key="researchPaper.id">
-        <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
-
-        <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
-        <div class="img-title">{{ researchPaper.title }}</div>
-      </li>
-    </ul>
-  </div>
+  <SearchResultsContent />
 </template>
 
 <script setup lang="ts">
