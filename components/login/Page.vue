@@ -17,7 +17,7 @@
             <div class="password-input-wrapper">
               <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder=""
                 required />
-              <div class="eye-icon" v-if="isPasswordEntered()" @click="togglePassword">
+              <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
@@ -34,20 +34,6 @@
 </template>
 
 <script setup lang="ts">
-<<<<<<<< HEAD: components / login / Page.vue
-import { ref, computed } from "vue";
-
-import eyeOpen from "@/assets/static-images/eye-open.png";
-import eyeClose from "@/assets/static-images/eye-close.png";
-
-const email = ref("");
-const password = ref("");
-const showPassword = ref(false);
-
-const passwordInputType = computed(() =>
-  showPassword.value ? "text" : "password"
-);
-========
 import { ref, computed } from 'vue';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
@@ -61,34 +47,33 @@ const successMsg = ref("");
 const showPassword = ref(false);
 
 async function login() {
-    try {
-      const { data, error } = await client.auth.signInWithPassword({
-        email: email.value,
-        password: password.value
-      });
-      if (error) throw error;
-      else {
-        console.log(data);
-      }
-      router.push("/welcome");
-      console.log("Logging in with", email.value, password.value);
-      alert("Logged in successfully!");
-    } catch (error: any) {
-      alert("Invalid Login Credentials!");
-      errorMsg.value = error.message;
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+    if (error) throw error;
+    else {
+      console.log(data);
     }
+    router.push("/welcome");
+    console.log("Logging in with", email.value, password.value);
+    alert("Logged in successfully!");
+  } catch (error: any) {
+    alert("Invalid Login Credentials!");
+    errorMsg.value = error.message;
   }
+}
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
->>>>>>>> 889f63775345aa643026bfc3a36f9b28a00e44b1:components/Login/Page.vue
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
 
 const passwordStrength = computed(() => {
   const length = password.value.length;
-  if (length > 16) return "strong";
-  if (length > 12) return "medium";
-  if (length > 8) return "weak";
-  return "very-weak";
+  if (length > 16) return 'strong';
+  if (length > 12) return 'medium';
+  if (length > 8) return 'weak';
+  return 'very-weak';
 });
 
 const passwordStrengthPercentage = computed(() => {
@@ -105,18 +90,8 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
-<<<<<<<< HEAD:components/login/Page.vue
-const login = () => {
-  console.log("Logging in with", email.value, password.value);
-};
-========
 </script>
->>>>>>>> 889f63775345aa643026bfc3a36f9b28a00e44b1:components/Login/Page.vue
 
-function isPasswordEntered() {
-return password.value.length > 0;
-}
-</script>
 
 <style scoped>
 body,
@@ -139,7 +114,7 @@ html {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #b70536;
+  background-color: #B70536;
   color: white;
   padding: 1.5%;
   text-align: center;
@@ -219,7 +194,7 @@ label {
 }
 
 .login-button {
-  background-color: #b70536;
+  background-color: #B70536;
   color: white;
   padding: 10px;
   width: 100%;
