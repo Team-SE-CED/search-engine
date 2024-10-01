@@ -26,7 +26,6 @@
                 :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
-
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -35,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+<<<<<<<< HEAD: components / login / Page.vue
 import { ref, computed } from "vue";
 
 import eyeOpen from "@/assets/static-images/eye-open.png";
@@ -47,6 +47,40 @@ const showPassword = ref(false);
 const passwordInputType = computed(() =>
   showPassword.value ? "text" : "password"
 );
+========
+import { ref, computed } from 'vue';
+import eyeOpen from '@/assets/static-images/eye-open.png';
+import eyeClose from '@/assets/static-images/eye-close.png';
+
+const client = useSupabaseClient();
+const router = useRouter();
+const email = ref('');
+const password = ref('');
+const errorMsg = ref("");
+const successMsg = ref("");
+const showPassword = ref(false);
+
+async function login() {
+    try {
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email.value,
+        password: password.value
+      });
+      if (error) throw error;
+      else {
+        console.log(data);
+      }
+      router.push("/welcome");
+      console.log("Logging in with", email.value, password.value);
+      alert("Logged in successfully!");
+    } catch (error: any) {
+      alert("Invalid Login Credentials!");
+      errorMsg.value = error.message;
+    }
+  }
+
+const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
+>>>>>>>> 889f63775345aa643026bfc3a36f9b28a00e44b1:components/Login/Page.vue
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
 
 const passwordStrength = computed(() => {
@@ -71,12 +105,16 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
+<<<<<<<< HEAD:components/login/Page.vue
 const login = () => {
   console.log("Logging in with", email.value, password.value);
 };
+========
+</script>
+>>>>>>>> 889f63775345aa643026bfc3a36f9b28a00e44b1:components/Login/Page.vue
 
 function isPasswordEntered() {
-  return password.value.length > 0;
+return password.value.length > 0;
 }
 </script>
 
