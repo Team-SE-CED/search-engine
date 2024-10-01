@@ -21,7 +21,14 @@ const goToPage = () => {
 
 </script>
 
+
 <style scoped>
+
+body,html {
+  margin: 0;
+  padding: 0;
+}
+
 .container {
   display: flex;
   justify-content: center;
