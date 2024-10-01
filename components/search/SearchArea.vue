@@ -8,11 +8,11 @@
 
         <!-- Search Input -->
         <input class="form-control form-control-lg pl-5 search-input" type="text" name="search" placeholder="Search..."
-          autocomplete="off" v-model="searchQuery" @focus="showSuggestions = true" />
+          autocomplete="off" v-model="searchQuery" @input="onSearchInput" @focus="showSuggestions = true" />
 
         <!-- Search Suggestions Dropdown -->
-        <ul v-if="hasVisibleSuggestions()" class="suggestions-list">
-          <li v-for="suggestion in filteredPapers" :key="suggestion.id">
+        <ul v-if="hasSearchSuggestions" class="suggestions-list">
+          <li v-for="suggestion in filteredProducts.slice(0, 8)" :key="suggestion.id">
             <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
             {{ suggestion.title }}
           </li>
@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
 
@@ -66,30 +66,55 @@ const selectFilter = (filter: { value: string; label: string }) => {
   isOpen.value = false;
 };
 
-// Filter Logic
-const filteredPapers = computed(() => {
+// Fetch Papers
+async function fetchPaper() {
+  const paper = await getResearchPaper();
+  products.value = paper;
+}
+
+// Filter Logic: Word-by-Word Detection
+const filteredProducts = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
-  if (query.includes(" ")) {
-    const keyword = query.split(" ").pop();
-    return products.value
-      .filter((p) => p.title.toLowerCase().includes(keyword || ""))
-      .slice(0, 8);
-  } else if (query) {
-    return products.value
-      .filter((p) => p.title.toLowerCase().startsWith(query)) // First priority: Starts with input
-      .concat(
-        products.value.filter(
-          (p) => !p.title.toLowerCase().startsWith(query) && p.title.toLowerCase().includes(query)
-        )
-      )
-      .slice(0, 8); // If no first word match, look for keywords
-  } else {
-    return [];
-  }
+  const queryWords = query.split(" ").filter(Boolean); // Split query by spaces and filter empty strings
+
+  if (queryWords.length === 0) return []; // No query means no results
+
+  // Filter results based on query words
+  const results = products.value.filter((p) => {
+    const title = p.title.toLowerCase();
+
+    // Word-by-word: Each word in the query must be found in the title
+    return queryWords.every((word) => title.includes(word));
+  });
+
+  // Limit to 8 results
+  return results.slice(0, 8);
 });
 
+// On input search
+const onSearchInput = () => {
+  const query = searchQuery.value.trim();
+
+  // If a space is typed, filter strictly for results that match
+  if (query.endsWith(" ")) {
+    const lastWord = query.split(" ").filter(Boolean).pop()?.toLowerCase();
+
+    if (lastWord) {
+      // Automatically remove results that do not have the last keyword
+      const filtered = products.value.filter((p) => p.title.toLowerCase().includes(lastWord));
+
+      if (filtered.length > 0) {
+        products.value = filtered;
+      }
+    }
+  }
+
+  // Show suggestions again after filtering
+  showSuggestions.value = true;
+};
+
 // Close Suggestions when clicking outside
-const handleClickOutsideSuggestions = (event: MouseEvent) => {
+const handleClickOutside = (event: MouseEvent) => {
   const searchInput = document.querySelector(".search-input");
   const suggestionsElement = document.querySelector(".suggestions-list");
 
@@ -103,40 +128,17 @@ const handleClickOutsideSuggestions = (event: MouseEvent) => {
   }
 };
 
-const handleClickOutsideFilters = (event: MouseEvent) => {
-  const filterDropdown = document.querySelector(".filter-dropdown");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
-
-  if (
-    filterDropdown &&
-    !filterDropdown.contains(event.target as Node) &&
-    dropdownMenu &&
-    !dropdownMenu.contains(event.target as Node)
-  ) {
-    isOpen.value = false;
-  }
-};
-
-
-// Functions
-function hasVisibleSuggestions() {
-  return showSuggestions.value && filteredPapers.value.length > 0;
-}
-
-async function fetchPaper() {
-  const paper = await getResearchPaper();
-  products.value = paper;
-}
+const hasSearchSuggestions = computed(() => {
+  return showSuggestions.value && filteredProducts.value.length > 0
+})
 
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
-  document.addEventListener("click", handleClickOutsideSuggestions);
-  document.addEventListener("click", handleClickOutsideFilters);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutsideSuggestions);
-  document.addEventListener("click", handleClickOutsideFilters);
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
