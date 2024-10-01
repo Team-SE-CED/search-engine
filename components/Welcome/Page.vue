@@ -26,11 +26,8 @@ onMounted(() => {
 
 </script>
 
-<style scoped>
-body {
-  margin: 0;
-}
 
+<style scoped>
 .container {
   display: flex;
   justify-content: center;
