@@ -15,16 +15,17 @@
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-wrapper">
-              <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder="" required />
+              <input :type="passwordInputType" id="password" v-model="password" class="form-control" placeholder=""
+                required />
               <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
             <div class="password-strength-bar">
-              <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
+              <div :class="['strength-indicator', passwordStrengthClass]"
+                :style="{ width: passwordStrengthPercentage + '%' }"></div>
             </div>
           </div>
-
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -34,19 +35,41 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
+const client = useSupabaseClient();
+const router = useRouter();
 const email = ref('');
 const password = ref('');
+const errorMsg = ref("");
+const successMsg = ref("");
 const showPassword = ref(false);
+
+async function login() {
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+    if (error) throw error;
+    else {
+      console.log(data);
+    }
+    router.push("/welcome");
+    console.log("Logging in with", email.value, password.value);
+    alert("Logged in successfully!");
+  } catch (error: any) {
+    alert("Invalid Login Credentials!");
+    errorMsg.value = error.message;
+  }
+}
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
 
 const passwordStrength = computed(() => {
-const length = password.value.length;
+  const length = password.value.length;
   if (length > 16) return 'strong';
   if (length > 12) return 'medium';
   if (length > 8) return 'weak';
@@ -54,7 +77,7 @@ const length = password.value.length;
 });
 
 const passwordStrengthPercentage = computed(() => {
-const length = password.value.length;
+  const length = password.value.length;
   if (length > 16) return 100;
   if (length > 12) return 75;
   if (length > 8) return 50;
@@ -67,9 +90,6 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
-const login = () => {
-  console.log("Logging in with", email.value, password.value);
-};
 </script>
 
 

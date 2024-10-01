@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <LoginPage/>
-    
-  </div>
+    <div>
+          <SignupPage/>  
+    </div>
 </template>
 
 <script setup lang="ts">
