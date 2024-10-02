@@ -15,26 +15,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
-const { getResearchPaper } = usePaper();
+const { getSuggestedPaperStore } = usePaperStores()
 const router = useRouter();
 
-const research_papers = ref<PaperUI[]>([]);
-
-async function fetchPaper() {
-    const paper = await getResearchPaper();
-    research_papers.value = paper;
-    console.log("PaperMan: " + paper[0].id)
-    console.log("PaperMan: " + paper[0].title)
-
-}
+const research_papers = ref<PaperUI[]>(getSuggestedPaperStore())
 
 function redirectTo(id: number) {
     router.push(`/search-result/${id}`); // Use router.push to navigate to the desired route
 }
 
-
 onMounted(() => {
-    fetchPaper();
 });
 </script>
 

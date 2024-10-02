@@ -1,11 +1,12 @@
 import { researchPaperFactory } from "~/server/factories/research-paper.factory";
-// import { useItemStore } from "~/server/stores/research-paper";
+import { useItemStore } from "~/server/stores/research-paper-store";
 import type { Paper } from "~/server/types/research-paper-server";
-// const { setPaperStores } = useItemStore();
 
 export function usePaper() {
+  const itemStore = useItemStore();
+
   async function getResearchPaper() {
-    const response = await fetch("/api/get-research-paper"); // GET method by default
+    const response = await fetch("/api/get-research-paper");
     if (!response.ok) {
       throw new Error("Failed to fetch research paper");
     }
@@ -13,7 +14,7 @@ export function usePaper() {
     const paper = data as Paper[];
     const paperFactory = researchPaperFactory.convertPapersToPaperUI(paper);
 
-    // setPaperStores();
+    itemStore.setPaperStores(paperFactory);
 
     return paperFactory;
   }

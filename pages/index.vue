@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <SearchAreaMainTitle />
-  </div>
-  <div>
     <SearchArea />
   </div>
 </template>
