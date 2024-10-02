@@ -7,6 +7,15 @@
         <img class="search-icon" src="/assets/img/search-icon.png" />
         <div class="vertical-line"></div>
 
+        <!-- su-logo -->
+        <img class="su-logo" src="assets\static-images\su-logo.png">
+
+        <!-- header text -->
+        <h1 class="stacked-text">
+          RESEARCH<br />
+          CATALOG
+        </h1>
+
         <!-- Search Input -->
         <input class="form-control form-control-lg pl-5 search-input" type="text" name="search" placeholder="Search..."
           autocomplete="off" v-model="searchQuery" @input="" @focus="showSuggestions = true" />
@@ -51,6 +60,8 @@
 </template>
 
 <script setup lang="ts">
+
+import "../assets/global_style1/bootstrap.min.css";
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
@@ -76,6 +87,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .container-sm {
   margin-top: 2%;
   padding-left: 8%;
@@ -83,7 +95,7 @@ onMounted(() => {
 
 .img-card {
   width: 200px;
-  margin: 10px;
+  margin: 15px;
   text-align: center;
   z-index: -2;
 }
@@ -109,7 +121,7 @@ onMounted(() => {
   flex-wrap: wrap;
   justify-content: left;
   gap: 50px;
-  padding: 20px;
+  padding: 50px;
   list-style: none;
 }
 
@@ -152,9 +164,28 @@ button.dropdown-toggle:focus {
   padding: 10px 0;
   font-size: 16px;
 }
-
 button.dropdown-toggle {
   font-size: 20px;
+}
+
+.stacked-text {
+  position: fixed;
+  left: 90px;
+  top: 4%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-family:Segoe UI;
+  font-size:25px; 
+  color: #ffffff; 
+}
+
+.su-logo {
+  position: fixed;
+  left: 20px;
+  top: 4%;
+  transform: translateY(-50%);
+  height: 60px;
+  pointer-events: none;
 }
 
 .search-icon {
@@ -220,4 +251,6 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+
+
 </style>
