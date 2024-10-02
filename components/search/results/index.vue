@@ -16,7 +16,7 @@
                 <ul v-if="searchQuery.length" class="suggestions-list">
                     <li v-for="suggestion in suggestions" :key="suggestion">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
-                        a{{ suggestion }}
+                        {{ suggestion }}
                     </li>
                 </ul>
 

@@ -13,7 +13,8 @@
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredProducts.slice(0, 8)" :key="suggestion.id">
+                    <li v-for="suggestion in filteredProducts.slice(0, 8)" :key="suggestion.id"
+                        @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
                         {{ suggestion.title }}
                     </li>
@@ -21,13 +22,12 @@
 
                 <!-- Filter Dropdown -->
                 <div class="filter-dropdown dropdown">
-                    <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
+                    <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
                         {{ selectedFilter ? selectedFilter.label : "Filters" }}
                     </button>
                     <ul class="dropdown-menu" :class="{ show: isOpen }">
-                        <li v-for="filter in filters" :key="filter.value">
-                            <a class="dropdown-item" href="#" @click.prevent="selectFilter(filter)">{{ filter.label
-                                }}</a>
+                        <li v-for="filters in filter" :key="filters.value">
+                            <span class="dropdown-item">{{ filters.value }}</span>
                         </li>
                     </ul>
                 </div>
@@ -42,33 +42,31 @@
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { filters } from "~/enums/filters";
+import type { Filters } from "~/server/types/filters";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
+const router = useRouter();
 
 // Declarations
-const filters = ref<{ value: string; label: string }[]>([
-    { value: "relevance", label: "Relevance" },
-    { value: "date", label: "Date" },
-    { value: "popularity", label: "Popularity" }
-]);
+const filter = ref<Filters[]>(filters)
+
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const products = ref<PaperUI[]>([]);
 const searchQuery = ref("");
 const showSuggestions = ref<boolean>(false);
 
-// Toggle dropdown
-const toggleDropdown = () => {
+// Functions
+const toggleFilterDropdown = () => {
     isOpen.value = !isOpen.value;
 };
 
-// Select filter
 const selectFilter = (filter: { value: string; label: string }) => {
     selectedFilter.value = filter;
     isOpen.value = false;
 };
 
-// Fetch Papers
 async function fetchPaper() {
     const paper = await getResearchPaper();
     products.value = paper;
@@ -93,11 +91,9 @@ const filteredProducts = computed(() => {
     return results.slice(0, 8);
 });
 
-// On input search
 const onSearchInput = () => {
     const query = searchQuery.value.trim();
 
-    // If a space is typed, filter strictly for results that match
     if (query.endsWith(" ")) {
         const lastWord = query.split(" ").filter(Boolean).pop()?.toLowerCase();
 
@@ -129,6 +125,10 @@ const handleClickOutside = (event: MouseEvent) => {
         showSuggestions.value = false;
     }
 };
+
+function redirectTo(id: number) {
+    router.push(`/search-result/${id}`);
+}
 
 const hasSearchSuggestions = computed(() => {
     return showSuggestions.value && filteredProducts.value.length > 0
