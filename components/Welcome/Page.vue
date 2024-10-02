@@ -26,6 +26,7 @@ onMounted(() => {
 
 </script>
 
+
 <style scoped>
 body {
   margin: 0;
