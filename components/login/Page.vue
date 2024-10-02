@@ -43,7 +43,6 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const errorMsg = ref("");
-const successMsg = ref("");
 const showPassword = ref(false);
 
 async function login() {

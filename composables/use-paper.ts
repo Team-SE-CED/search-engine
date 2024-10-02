@@ -11,8 +11,7 @@ export function usePaper() {
     }
     const data = await response.json();
     const paper = data as Paper[];
-    const paperFactory =
-      researchPaperFactory.toResearchPaperFullResponse(paper);
+    const paperFactory = researchPaperFactory.convertPapersToPaperUI(paper);
 
     // setPaperStores();
 
