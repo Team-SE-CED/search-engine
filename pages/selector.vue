@@ -1,10 +1,5 @@
 <template>
   <div>
-    <LoginPage />
-
-  </div>
-  ========
-  <div>
     <SelectorPage />
   </div>
 </template>
