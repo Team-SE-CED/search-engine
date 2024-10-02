@@ -1,5 +1,5 @@
 <template>
-    <div style="">
+    <div>
         Fetched: {{ showPaperTitle }}
     </div>
 </template>
@@ -9,26 +9,25 @@ import { ref, computed, onMounted } from 'vue'
 import type { PaperUI } from '~/types/research-paper-ui';
 import { useRoute } from 'vue-router';
 
-const { id } = useRoute().params;
+const { id } = useRoute().params; // Get the ID from route params
 const { getResearchPaper } = usePaper();
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
-let index = Number(id);
+const paperId = Number(id); // Convert the ID to a number
 
 onMounted(() => {
     fetchPaper();
 });
 
 async function fetchPaper() {
-    const paper = await getResearchPaper();
-    researchPaper.value = paper;
+    const papers = await getResearchPaper();
+    researchPaper.value = papers;
 }
 
 const showPaperTitle = computed(() => {
-    if (researchPaper.value[index]) {
-        return researchPaper.value[index].title;
-    }
+    const paper = researchPaper.value.find(p => p.id === paperId); // Find the paper by ID
+    if (paper) return paper.title;
     return 'Loading...';
 });
 </script>
