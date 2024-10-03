@@ -15,7 +15,7 @@ header {
   width: 100%;
   background-color: #b70536;
   color: white;
-  padding: 1.5%;
+  padding: 2%;
   text-align: center;
   z-index: -1;
 }
