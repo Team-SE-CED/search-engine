@@ -10,11 +10,12 @@
                 <!-- Search Input -->
                 <input class="form-control form-control-lg pl-5 search-input" type="text" name="search"
                     placeholder="Search..." autocomplete="off" v-model="searchQuery" @input=""
-                    @focus="showSuggestions = true" />
+                    @focus="showSuggestions = true" @keydown.enter="handleSubmit" />
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="searchQuery.length" class="suggestions-list">
-                    <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+                    <li v-for="suggestion in filteredSuggestions" :key="suggestion.id"
+                        @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
                         {{ suggestion.title }}
                     </li>
@@ -46,6 +47,7 @@ import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper()
 const { filterPapers, filterLastKeyword } = usePaperFactory()
 const { } = usePaperStores()
+const router = useRouter();
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
@@ -68,9 +70,19 @@ const filteredKeywords = () => {
 }
 // Search Engine Algorithm
 
+function redirectTo(id: number) {
+    router.push(`/search-result/${id}`);
+}
+
 async function fetchPaper() {
     const paper = await getResearchPaper();
     researchPaper.value = paper;
+}
+
+function handleSubmit() {
+    if (searchQuery.value.trim()) {
+        router.push(`/search-result?search=${encodeURIComponent(searchQuery.value)}`);
+    }
 }
 
 onMounted(() => {
