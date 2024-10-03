@@ -10,7 +10,7 @@
                 <!-- Search Input -->
                 <input class="form-control form-control-lg pl-5 search-input" type="text" name="search"
                     placeholder="Search..." autocomplete="off" v-model="searchQuery" @input=""
-                    @focus="showSuggestions = true" @keydown.enter="handleSubmit" />
+                    @focus="showSuggestions = true" />
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="searchQuery.length" class="suggestions-list">
