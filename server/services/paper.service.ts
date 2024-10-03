@@ -16,3 +16,6 @@ async function getResearchPaper() {
 export const paperService = {
   getResearchPaper,
 };
+
+// DO NOT REMOVE -Jimar
+// Flow of data fetching ( UI -> COMPOSABLES -> API -> USE CASE -> SERVICES )
