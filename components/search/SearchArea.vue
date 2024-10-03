@@ -7,25 +7,48 @@
         <div class="vertical-line"></div>
 
         <!-- Search Input -->
-        <input class="form-control form-control-lg pl-5 search-input" type="text" name="search" placeholder="Search..."
-          autocomplete="off" v-model="searchQuery" @input="onSearchInput" @focus="showSuggestions = true" />
+        <input
+          class="form-control form-control-lg pl-5 search-input"
+          type="text"
+          name="search"
+          placeholder="Search..."
+          autocomplete="off"
+          v-model="searchQuery"
+          @input="onSearchInput"
+          @focus="showSuggestions = true"
+        />
 
         <!-- Search Suggestions Dropdown -->
         <ul v-if="hasSearchSuggestions" class="suggestions-list">
-          <li v-for="suggestion in filteredProducts.slice(0, 8)" :key="suggestion.id">
-            <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+          <li
+            v-for="suggestion in filteredProducts.slice(0, 8)"
+            :key="suggestion.id"
+          >
+            <img
+              class="suggestion-search-icon"
+              src="/assets/img/search-icon.png"
+            />
             {{ suggestion.title }}
           </li>
         </ul>
 
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
+          <button
+            class="btn dropdown-toggle"
+            type="button"
+            @click="toggleDropdown"
+          >
             {{ selectedFilter ? selectedFilter.label : "Filters" }}
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#" @click.prevent="selectFilter(filter)">{{ filter.label }}</a>
+              <a
+                class="dropdown-item"
+                href="#"
+                @click.prevent="selectFilter(filter)"
+                >{{ filter.label }}</a
+              >
             </li>
           </ul>
         </div>
@@ -47,7 +70,7 @@ const { getResearchPaper } = usePaper();
 const filters = ref<{ value: string; label: string }[]>([
   { value: "relevance", label: "Relevance" },
   { value: "date", label: "Date" },
-  { value: "popularity", label: "Popularity" }
+  { value: "popularity", label: "Popularity" },
 ]);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
@@ -101,7 +124,9 @@ const onSearchInput = () => {
 
     if (lastWord) {
       // Automatically remove results that do not have the last keyword
-      const filtered = products.value.filter((p) => p.title.toLowerCase().includes(lastWord));
+      const filtered = products.value.filter((p) =>
+        p.title.toLowerCase().includes(lastWord)
+      );
 
       if (filtered.length > 0) {
         products.value = filtered;
@@ -129,8 +154,8 @@ const handleClickOutside = (event: MouseEvent) => {
 };
 
 const hasSearchSuggestions = computed(() => {
-  return showSuggestions.value && filteredProducts.value.length > 0
-})
+  return showSuggestions.value && filteredProducts.value.length > 0;
+});
 
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));

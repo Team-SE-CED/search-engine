@@ -1,49 +1,72 @@
 <template>
   <!-- search bar div -->
   <div class="fixed-search-bar">
-    <form class="container" action="/search" method="GET">
+    <form class="container" action="/search" @submit.prevent="handleSearch">
       <div class="position-relative">
         <!-- Search Icon -->
-        <img class="search-icon" src="/assets/img/search-icon.png" />
-        <div class="vertical-line"></div>
+        <img
+          class="search-icon"
+          src="/assets/img/search-icon.png"
+          alt="Search"
+        />
+        <!-- <div class="vertical-line"></div> -->
 
         <!-- Search Input -->
-        <input class="form-control form-control-lg pl-5 search-input" type="text" name="search" placeholder="Search..."
-          autocomplete="off" v-model="searchQuery" @input="" @focus="showSuggestions = true" />
+        <input
+          class="form-control form-control-lg pl-5 search-input"
+          type="text"
+          name="search"
+          placeholder="Search..."
+          autocomplete="off"
+          v-model="searchQuery"
+          @focus="showSuggestions = true"
+        />
 
         <!-- Search Suggestions Dropdown -->
-        <ul v-if="searchQuery.length" class="suggestions-list">
-          <li v-for="suggestion in suggestions" :key="suggestion">
-            <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
-            {{ suggestion }}
+        <ul
+          v-if="showSuggestions && filteredSuggestions.length > 0"
+          class="suggestions-list"
+        >
+          <li
+            v-for="suggestion in filteredSuggestions"
+            :key="suggestion.id"
+            @click="selectSuggestion(suggestion)"
+          >
+            <img
+              class="suggestion-search-icon"
+              src="/assets/img/search-icon.png"
+              alt="Search"
+            />
+            {{ suggestion.title }}
           </li>
         </ul>
-
-        <!-- Filter Dropdown -->
-        <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button">
-            <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
-            {{ "Filters" }}
-          </button>
-          <ul class="dropdown-menu" :class="{ show: isOpen }">
-            <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#">{{ filter.label }}</a>
-            </li>
-          </ul>
-        </div>
       </div>
-
-      <!-- Hidden input to include selected filter in form submission -->
-      <input type="hidden" name="filter" :value="selectedFilter?.value" />
     </form>
   </div>
-  <!-- search results div -->
-  <div class="container-sm">
-    <ul class="img-grid">
-      <li class="img-card" v-for="researchPaper in research_papers" :key="researchPaper.id">
-        <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
 
-        <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
+  <!-- search results div -->
+  <div v-if="hasSearched" class="container-sm">
+    <div v-if="searchResults.length === 0" class="no-results">
+      No results found.
+    </div>
+    <ul v-else class="img-grid">
+      <li
+        class="img-card"
+        v-for="researchPaper in searchResults"
+        :key="researchPaper.id"
+      >
+        <img
+          v-if="researchPaper.imgUrl"
+          :src="researchPaper.imgUrl"
+          :alt="researchPaper.title"
+          class="img-poster"
+        />
+        <img
+          v-else
+          src="https://via.placeholder.com/200x300?text=research"
+          alt="sample poster"
+          class="img-poster"
+        />
         <div class="img-title">{{ researchPaper.title }}</div>
       </li>
     </ul>
@@ -51,27 +74,72 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import "../assets/global_style1/bootstrap.min.css";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
+
 const { getResearchPaper } = usePaper();
 
 // Declarations
-const research_papers = ref<PaperUI[]>([]);
-const filters = ref<{ value: string; label: string }[]>([]);
-const isOpen = ref(false);
-const selectedFilter = ref<{ value: string; label: string } | null>(null);
+const researchPapers = ref<PaperUI[]>([]);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const suggestions = ref<string[]>([]);
+const searchResults = ref<PaperUI[]>([]);
+const hasSearched = ref<boolean>(false);
 
 // Functions
 async function fetchPaper() {
-  const paper = await getResearchPaper();
-  research_papers.value = paper;
+  const papers = await getResearchPaper();
+  researchPapers.value = papers;
 }
 
+const filteredSuggestions = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (!query) return [];
+
+  return researchPapers.value
+    .filter((p) => p.title.toLowerCase().includes(query))
+    .slice(0, 8);
+});
+
+const selectSuggestion = (suggestion: PaperUI) => {
+  searchQuery.value = suggestion.title;
+  showSuggestions.value = false;
+  handleSearch();
+};
+
+const handleSearch = () => {
+  const query = searchQuery.value.trim().toLowerCase();
+
+  searchResults.value = researchPapers.value.filter((paper) => {
+    return paper.title.toLowerCase().includes(query);
+  });
+
+  hasSearched.value = true;
+  showSuggestions.value = false;
+};
+
+const handleClickOutside = (event: MouseEvent) => {
+  const searchInput = document.querySelector(".search-input");
+  const suggestionsElement = document.querySelector(".suggestions-list");
+
+  if (
+    searchInput &&
+    !searchInput.contains(event.target as Node) &&
+    suggestionsElement &&
+    !suggestionsElement.contains(event.target as Node)
+  ) {
+    showSuggestions.value = false;
+  }
+};
+
 onMounted(() => {
-  fetchPaper();
+  fetchPaper().catch((error) => console.error(error));
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
@@ -79,6 +147,12 @@ onMounted(() => {
 .container-sm {
   margin-top: 2%;
   padding-left: 8%;
+}
+
+.no-results {
+  padding: 35vh;
+  font-size: 60px;
+  color: #666;
 }
 
 .img-card {
@@ -168,7 +242,7 @@ button.dropdown-toggle {
 
 input.form-control {
   padding-left: 60px;
-  padding-right: 150px;
+  padding-right: 60px;
 }
 
 .search-input:focus {
