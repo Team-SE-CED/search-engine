@@ -1,6 +1,6 @@
 <template>
-  <Logout />
   <SearchResults />
+  <SearchLogout />
 </template>
 
 <script setup></script>

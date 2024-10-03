@@ -5,13 +5,13 @@
       <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
     </div>
 
-    <form class="signup-form">
+    <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
         <input type="text" class="input-field" placeholder="Name" />
         <input type="text" class="input-field" placeholder="ID no." />
       </div>
       <input type="text" class="input-field" placeholder="Course" />
-      <input type="email" class="input-field" placeholder="Email" />
+      <input type="email" class="input-field" v-model="email" placeholder="Email" />
 
       <div class="form-group">
         <div class="password-input-wrapper">

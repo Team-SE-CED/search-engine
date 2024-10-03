@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h1>If you are here, you are logged in. Welcome, {{ user?.email }}</h1>
-
-  </div>
-  <div>
     <h1>
       <NuxtLink to="/login" event="" @click.native="logout">Logout</NuxtLink>
     </h1>
