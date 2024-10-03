@@ -30,13 +30,13 @@
 
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button">
-            <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
-            {{ "Filters" }}
+          <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
+            {{ selectedFilter ? selectedFilter.label : "Filters" }} 
+          
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#">{{ filter.label }}</a>
+              <a class="dropdown-item" href="#" @click.prevent="selectFilter(filter)">{{ filter.label }}</a>
             </li>
           </ul>
         </div>
@@ -68,12 +68,27 @@ const { getResearchPaper } = usePaper();
 
 // Declarations
 const research_papers = ref<PaperUI[]>([]);
-const filters = ref<{ value: string; label: string }[]>([]);
+const filters = ref<{ value: string; label: string }[]>([
+  { value: "relevance", label: "Relevance" },
+  { value: "date", label: "Date" },
+  { value: "popularity", label: "Popularity" }
+]);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const suggestions = ref<string[]>([]);
+
+// Toggle dropdown
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+// Select filter
+const selectFilter = (filter: { value: string; label: string }) => {
+  selectedFilter.value = filter;
+  isOpen.value = false;
+};
 
 // Functions
 async function fetchPaper() {
