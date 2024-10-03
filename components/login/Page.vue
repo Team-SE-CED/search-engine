@@ -65,12 +65,32 @@ import { ref, computed } from 'vue';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
+const client = useSupabaseClient();
+const router = useRouter();
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 const rememberMe = ref(false); 
 const isEmailFocused = ref(false); 
 const isPasswordFocused = ref(false);
+async function login() {
+    try {
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email.value,
+        password: password.value
+      });
+      if (error) throw error;
+      else {
+        console.log(data);
+      }
+      router.push("/welcome");
+      console.log("Logging in with", email.value, password.value);
+      alert("Logged in successfully!"); 
+    } catch (error: any) {
+      alert("Invalid Login Credentials!"); 
+      // errorMsg.value = error.message;
+    }
+  }
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
@@ -79,9 +99,6 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
-const login = () => {
-  console.log("Logging in with", email.value, password.value, rememberMe.value);
-};
 </script>
 
 
