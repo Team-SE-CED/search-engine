@@ -11,6 +11,15 @@
         />
         <!-- <div class="vertical-line"></div> -->
 
+        <!-- su-logo -->
+        <img class="su-logo" src="assets\static-images\su-logo.png" />
+
+        <!-- header text -->
+        <h1 class="stacked-text">
+          RESEARCH<br />
+          CATALOG
+        </h1>
+
         <!-- Search Input -->
         <input
           class="form-control form-control-lg pl-5 search-input"
@@ -40,6 +49,27 @@
             {{ suggestion.title }}
           </li>
         </ul>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-dropdown dropdown">
+          <button
+            class="btn dropdown-toggle"
+            type="button"
+            @click="toggleDropdown"
+          >
+            {{ selectedFilter ? selectedFilter.label : "Filters" }}
+          </button>
+          <ul class="dropdown-menu" :class="{ show: isOpen }">
+            <li v-for="filter in filters" :key="filter.value">
+              <a
+                class="dropdown-item"
+                href="#"
+                @click.prevent="selectFilter(filter)"
+                >{{ filter.label }}</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
     </form>
   </div>
@@ -75,17 +105,35 @@
 
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 
 const { getResearchPaper } = usePaper();
 
 // Declarations
-const researchPapers = ref<PaperUI[]>([]);
+const research_papers = ref<PaperUI[]>([]);
+const filters = ref<{ value: string; label: string }[]>([
+  { value: "relevance", label: "Relevance" },
+  { value: "date", label: "Date" },
+  { value: "popularity", label: "Popularity" },
+]);
+const isOpen = ref(false);
+const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const searchResults = ref<PaperUI[]>([]);
 const hasSearched = ref<boolean>(false);
+
+// Toggle dropdown
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+// Select filter
+const selectFilter = (filter: { value: string; label: string }) => {
+  selectedFilter.value = filter;
+  isOpen.value = false;
+};
 
 // Functions
 async function fetchPaper() {
@@ -157,7 +205,7 @@ onBeforeUnmount(() => {
 
 .img-card {
   width: 200px;
-  margin: 10px;
+  margin: 15px;
   text-align: center;
   z-index: -2;
 }
@@ -183,7 +231,7 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
   justify-content: left;
   gap: 50px;
-  padding: 20px;
+  padding: 50px;
   list-style: none;
 }
 
@@ -226,9 +274,28 @@ button.dropdown-toggle:focus {
   padding: 10px 0;
   font-size: 16px;
 }
-
 button.dropdown-toggle {
   font-size: 20px;
+}
+
+.stacked-text {
+  position: fixed;
+  left: 90px;
+  top: 4%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-family: Segoe UI;
+  font-size: 25px;
+  color: #ffffff;
+}
+
+.su-logo {
+  position: fixed;
+  left: 20px;
+  top: 4%;
+  transform: translateY(-50%);
+  height: 60px;
+  pointer-events: none;
 }
 
 .search-icon {
