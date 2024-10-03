@@ -47,6 +47,7 @@ import type { Filters } from "~/server/types/filters";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapers, filterLastKeyword } = usePaperFactory()
+const { setSuggestedPaperStore } = usePaperStores();
 const router = useRouter();
 
 // Declarations
@@ -101,6 +102,7 @@ function redirectTo(id: number) {
 }
 
 function handleSubmit() {
+    setSuggestedPaperStore(filteredPapers.value)
     if (searchQuery.value.trim()) {
         router.push(`/search-result?search=${encodeURIComponent(searchQuery.value)}`);
     }

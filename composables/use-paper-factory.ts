@@ -6,8 +6,6 @@ import {
 import type { PaperUI } from "~/types/research-paper-ui";
 
 export function usePaperFactory() {
-  const { setSuggestedPaperStore } = usePaperStores();
-
   function filterAndStorePapersByTitle(
     suggestions: PaperUI[],
     searchQuery: string
@@ -16,8 +14,6 @@ export function usePaperFactory() {
       suggestions,
       searchQuery
     );
-
-    setSuggestedPaperStore(filteredPaper);
 
     return filteredPaper;
   }

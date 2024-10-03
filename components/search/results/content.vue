@@ -1,7 +1,8 @@
 <template>
     <div class="container-sm">
+        <span>Loaded {{ filteredPapers.length }} results</span>
         <ul class="img-grid">
-            <li class="img-card" v-for="researchPaper in research_papers" :key="researchPaper.id"
+            <li class="img-card" v-for="researchPaper in filteredPapers" :key="researchPaper.id"
                 @click="redirectTo(researchPaper.id)">
                 <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
                 <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster"
@@ -13,17 +14,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import type { PaperUI } from "~/types/research-paper-ui";
+import { onMounted } from "vue";
+
 const { getSuggestedPaperStore } = usePaperStores()
 const router = useRouter();
 
-const research_papers = ref<PaperUI[]>(getSuggestedPaperStore())
+const filteredPapers = computed(() => {
+    return getSuggestedPaperStore()
+})
 
 function redirectTo(id: number) {
     router.push(`/search-result/${id}`); // Use router.push to navigate to the desired route
 }
-
 onMounted(() => {
 });
 </script>

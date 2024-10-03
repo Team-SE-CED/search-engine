@@ -1,7 +1,7 @@
 <template>
     <!-- search bar div -->
     <div class="fixed-search-bar">
-        <form class="container" action="/search" method="GET">
+        <form class="container" @submit.prevent="handleSubmit()">
             <div class="position-relative">
                 <!-- Search Icon -->
                 <img class="search-icon" src="/assets/img/search-icon.png" />
@@ -9,12 +9,12 @@
 
                 <!-- Search Input -->
                 <input class="form-control form-control-lg pl-5 search-input" type="text" name="search"
-                    placeholder="Search..." autocomplete="off" v-model="searchQuery" @input=""
-                    @focus="showSuggestions = true" />
+                    placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="filteredKeywords"
+                    @focus="showSuggestions = true" @keydown.enter="handleSubmit" />
 
                 <!-- Search Suggestions Dropdown -->
-                <ul v-if="searchQuery.length" class="suggestions-list">
-                    <li v-for="suggestion in filteredSuggestions" :key="suggestion.id"
+                <ul v-if="hasSearchSuggestions" class="suggestions-list">
+                    <li v-for="suggestion in filteredSuggestions.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
                         {{ suggestion.title }}
@@ -46,7 +46,7 @@ import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper()
 const { filterPapers, filterLastKeyword } = usePaperFactory()
-const { } = usePaperStores()
+const { setSuggestedPaperStore } = usePaperStores()
 const router = useRouter();
 
 // Declarations
@@ -56,7 +56,6 @@ const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const suggestions = ref<string[]>([]);
 
 // Functions
 
@@ -70,6 +69,24 @@ const filteredKeywords = () => {
 }
 // Search Engine Algorithm
 
+const handleClickOutside = (event: MouseEvent) => {
+    const searchInput = document.querySelector(".search-input");
+    const suggestionsElement = document.querySelector(".suggestions-list");
+
+    if (
+        searchInput &&
+        !searchInput.contains(event.target as Node) &&
+        suggestionsElement &&
+        !suggestionsElement.contains(event.target as Node)
+    ) {
+        showSuggestions.value = false;
+    }
+};
+
+const hasSearchSuggestions = computed(() => {
+    return searchQuery.value.length && showSuggestions.value
+})
+
 function redirectTo(id: number) {
     router.push(`/search-result/${id}`);
 }
@@ -80,13 +97,44 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
-    if (searchQuery.value.trim()) {
-        router.push(`/search-result?search=${encodeURIComponent(searchQuery.value)}`);
+    showSuggestions.value = false;
+
+    if (!searchQuery.value) {
+        setSuggestedPaperStore(researchPaper.value)
     }
+
+    else {
+        setSuggestedPaperStore(filteredSuggestions.value)
+    }
+
+    const queryParams: any = {
+        search: searchQuery.value.trim(),
+    };
+
+    if (selectedFilter.value) {
+        queryParams.filter = selectedFilter.value;
+    }
+
+    router.push({
+        path: '/search-result',
+        query: queryParams
+    });
 }
 
+// Shows suggestion-list if hasSuggestions
+watch(
+    () => searchQuery.value,
+    (newValue) => {
+        if (newValue) showSuggestions.value = true
+    })
+
 onMounted(() => {
-    fetchPaper();
+    document.addEventListener("click", handleClickOutside);
+    fetchPaper().catch((error) => console.error(error));
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", handleClickOutside);
 });
 </script>
 

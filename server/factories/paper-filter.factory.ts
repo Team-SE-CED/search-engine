@@ -8,11 +8,9 @@ export function searchAndFilterPapersByTitle(
   const queryWords = query.trim().toLowerCase().split(" ").filter(Boolean);
   if (queryWords.length === 0) return [];
 
-  return products
-    .filter((p) =>
-      queryWords.every((word) => p.title.toLowerCase().includes(word))
-    )
-    .slice(0, 8);
+  return products.filter((p) =>
+    queryWords.every((word) => p.title.toLowerCase().includes(word))
+  );
 }
 
 export function updateResearchPapersByLastKeyword(
