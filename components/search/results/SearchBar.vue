@@ -57,6 +57,8 @@ const showSuggestions = ref<boolean>(false);
 const suggestions = ref<string[]>([]);
 
 // Functions
+
+// Search Engine Algorithm
 const filteredSuggestions = computed((): PaperUI[] => {
     return filterPapers(researchPaper.value, searchQuery.value);
 });
@@ -64,6 +66,7 @@ const filteredSuggestions = computed((): PaperUI[] => {
 const filteredKeywords = () => {
     return filterLastKeyword(searchQuery.value, researchPaper.value, showSuggestions.value);
 }
+// Search Engine Algorithm
 
 async function fetchPaper() {
     const paper = await getResearchPaper();

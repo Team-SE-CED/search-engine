@@ -13,7 +13,7 @@
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredProducts.slice(0, 8)" :key="suggestion.id"
+                    <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
                         {{ suggestion.title }}
@@ -72,13 +72,15 @@ async function fetchPaper() {
     researchPaper.value = fetchedPaper;
 }
 
-const filteredProducts = computed((): PaperUI[] => {
+// Search Engine Algorithm
+const filteredPapers = computed((): PaperUI[] => {
     return filterPapers(researchPaper.value, searchQuery.value);
 });
 
 const filteredKeywords = () => {
     return filterLastKeyword(searchQuery.value, researchPaper.value, showSuggestions.value);
 }
+// Search Engine Algorithm
 
 const handleClickOutside = (event: MouseEvent) => {
     const searchInput = document.querySelector(".search-input");
@@ -105,7 +107,7 @@ function handleSubmit() {
 }
 
 const hasSearchSuggestions = computed(() => {
-    return showSuggestions.value && filteredProducts.value.length > 0;
+    return showSuggestions.value && filteredPapers.value.length > 0;
 });
 
 onMounted(() => {
