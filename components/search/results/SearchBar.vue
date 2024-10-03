@@ -84,6 +84,7 @@ const handleClickOutside = (event: MouseEvent) => {
 };
 
 const hasSearchSuggestions = computed(() => {
+    if (searchQuery.value === " ") return false
     return searchQuery.value.length && showSuggestions.value
 })
 
