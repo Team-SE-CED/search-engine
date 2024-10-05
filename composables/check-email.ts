@@ -1,25 +1,31 @@
-export function checkEmail() {
-  async function postEmail(email: string) {
-    let errorMessage = '';
-    
-    // get email
-    const response = await fetch("/api/post-email", {
-      method: "post",
+export const useCheckEmail = async (email: string): Promise<Boolean> => {
+  try {
+    // Call the server-side API to check if the email exists
+    const response = await fetch('api/post-email', {
+      method: 'POST',
       body: JSON.stringify({ email }),
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    const data = await response.json();
-
-    // if email exist, show error message
-    if(data.exists) {
-      errorMessage = 'Email already exists';
-      return { error: errorMessage };
+    if (!response.ok) {
+      throw new Error(`Error fetching email check: ${response.statusText}`);
     }
-    // Success! Redirect user or show success message
-  
+
+    interface CheckEmailResponse {
+      exists: boolean;
+    }
+
+    // Parse the JSON response body
+    const data: CheckEmailResponse = await response.json();
+
+    // Return whether the email exists
+    return data.exists;
+    
+    
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return false; // Return false in case of an error, or handle error differently
   }
-  return { postEmail };
-}
+};

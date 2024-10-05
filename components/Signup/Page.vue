@@ -4,7 +4,7 @@
     <div class="logo">
       <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
     </div>
-
+    <div class="error-popup" v-if="errorMessage">{{ errorMessage }}</div>
     <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
         <input type="text" class="input-field" placeholder="Name" />
@@ -26,28 +26,37 @@
       </div>
 
       <button type="submit" class="signup-btn">SIGN UP</button>
+      
     </form>
+    
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-
+import { useCheckEmail } from '@/composables/check-email';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
 const client = useSupabaseClient();
-const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-// const errorMsg = ref("");
+
+let errorMessage = '';
 // const successMsg = ref("");
 const showPassword = ref(false);
 
 async function createAccount() {
   try {
-    const { data, error } = await client.auth.signUp({
+    // const emailExists = await useCheckEmail(email.value)
+
+    // if (emailExists) {
+    //   alert('Email already registered. Please log in or use a different email.');
+    //   return;
+    // }
+
+    const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
     // options: {
@@ -56,16 +65,23 @@ async function createAccount() {
     //   }
     // }
     })
-    if (error) throw error;
+    
+    if (error) {
+      // alert(error);
+      errorMessage = "User already registered."
+      return;
+    }
     // else if (data.user?.id == client.auth.admin.getUserById()) {
     //   alert("Email already exists!");
     // }
     else {
       alert("Sign up Successful! Check your email for confirmation!");
+      router.push('/login');
     }
-  } catch (error: any) {
+  } catch (error) {
       console.log(error);
-      alert(error);
+      alert("Something went wrong. Try again.");
+      errorMessage = "Something went wrong. Try again.";
   }
 
 }
@@ -191,6 +207,24 @@ const togglePassword = () => {
   width: 24px;
   height: 24px;
 }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.error-popup {
+  color: white;
+  background-color: red;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
 
 .password-strength-bar {
   background-color: #ffffff;
@@ -220,4 +254,6 @@ const togglePassword = () => {
 .strong {
   background-color: #2ecc71;
 }
+
+
 </style>
