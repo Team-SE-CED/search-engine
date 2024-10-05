@@ -61,20 +61,12 @@ async function createAccount() {
     //   alert("Email already exists!");
     // }
     else {
-      console.log(user.value?.email);
       alert("Sign up Successful! Check your email for confirmation!");
-      getUser();
     }
   } catch (error: any) {
       console.log(error);
       alert(error);
   }
-
-}
-
-async function getUser() {
-  const { data, error } = await client.auth.admin.getUserById('c96ae603-e9ea-49db-92ae-af176aabd164');
-  console.log(data);
 
 }
 

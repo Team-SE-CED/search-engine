@@ -5,6 +5,10 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { email } = body;
 
+  if(!email) {
+    return {exists: false, error: 'No email provided'};
+  }
+  
   const client = await serverSupabaseClient(event);
 
   // check if existing user already exists
