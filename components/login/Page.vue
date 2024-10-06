@@ -60,23 +60,23 @@ const rememberMe = ref(false);
 const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
 async function login() {
-    try {
-      const { data, error } = await client.auth.signInWithPassword({
-        email: email.value,
-        password: password.value
-      });
-      if (error) throw error;
-      else {
-        console.log(data);
-      }
-      router.push("/welcome");
-      console.log("Logging in with", email.value, password.value);
-      alert("Logged in successfully!"); 
-    } catch (error: any) {
-      alert("Invalid Login Credentials!"); 
-      // errorMsg.value = error.message;
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+    if (error) throw error;
+    else {
+      console.log(data);
     }
+    router.push("/welcome");
+    console.log("Logging in with", email.value, password.value);
+    alert("Logged in successfully!");
+  } catch (error: any) {
+    alert("Invalid Login Credentials!");
+    // errorMsg.value = error.message;
   }
+}
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
@@ -89,12 +89,6 @@ const togglePassword = () => {
 
 
 <style scoped>
-body,
-html {
-  margin: 0;
-  padding: 0;
-}
-
 .login-page {
   display: flex;
   flex-direction: column;
