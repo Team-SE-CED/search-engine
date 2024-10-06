@@ -1,8 +1,12 @@
 import { Paper } from "~/server/types/research-paper-server";
-import { getResearchPaperUseCase } from "~/server/use-case/get-paper";
+import { serverSupabaseClient } from "#supabase/server"
 
-export default defineEventHandler(async () => {
-  const data = await getResearchPaperUseCase();
+export default defineEventHandler(async (event) => {
+  const client = await serverSupabaseClient(event);
+  const { data } = await client
+    .from("research_papers")
+    .select()
+    .order("title", { ascending: true });
   const response = data as Paper[];
 
   return response;

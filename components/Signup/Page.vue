@@ -5,13 +5,13 @@
       <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
     </div>
 
-    <form class="signup-form">
+    <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
         <input type="text" class="input-field" placeholder="Name" />
         <input type="text" class="input-field" placeholder="ID no." />
       </div>
       <input type="text" class="input-field" placeholder="Course" />
-      <input type="email" class="input-field" placeholder="Email" />
+      <input type="email" class="input-field" v-model="email" placeholder="Email" />
 
       <div class="form-group">
         <div class="password-input-wrapper">
@@ -30,16 +30,53 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-
 import { ref, computed } from 'vue';
+
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+const router = useRouter();
 const email = ref('');
 const password = ref('');
+// const errorMsg = ref("");
+// const successMsg = ref("");
 const showPassword = ref(false);
+
+async function createAccount() {
+  try {
+    const { data, error } = await client.auth.signUp({
+    email: email.value,
+    password: password.value,
+    // options: {
+    //   data: {
+    //     first_name: name.value
+    //   }
+    // }
+    })
+    if (error) throw error;
+    // else if (data.user?.id == client.auth.admin.getUserById()) {
+    //   alert("Email already exists!");
+    // }
+    else {
+      console.log(user.value?.email);
+      alert("Sign up Successful! Check your email for confirmation!");
+      getUser();
+    }
+  } catch (error: any) {
+      console.log(error);
+      alert(error);
+  }
+
+}
+
+async function getUser() {
+  const { data, error } = await client.auth.admin.getUserById('c96ae603-e9ea-49db-92ae-af176aabd164');
+  console.log(data);
+
+}
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
@@ -64,10 +101,6 @@ const passwordStrengthClass = computed(() => passwordStrength.value);
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
-};
-
-const login = () => {
-  console.log("Logging in with", email.value, password.value);
 };
 </script>
 
