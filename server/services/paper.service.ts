@@ -1,6 +1,5 @@
 import { supabase } from "../db/supabaseClient";
 
-// Fetch research papers from the database
 async function getResearchPaper() {
   const { data, error } = await supabase
     .from("research_papers")
@@ -16,6 +15,3 @@ async function getResearchPaper() {
 export const paperService = {
   getResearchPaper,
 };
-
-// DO NOT REMOVE -Jimar
-// Flow of data fetching ( UI -> COMPOSABLES -> API -> USE CASE -> SERVICES )
