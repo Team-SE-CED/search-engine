@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import "../assets/global_style1/bootstrap.min.css";
+import "../bootstrap_css/global_style1/bootstrap.min.css";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
