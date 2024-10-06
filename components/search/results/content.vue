@@ -1,6 +1,6 @@
 <template>
     <div class="container-sm">
-        <span>Loaded {{ filteredPapers.length }} results</span>
+
         <ul class="img-grid">
             <li class="img-card" v-for="researchPaper in filteredPapers" :key="researchPaper.id"
                 @click="redirectTo(researchPaper.id)">
@@ -10,6 +10,12 @@
                 <div class="img-title">{{ researchPaper.title }}</div>
             </li>
         </ul>
+    </div>
+    <div v-if="!numberOfResults" class="no-results-found">
+        No results found
+    </div>
+    <div v-else class="no-results-found">
+        Loaded {{ numberOfResults }} results
     </div>
 </template>
 
@@ -21,6 +27,10 @@ const router = useRouter();
 
 const filteredPapers = computed(() => {
     return getSuggestedPaperStore()
+})
+
+const numberOfResults = computed(() => {
+    return filteredPapers.value.length
 })
 
 function redirectTo(id: number) {
@@ -67,5 +77,15 @@ onMounted(() => {
     gap: 50px;
     padding: 20px;
     list-style: none;
+}
+
+.no-results-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 20px;
+    color: #888;
+    margin-top: 20px;
 }
 </style>

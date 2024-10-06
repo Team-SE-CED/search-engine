@@ -98,13 +98,12 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
+    // router.push({
+    //     path: '/',
+    // });
     showSuggestions.value = false;
 
-    if (!searchQuery.value) {
-        setSuggestedPaperStore(researchPaper.value)
-    }
-
-    else {
+    if (searchQuery.value) {
         setSuggestedPaperStore(filteredSuggestions.value)
     }
 
