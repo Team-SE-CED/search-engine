@@ -10,13 +10,18 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.5",
     "@supabase/supabase-js": "^2.45.4",
     "lodash": "^4.17.21",
     "nuxt": "^3.13.0",
+    "pinia": "^2.2.4",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^1.4.0"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

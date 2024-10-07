@@ -1,6 +1,7 @@
+import { PaperUI } from "~/types/research-paper-ui";
 import { Paper } from "../types/research-paper-server";
 
-function toResearchPaperFullResponse(expense: Paper[]) {
+function convertPapersToPaperUI(expense: Paper[]): PaperUI[] {
   return expense.map((expense) => {
     return {
       id: expense.id,
@@ -12,5 +13,5 @@ function toResearchPaperFullResponse(expense: Paper[]) {
 }
 
 export const researchPaperFactory = {
-  toResearchPaperFullResponse,
+  convertPapersToPaperUI,
 };

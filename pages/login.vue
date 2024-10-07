@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoginPage />
-
+    <SelectorPage />
   </div>
 </template>
 
