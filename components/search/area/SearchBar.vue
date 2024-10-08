@@ -21,16 +21,7 @@
                 </ul>
 
                 <!-- Filter Dropdown -->
-                <div class="filter-dropdown dropdown">
-                    <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
-                        {{ selectedFilter ? selectedFilter.label : "Filters" }}
-                    </button>
-                    <ul class="dropdown-menu" :class="{ show: isOpen }">
-                        <li v-for="filters in filter" :key="filters.value">
-                            <span class="dropdown-item">{{ filters.value }}</span>
-                        </li>
-                    </ul>
-                </div>
+                <SearchFilters />
             </div>
 
             <!-- Hidden input to include selected filter in form submission -->
@@ -42,8 +33,6 @@
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { filters } from "~/enums/filters";
-import type { Filters } from "~/server/types/filters";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapers, filterLastKeyword } = usePaperFactory()
@@ -51,7 +40,6 @@ const { setSuggestedPaperStore } = usePaperStores();
 const router = useRouter();
 
 // Declarations
-const filter = ref<Filters[]>(filters);
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const researchPaper = ref<PaperUI[]>([]);
@@ -59,15 +47,6 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 
 // Functions
-const toggleFilterDropdown = () => {
-    isOpen.value = !isOpen.value;
-};
-
-const selectFilter = (filter: { value: string; label: string }) => {
-    selectedFilter.value = filter;
-    isOpen.value = false;
-};
-
 async function fetchPaper() {
     const fetchedPaper = await getResearchPaper();
     researchPaper.value = fetchedPaper;
@@ -133,21 +112,8 @@ onBeforeUnmount(() => {
     height: 80px;
 }
 
-.filter-dropdown {
-    position: absolute;
-    right: 25px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
-}
-
 button.dropdown-toggle:focus {
     border: none;
-}
-
-.dropdown-menu {
-    padding: 10px 0;
-    font-size: 16px;
 }
 
 button.dropdown-toggle {

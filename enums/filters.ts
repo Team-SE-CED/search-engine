@@ -1,9 +1,8 @@
 import type { Filters } from "~/server/types/filters";
 
 enum FilterList {
-  Relevance = "Relevance",
+  Department = "Department",
   Date = "Date",
-  Popularity = "Popularity",
   Author = "Author",
 }
 

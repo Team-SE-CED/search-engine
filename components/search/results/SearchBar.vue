@@ -22,17 +22,7 @@
                 </ul>
 
                 <!-- Filter Dropdown -->
-                <div class="filter-dropdown dropdown">
-                    <button class="btn dropdown-toggle" type="button">
-                        <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
-                        {{ "Filters" }}
-                    </button>
-                    <ul class="dropdown-menu" :class="{ show: isOpen }">
-                        <li v-for="filter in filters" :key="filter.value">
-                            <a class="dropdown-item" href="#">{{ filter.label }}</a>
-                        </li>
-                    </ul>
-                </div>
+                <SearchFilters />
             </div>
 
             <!-- Hidden input to include selected filter in form submission -->
@@ -51,8 +41,6 @@ const router = useRouter();
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
-const filters = ref<{ value: string; label: string }[]>([]);
-const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
@@ -98,9 +86,7 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
-    // router.push({
-    //     path: '/',
-    // });
+
     showSuggestions.value = false;
 
     if (searchQuery.value) {
@@ -183,9 +169,7 @@ onBeforeUnmount(() => {
     left: 0;
     right: 0;
     z-index: 1000;
-    /* Ensure it appears above other content */
     padding: 4px;
-    /* Optional: padding for visual space */
 }
 
 .container {
@@ -197,14 +181,6 @@ onBeforeUnmount(() => {
     border-color: gray;
     border-radius: 50px;
     height: 40px;
-}
-
-.filter-dropdown {
-    position: absolute;
-    right: 25px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
 }
 
 button.dropdown-toggle:focus {
@@ -250,7 +226,6 @@ input.form-control {
     background-color: #484848;
 }
 
-/* Suggestions List Styles */
 .suggestions-list {
     position: absolute;
     top: 40px;
@@ -260,7 +235,6 @@ input.form-control {
     border: 1px solid gray;
     border-radius: 50px;
     z-index: 10;
-    /* max-height: 500px; */
     overflow-y: auto;
     list-style: none;
     padding-top: 10px;
