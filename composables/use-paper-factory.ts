@@ -1,18 +1,22 @@
 // composables/usePaper.ts
 import {
-  searchAndFilterPapersByTitle,
+  searchAndFilterPapers,
   updateResearchPapersByLastKeyword,
 } from "~/server/factories/paper-filter.factory";
 import type { PaperUI } from "~/types/research-paper-ui";
 
 export function usePaperFactory() {
-  function filterAndStorePapersByTitle(
+  function filterPapersFactory(
     suggestions: PaperUI[],
-    searchQuery: string
+    searchQuery: string,
+    selectedFilter: string,
+    selectedYear?: string
   ) {
-    const filteredPaper = searchAndFilterPapersByTitle(
+    const filteredPaper = searchAndFilterPapers(
       suggestions,
-      searchQuery
+      searchQuery,
+      selectedFilter,
+      selectedYear
     );
 
     return filteredPaper;
@@ -31,7 +35,7 @@ export function usePaperFactory() {
   }
 
   return {
-    filterPapers: filterAndStorePapersByTitle,
+    filterPapersFactory,
     filterLastKeyword,
   };
 }

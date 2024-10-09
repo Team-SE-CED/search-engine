@@ -35,7 +35,7 @@
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper()
-const { filterPapers, filterLastKeyword } = usePaperFactory()
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory()
 const { setSuggestedPaperStore } = usePaperStores()
 const router = useRouter();
 
@@ -49,7 +49,7 @@ const showSuggestions = ref<boolean>(false);
 
 // Search Engine Algorithm
 const filteredSuggestions = computed((): PaperUI[] => {
-    return filterPapers(researchPaper.value, searchQuery.value);
+    return filterPapersFactory(researchPaper.value, searchQuery.value, "title");
 });
 
 const filteredKeywords = () => {

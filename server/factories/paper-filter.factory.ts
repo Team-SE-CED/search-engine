@@ -1,16 +1,56 @@
-import { Ref } from "vue";
 import { PaperUI } from "~/types/research-paper-ui";
 
-export function searchAndFilterPapersByTitle(
+export function searchAndFilterPapers(
   products: PaperUI[],
-  query: string
+  query: string,
+  selectedFilter: string | null,
+  selectedYear?: string,
+  selectedDepartment?: string
 ): PaperUI[] {
-  const queryWords = query.trim().toLowerCase().split(" ").filter(Boolean);
+  if (!selectedFilter) return [];
+
+  const selectedFilterModified = selectedFilter.toLowerCase();
+
+  const queryWords = query.trim().split(" ").filter(Boolean);
   if (queryWords.length === 0) return [];
 
-  return products.filter((p) =>
-    queryWords.every((word) => p.title.toLowerCase().includes(word))
-  );
+  const regexWords = queryWords.map((word) => new RegExp(word, "i")); // 'i' for case-insensitive
+
+  switch (selectedFilterModified) {
+    case "author":
+      return products.filter((p) =>
+        regexWords.every((regex) => regex.test(p.author?.toLowerCase() || ""))
+      );
+    case "title":
+      return products.filter((p) =>
+        regexWords.every((regex) => regex.test(p.title?.toLowerCase() || ""))
+      );
+    case "date":
+      let filteredPapersYear = products;
+      if (selectedYear) {
+        filteredPapersYear = products.filter((p) => {
+          const paperYear = new Date(p.date).getFullYear().toString();
+          return paperYear === selectedYear;
+        });
+      }
+
+      return filteredPapersYear.filter((p) =>
+        regexWords.every((regex) => regex.test(p.title?.toLowerCase() || ""))
+      );
+    case "department":
+      let filteredPapersDepartment = products;
+      if (selectedYear) {
+        filteredPapersDepartment = products.filter((p) => {
+          return;
+        });
+      }
+
+      return filteredPapersDepartment.filter((p) =>
+        regexWords.every((regex) => regex.test(p.title?.toLowerCase() || ""))
+      );
+    default:
+      return [];
+  }
 }
 
 export function updateResearchPapersByLastKeyword(
@@ -24,9 +64,8 @@ export function updateResearchPapersByLastKeyword(
     const lastWord = query.split(" ").filter(Boolean).pop()?.toLowerCase();
 
     if (lastWord) {
-      // Filter research papers based on the last keyword
       const filtered = researchPapers.filter((p) =>
-        p.title.toLowerCase().includes(lastWord)
+        p.title?.toLowerCase().includes(lastWord || "")
       );
 
       if (filtered.length > 0) {

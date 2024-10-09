@@ -4,8 +4,8 @@
             {{ selectedFilter ? selectedFilter.label : "Filters" }}
         </button>
         <ul class="dropdown-menu" :class="{ show: isOpen }">
-            <li v-for="filters in filter" :key="filters.value">
-                <span class="dropdown-item">{{ filters.value }}</span>
+            <li v-for="filterItem in filter" :key="filterItem.value" @click="selectFilter(filterItem)">
+                <span class="dropdown-item">{{ filterItem.label }}</span>
             </li>
         </ul>
     </div>
@@ -14,18 +14,52 @@
 <script lang="ts" setup>
 import { filters } from '~/enums/filters';
 import type { Filters } from '~/server/types/filters';
+import { ref, watch } from 'vue';
 
+const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear"]);
+const props = defineProps({
+    filterDropdownState: Boolean
+});
 
 // Declarations
 const filter = ref<Filters[]>(filters);
-const selectedFilter = ref<{ value: string; label: string } | null>(null);
+const selectedFilter = ref<Filters | null>(null);
 const isOpen = ref(false);
+const selectedYear = ref<number>()
 
 // Functions
-const toggleFilterDropdown = () => {
+function toggleFilterDropdown() {
     isOpen.value = !isOpen.value;
 };
+
+function selectFilter(filterItem: Filters) {
+    toggleFilterDropdown();
+
+    if (filterItem.value === "None") {
+        emit("selectedFilter", "title");
+        selectedFilter.value = null;
+        return;
+    }
+    if (filterItem.value === "Date") {
+        emit("selectedYear", "2023");
+        selectedYear.value = 2023
+    }
+
+    selectedFilter.value = filterItem;
+    emit("selectedFilter", selectedFilter.value.value);
+}
+
+watch(() => props.filterDropdownState,
+    (newValue) => {
+        isOpen.value = newValue;
+    });
+
+watch(() => isOpen.value,
+    (newValue) => {
+        emit("filterDropdownState", newValue);
+    });
 </script>
+
 
 <style scoped>
 .filter-dropdown {

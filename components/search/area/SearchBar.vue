@@ -16,12 +16,15 @@
                     <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
-                        {{ suggestion.title }}
+                        {{ selectedSuggestion(suggestion) }}
                     </li>
                 </ul>
 
                 <!-- Filter Dropdown -->
-                <SearchFilters />
+                <SearchFilters class="search-filters" :filterDropdownState="isOpen"
+                    @selectedFilter="handleSelectedFilter" @filterDropdownState="handleFilterDropdownState"
+                    @selectedYear="handleSelectedYear" />
+
             </div>
 
             <!-- Hidden input to include selected filter in form submission -->
@@ -35,16 +38,18 @@ import "../assets/global_style1/bootstrap.min.css";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
-const { filterPapers, filterLastKeyword } = usePaperFactory()
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory()
 const { setSuggestedPaperStore } = usePaperStores();
 const router = useRouter();
 
 // Declarations
-const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const researchPaper = ref<PaperUI[]>([]);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
+const test = ref<string>("title")
+const isOpen = ref<boolean>(false)
+const selectedYear = ref<string>()
 
 // Functions
 async function fetchPaper() {
@@ -54,7 +59,7 @@ async function fetchPaper() {
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-    return filterPapers(researchPaper.value, searchQuery.value);
+    return filterPapersFactory(researchPaper.value, searchQuery.value, test.value, selectedYear.value);
 });
 
 const filteredKeywords = () => {
@@ -76,6 +81,27 @@ const handleClickOutside = (event: MouseEvent) => {
     }
 };
 
+const handleClickOutsideFilter = (event: MouseEvent) => {
+    const filtersElement = document.querySelector(".search-filters"); // Assuming you add a class to your SearchFilters component
+
+    if (
+        isOpen.value &&
+        filtersElement &&
+        !filtersElement.contains(event.target as Node)
+    ) {
+        isOpen.value = false; // or any other logic to close your filters
+    }
+};
+
+function handleFilterDropdownState(isOpenValue: boolean) {
+    isOpen.value = isOpenValue
+}
+
+function handleSelectedYear(selectedYearValue: string) {
+    selectedYear.value = selectedYearValue
+}
+
+
 function redirectTo(id: number) {
     router.push(`/search-result/${id}`);
 }
@@ -87,6 +113,18 @@ function handleSubmit() {
     }
 }
 
+function handleSelectedFilter(selectedFilter: string) {
+    test.value = selectedFilter
+}
+
+function selectedSuggestion(suggestion: PaperUI) {
+    if (test.value === "title") return suggestion.title
+    if (test.value === "Author") return suggestion.author
+    if (test.value === "Date") return suggestion.title
+
+    return "No Display"
+}
+
 const hasSearchSuggestions = computed(() => {
     return showSuggestions.value && filteredPapers.value.length > 0;
 });
@@ -94,10 +132,13 @@ const hasSearchSuggestions = computed(() => {
 onMounted(() => {
     fetchPaper().catch((error) => console.error(error));
     document.addEventListener("click", handleClickOutside);
+    document.addEventListener("click", handleClickOutsideFilter);
+    test.value = "title"
 });
 
 onBeforeUnmount(() => {
     document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("click", handleClickOutsideFilter);
 });
 </script>
 
