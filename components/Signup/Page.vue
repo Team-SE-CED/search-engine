@@ -7,10 +7,10 @@
     <div class="error-popup" v-if="errorMessage">{{ errorMessage }}</div>
     <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
-        <input type="text" class="input-field" placeholder="Name" />
-        <input type="text" class="input-field" placeholder="ID no." />
+        <input type="text" class="input-field" v-model="name" placeholder="Name" />
+        <input type="text" class="input-field" v-model="idnum" placeholder="ID no." />
       </div>
-      <input type="text" class="input-field" placeholder="Course" />
+      <input type="text" class="input-field" v-model="course" placeholder="Course" />
       <input type="email" class="input-field" v-model="email" placeholder="Email" />
 
       <div class="form-group">
@@ -34,7 +34,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useCheckEmail } from '@/composables/check-email';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
@@ -42,38 +41,33 @@ const client = useSupabaseClient();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
+const name = ref('');
+const idnum = ref('');
+const course = ref('');
 
-let errorMessage = '';
+let errorMessage = ref('');
 // const successMsg = ref("");
 const showPassword = ref(false);
 
 async function createAccount() {
   try {
-    // const emailExists = await useCheckEmail(email.value)
-
-    // if (emailExists) {
-    //   alert('Email already registered. Please log in or use a different email.');
-    //   return;
-    // }
-
     const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
-    // options: {
-    //   data: {
-    //     first_name: name.value
-    //   }
-    // }
+    options: {
+      data: {
+         name: name.value,
+         idnum: idnum.value,
+         course: course.value,
+       }
+     }
     })
     
     if (error) {
-      // alert(error);
-      errorMessage = "User already registered."
+      errorMessage.value = "User already registered."
       return;
     }
-    // else if (data.user?.id == client.auth.admin.getUserById()) {
-    //   alert("Email already exists!");
-    // }
+    
     else {
       alert("Sign up Successful! Check your email for confirmation!");
       router.push('/login');
@@ -81,9 +75,8 @@ async function createAccount() {
   } catch (error) {
       console.log(error);
       alert("Something went wrong. Try again.");
-      errorMessage = "Something went wrong. Try again.";
+      errorMessage.value = "Something went wrong. Try again.";
   }
-
 }
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));

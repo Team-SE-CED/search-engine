@@ -77,7 +77,6 @@ async function login() {
 
   } catch (error: any) {
     alert("Invalid Login Credentials!");
-    // errorMsg.value = error.message;
   }
 }
 
