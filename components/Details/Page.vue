@@ -161,7 +161,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   .search-bar {
   display: flex;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 25px;
   border: 1px solid #ccc;
   padding: 8px;
   margin-right: 100px;
