@@ -114,7 +114,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   align-items: center;
   justify-content: space-between;
   color: white;
-  width: 115%;
+  width: 99%;
 }
   
 .left-content {
