@@ -6,14 +6,14 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: [
-    function (to, from) {
-      // Custom inline middleware
-    },
-    'selector',
-  ],
-});
+// definePageMeta({
+//   middleware: [
+//     function (to, from) {
+//       // Custom inline middleware
+//     },
+//     'selector',
+//   ],
+// });
 </script>
 
 <style scoped>
