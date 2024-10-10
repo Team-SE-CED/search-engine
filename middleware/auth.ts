@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (to.path !== "/search") {
+  if (to.path !== "/login") {
     // setting the redirect code to '301 Moved Permanently'
-    return navigateTo("/search", { redirectCode: 301 });
+    return navigateTo("/login", { redirectCode: 301 });
   }
 });
