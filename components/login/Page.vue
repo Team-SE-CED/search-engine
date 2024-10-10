@@ -59,19 +59,22 @@ const showPassword = ref(false);
 const rememberMe = ref(false);
 const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
+
 async function login() {
   try {
     const { data, error } = await client.auth.signInWithPassword({
       email: email.value,
       password: password.value
     });
-    if (error) throw error;
-    else {
-      console.log(data);
-    }
+    
+    if (error) {
+      alert(error.message);
+    };
+
     router.push("/welcome");
     console.log("Logging in with", email.value, password.value);
     alert("Logged in successfully!");
+
   } catch (error: any) {
     alert("Invalid Login Credentials!");
     // errorMsg.value = error.message;

@@ -3,6 +3,15 @@
   <SearchLogout />
 </template>
 
-<script setup></script>
+<script setup>
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      // Custom inline middleware
+    },
+    'auth',
+  ],
+});
+</script>
 
 <style scoped></style>

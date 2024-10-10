@@ -11,7 +11,7 @@ definePageMeta({
     function (to, from) {
       // Custom inline middleware
     },
-    'welcome',
+    'selector',
   ],
 });
 </script>
