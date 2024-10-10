@@ -1,5 +1,4 @@
 <template>
-    <!-- search bar div -->
     <div class="fixed-search-bar">
         <form class="container" @submit.prevent="handleSubmit()">
             <div class="position-relative">
@@ -7,22 +6,22 @@
                 <img class="search-icon" src="/assets/img/search-icon.png" />
                 <div class="vertical-line"></div>
 
-                <!-- Search Input -->
-                <input class="form-control form-control-lg pl-5 search-input" type="text" name="search"
-                    placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="filteredKeywords"
-                    @focus="showSuggestions = true" @keydown.enter="handleSubmit" />
+                <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
+                    @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredSuggestions.slice(0, 8)" :key="suggestion.id"
+                    <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
                         <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
-                        {{ suggestion.title }}
+                        {{ selectedSuggestion(suggestion) }}
                     </li>
                 </ul>
 
                 <!-- Filter Dropdown -->
-                <SearchFilters />
+                <SearchFilters class="search-filters" :filterDropdownState="isOpen"
+                    @selectedFilter="handleSelectedFilter" @filterDropdownState="handleFilterDropdownState"
+                    @selectedYear="handleSelectedYear" @selectedDepartment="handleSelectedDepartment" />
             </div>
 
             <!-- Hidden input to include selected filter in form submission -->
@@ -44,12 +43,16 @@ const researchPaper = ref<PaperUI[]>([]);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
+const test = ref<string>("title")
+const isOpen = ref<boolean>(false)
+const selectedYear = ref<string>()
+const selectedDepartment = ref<string>()
 
 // Functions
 
 // Search Engine Algorithm
-const filteredSuggestions = computed((): PaperUI[] => {
-    return filterPapersFactory(researchPaper.value, searchQuery.value, "title");
+const filteredPapers = computed((): PaperUI[] => {
+    return filterPapersFactory(researchPaper.value, searchQuery.value, test.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -77,7 +80,44 @@ const hasSearchSuggestions = computed(() => {
 })
 
 function redirectTo(id: number) {
-    router.push(`/search-result/${id}`);
+    router.push(`/result/${id}`);
+}
+
+function selectedSuggestion(suggestion: PaperUI) {
+    if (test.value === "title") return suggestion.title
+    if (test.value === "Author") return suggestion.author
+    if (test.value === "Date") return suggestion.title
+    if (test.value === "Department") return suggestion.title
+
+    return "No Display"
+}
+
+const handleClickOutsideFilter = (event: MouseEvent) => {
+    const filtersElement = document.querySelector(".search-filters"); // Assuming you add a class to your SearchFilters component
+
+    if (
+        isOpen.value &&
+        filtersElement &&
+        !filtersElement.contains(event.target as Node)
+    ) {
+        isOpen.value = false; // or any other logic to close your filters
+    }
+};
+
+function handleFilterDropdownState(isOpenValue: boolean) {
+    isOpen.value = isOpenValue
+}
+
+function handleSelectedYear(selectedYearValue: string) {
+    selectedYear.value = selectedYearValue
+}
+
+function handleSelectedDepartment(selectedDepartmentValue: string) {
+    selectedDepartment.value = selectedDepartmentValue
+}
+
+function handleSelectedFilter(selectedFilter: string) {
+    test.value = selectedFilter
 }
 
 async function fetchPaper() {
@@ -90,7 +130,7 @@ function handleSubmit() {
     showSuggestions.value = false;
 
     if (searchQuery.value) {
-        setSuggestedPaperStore(filteredSuggestions.value)
+        setSuggestedPaperStore(filteredPapers.value)
     }
 
     const queryParams: any = {
@@ -102,7 +142,7 @@ function handleSubmit() {
     }
 
     router.push({
-        path: '/search-result',
+        path: '/result',
         query: queryParams
     });
 }
@@ -115,12 +155,15 @@ watch(
     })
 
 onMounted(() => {
-    document.addEventListener("click", handleClickOutside);
     fetchPaper().catch((error) => console.error(error));
+    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("click", handleClickOutsideFilter);
+    test.value = "title"
 });
 
 onBeforeUnmount(() => {
     document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("click", handleClickOutsideFilter);
 });
 </script>
 

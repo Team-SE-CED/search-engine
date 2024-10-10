@@ -34,7 +34,7 @@ const numberOfResults = computed(() => {
 })
 
 function redirectTo(id: number) {
-    router.push(`/search-result/${id}`); // Use router.push to navigate to the desired route
+    router.push(`/result/${id}`); // Use router.push to navigate to the desired route
 }
 onMounted(() => {
 });

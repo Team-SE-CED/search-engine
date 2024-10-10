@@ -6,10 +6,8 @@
                 <img class="search-icon" src="/assets/img/search-icon.png" />
                 <div class="vertical-line"></div>
 
-                <!-- Search Input -->
-                <input class="form-control form-control-lg pl-5 search-input" type="text" name="search"
-                    placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="filteredKeywords"
-                    @focus="showSuggestions = true" @keydown.enter="handleSubmit" />
+                <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
+                    @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
                 <!-- Search Suggestions Dropdown -->
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
@@ -23,7 +21,7 @@
                 <!-- Filter Dropdown -->
                 <SearchFilters class="search-filters" :filterDropdownState="isOpen"
                     @selectedFilter="handleSelectedFilter" @filterDropdownState="handleFilterDropdownState"
-                    @selectedYear="handleSelectedYear" />
+                    @selectedYear="handleSelectedYear" @selectedDepartment="handleSelectedDepartment" />
 
             </div>
 
@@ -35,7 +33,6 @@
 
 <script setup lang="ts">
 import "../assets/global_style1/bootstrap.min.css";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory()
@@ -50,6 +47,7 @@ const showSuggestions = ref<boolean>(false);
 const test = ref<string>("title")
 const isOpen = ref<boolean>(false)
 const selectedYear = ref<string>()
+const selectedDepartment = ref<string>()
 
 // Functions
 async function fetchPaper() {
@@ -59,7 +57,7 @@ async function fetchPaper() {
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-    return filterPapersFactory(researchPaper.value, searchQuery.value, test.value, selectedYear.value);
+    return filterPapersFactory(researchPaper.value, searchQuery.value, test.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -101,26 +99,30 @@ function handleSelectedYear(selectedYearValue: string) {
     selectedYear.value = selectedYearValue
 }
 
-
-function redirectTo(id: number) {
-    router.push(`/search-result/${id}`);
-}
-
-function handleSubmit() {
-    setSuggestedPaperStore(filteredPapers.value)
-    if (searchQuery.value.trim()) {
-        router.push(`/search-result?search=${encodeURIComponent(searchQuery.value)}`);
-    }
+function handleSelectedDepartment(selectedDepartmentValue: string) {
+    selectedDepartment.value = selectedDepartmentValue
 }
 
 function handleSelectedFilter(selectedFilter: string) {
     test.value = selectedFilter
 }
 
+function redirectTo(id: number) {
+    router.push(`/result/${id}`);
+}
+
+function handleSubmit() {
+    setSuggestedPaperStore(filteredPapers.value)
+    if (searchQuery.value.trim()) {
+        router.push(`/result?search=${encodeURIComponent(searchQuery.value)}`);
+    }
+}
+
 function selectedSuggestion(suggestion: PaperUI) {
     if (test.value === "title") return suggestion.title
     if (test.value === "Author") return suggestion.author
     if (test.value === "Date") return suggestion.title
+    if (test.value === "Department") return suggestion.title
 
     return "No Display"
 }

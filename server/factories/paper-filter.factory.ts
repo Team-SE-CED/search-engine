@@ -39,9 +39,9 @@ export function searchAndFilterPapers(
       );
     case "department":
       let filteredPapersDepartment = products;
-      if (selectedYear) {
+      if (selectedDepartment) {
         filteredPapersDepartment = products.filter((p) => {
-          return;
+          return p.department === selectedDepartment;
         });
       }
 

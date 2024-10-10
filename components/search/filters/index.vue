@@ -16,7 +16,7 @@ import { filters } from '~/enums/filters';
 import type { Filters } from '~/server/types/filters';
 import { ref, watch } from 'vue';
 
-const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear"]);
+const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear", "selectedDepartment"]);
 const props = defineProps({
     filterDropdownState: Boolean
 });
@@ -42,7 +42,9 @@ function selectFilter(filterItem: Filters) {
     }
     if (filterItem.value === "Date") {
         emit("selectedYear", "2023");
-        selectedYear.value = 2023
+    }
+    if (filterItem.value === "Department") {
+        emit("selectedDepartment", "Computer Engineering");
     }
 
     selectedFilter.value = filterItem;
@@ -73,5 +75,6 @@ watch(() => isOpen.value,
 .dropdown-menu {
     padding: 10px 0;
     font-size: 16px;
+    cursor: pointer;
 }
 </style>

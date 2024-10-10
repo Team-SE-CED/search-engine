@@ -10,13 +10,15 @@ export function usePaperFactory() {
     suggestions: PaperUI[],
     searchQuery: string,
     selectedFilter: string,
-    selectedYear?: string
+    selectedYear?: string,
+    selectedDepartment?: string
   ) {
     const filteredPaper = searchAndFilterPapers(
       suggestions,
       searchQuery,
       selectedFilter,
-      selectedYear
+      selectedYear,
+      selectedDepartment
     );
 
     return filteredPaper;
