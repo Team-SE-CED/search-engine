@@ -11,30 +11,16 @@
           <div class="form-group">
             <div class="input-wrapper">
               <label :class="{ active: email.length > 0 || isEmailFocused }" for="email">Silliman Email</label>
-              <input
-                type="email"
-                id="email"
-                v-model="email"
-                class="form-control"
-                @focus="isEmailFocused = true"
-                @blur="isEmailFocused = email.length > 0"
-                required
-              />
+              <input type="email" id="email" v-model="email" class="form-control" @focus="isEmailFocused = true"
+                @blur="isEmailFocused = email.length > 0" required />
             </div>
           </div>
 
           <div class="form-group">
             <div class="input-wrapper">
               <label :class="{ active: password.length > 0 || isPasswordFocused }" for="password">Password</label>
-              <input
-                :type="passwordInputType"
-                id="password"
-                v-model="password"
-                class="form-control"
-                @focus="isPasswordFocused = true"
-                @blur="isPasswordFocused = password.length > 0"
-                required
-              />
+              <input :type="passwordInputType" id="password" v-model="password" class="form-control"
+                @focus="isPasswordFocused = true" @blur="isPasswordFocused = password.length > 0" required />
               <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
@@ -70,27 +56,27 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
-const rememberMe = ref(false); 
-const isEmailFocused = ref(false); 
+const rememberMe = ref(false);
+const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
 async function login() {
-    try {
-      const { data, error } = await client.auth.signInWithPassword({
-        email: email.value,
-        password: password.value
-      });
-      if (error) throw error;
-      else {
-        console.log(data);
-      }
-      router.push("/welcome");
-      console.log("Logging in with", email.value, password.value);
-      alert("Logged in successfully!"); 
-    } catch (error: any) {
-      alert("Invalid Login Credentials!"); 
-      // errorMsg.value = error.message;
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    });
+    if (error) throw error;
+    else {
+      console.log(data);
     }
+    router.push("/welcome");
+    console.log("Logging in with", email.value, password.value);
+    alert("Logged in successfully!");
+  } catch (error: any) {
+    alert("Invalid Login Credentials!");
+    // errorMsg.value = error.message;
   }
+}
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
@@ -103,12 +89,6 @@ const togglePassword = () => {
 
 
 <style scoped>
-
-body,html {
-  margin: 0;
-  padding: 0;
-}
-
 .login-page {
   display: flex;
   flex-direction: column;

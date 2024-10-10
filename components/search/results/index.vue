@@ -1,0 +1,4 @@
+<template>
+    <SearchResultsSearchBar />
+    <SearchResultsContent />
+</template>
