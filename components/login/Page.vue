@@ -18,9 +18,9 @@
 
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: password.length > 0 || isPasswordFocused }" for="password">Password</label>
+              <label :class="{ active: isPasswordActive }" for="password">Password</label>
               <input :type="passwordInputType" id="password" v-model="password" class="form-control"
-                @focus="isPasswordFocused = true" @blur="isPasswordFocused = password.length > 0" required />
+                @focus="handlePasswordFocus" @blur="handlePasswordBlur" required />
               <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
@@ -82,15 +82,21 @@ async function login() {
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
-const isEmailActive = computed(() => {
-  return email.value.length > 0 || isEmailFocused.value;
-})
+const isEmailActive = computed(() => (email.value.length > 0 || isEmailFocused.value))
+const isPasswordActive = computed(() => (password.value.length > 0 || isPasswordFocused.value))
 
 function handleEmailFocus() {
   return isEmailFocused.value = true;
 }
 function handleEmailBlur() {
   return isEmailFocused.value = false;
+}
+
+function handlePasswordFocus() {
+  return isPasswordFocused.value = true;
+}
+function handlePasswordBlur() {
+  return isPasswordFocused.value = false;
 }
 
 const togglePassword = () => {
