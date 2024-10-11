@@ -40,11 +40,7 @@
 </template>
 
 <script setup lang="ts">
-<<<<<<< HEAD
 import "../bootstrap_css/global_style1/bootstrap.min.css";
-=======
-import "../assets/global_style1/bootstrap.min.css";
->>>>>>> ddda99174433c5c2ebd6c92684685785731ed3e6
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { filters } from "~/enums/filters";
 import type { Filters } from "~/server/types/filters";
