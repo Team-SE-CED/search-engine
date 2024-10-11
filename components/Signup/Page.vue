@@ -44,9 +44,7 @@ const password = ref('');
 const name = ref('');
 const idnum = ref('');
 const course = ref('');
-
-let errorMessage = ref('');
-// const successMsg = ref("");
+const errorMessage = ref('');
 const showPassword = ref(false);
 
 async function createAccount() {

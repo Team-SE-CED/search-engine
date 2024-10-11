@@ -18,7 +18,7 @@
   </body>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const router = useRouter()
 const goToLogin = () => {
   router.push('/login')

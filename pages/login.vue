@@ -4,16 +4,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// definePageMeta({
-//   middleware: [
-//     function (to, from) {
-//       // Custom inline middleware
-//     },
-//     'welcome',
-//   ],
-// });
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
