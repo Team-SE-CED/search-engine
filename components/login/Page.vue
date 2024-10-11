@@ -66,6 +66,7 @@ async function login() {
       email: email.value,
       password: password.value
     });
+<<<<<<< HEAD
     
     if (error) {
       alert(error.message);
@@ -77,6 +78,18 @@ async function login() {
 
   } catch (error: any) {
     alert("Invalid Login Credentials!");
+=======
+    if (error) throw error;
+    else {
+      console.log(data);
+    }
+    router.push("/welcome");
+    console.log("Logging in with", email.value, password.value);
+    alert("Logged in successfully!");
+  } catch (error: any) {
+    alert("Invalid Login Credentials!");
+    // errorMsg.value = error.message;
+>>>>>>> ddda99174433c5c2ebd6c92684685785731ed3e6
   }
 }
 
