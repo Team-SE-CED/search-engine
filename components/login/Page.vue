@@ -85,18 +85,18 @@ const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
 const isEmailActive = computed(() => (email.value.length > 0 || isEmailFocused.value))
 const isPasswordActive = computed(() => (password.value.length > 0 || isPasswordFocused.value))
 
-function handleEmailFocus() {
-  return isEmailFocused.value = true;
+const handleEmailFocus = () => {
+  isEmailFocused.value = true;
 }
-function handleEmailBlur() {
-  return isEmailFocused.value = false;
+const handleEmailBlur = () => {
+  isEmailFocused.value = false;
 }
 
-function handlePasswordFocus() {
-  return isPasswordFocused.value = true;
+const handlePasswordFocus = () => {
+  isPasswordFocused.value = true;
 }
-function handlePasswordBlur() {
-  return isPasswordFocused.value = false;
+const handlePasswordBlur = () => {
+  isPasswordFocused.value = false;
 }
 
 const togglePassword = () => {
