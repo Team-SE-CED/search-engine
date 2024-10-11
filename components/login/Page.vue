@@ -10,9 +10,9 @@
 
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: email.length > 0 || isEmailFocused }" for="email">Silliman Email</label>
-              <input type="email" id="email" v-model="email" class="form-control" @focus="isEmailFocused = true"
-                @blur="isEmailFocused = email.length > 0" required />
+              <label :class="{ active: isEmailActive }" for="email">Silliman Email</label>
+              <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus"
+                @blur="handleEmailBlur" required />
             </div>
           </div>
 
@@ -82,6 +82,16 @@ async function login() {
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
+const isEmailActive = computed(() => {
+  return email.value.length > 0 || isEmailFocused.value;
+})
+
+function handleEmailFocus() {
+  return isEmailFocused.value = true;
+}
+function handleEmailBlur() {
+  return isEmailFocused.value = false;
+}
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
