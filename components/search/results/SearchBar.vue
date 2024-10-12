@@ -116,9 +116,6 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
-  // router.push({
-  //     path: '/',
-  // });
   showSuggestions.value = false;
 
   if (searchQuery.value) {
