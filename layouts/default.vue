@@ -17,6 +17,6 @@ header {
   color: white;
   padding: 2%;
   text-align: center;
-  z-index: 1;
+  z-index: -1;
 }
 </style>

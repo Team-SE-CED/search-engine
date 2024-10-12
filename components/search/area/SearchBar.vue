@@ -61,12 +61,8 @@ const filteredPapers = computed((): PaperUI[] => {
 });
 
 const filteredKeywords = () => {
-    return filterLastKeyword(
-        searchQuery.value,
-        researchPaper.value,
-        showSuggestions.value
-    );
-};
+    return filterLastKeyword(searchQuery.value, researchPaper.value, showSuggestions.value);
+}
 // Search Engine Algorithm
 
 const handleClickOutside = (event: MouseEvent) => {
@@ -150,13 +146,13 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .container {
-    width: 60vw;
+    width: 60%;
 }
 
 .form-control {
     border-color: gray;
-    border-radius: 50vh;
-    height: 10vh;
+    border-radius: 50px;
+    height: 80px;
 }
 
 button.dropdown-toggle:focus {
@@ -194,14 +190,14 @@ input.form-control {
 /* Suggestions List Styles */
 .suggestions-list {
     position: absolute;
-    text-align: left;
     top: 80px;
     left: 0;
     width: 100%;
     background-color: white;
     border: 1px solid gray;
     border-radius: 50px;
-    overflow: hidden;
+    z-index: 10;
+    overflow-y: auto;
     list-style: none;
     padding-top: 10px;
     padding-left: 0;
@@ -212,9 +208,6 @@ input.form-control {
 .suggestions-list li {
     padding: 10px 30px;
     cursor: pointer;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .suggestion-search-icon {
