@@ -1,7 +1,7 @@
 <template>
   <body>
   <div class="container">
-    <div class="split left">
+    <div class="split left" @click.native="goToLogin">
       <div class="content">
         <h1 class="login-text">LOG IN</h1>
       </div>
@@ -9,8 +9,8 @@
     <div class="logo">
       <img src="~assets/static-images/su-logo.png" alt="Center Logo" />
     </div>
-    <div class="split right">
-      <div class="content">
+    <div class="split right" @click.native="goToSignup" >
+      <div class="content" >
         <h1 class="signup-text">SIGN UP</h1>
       </div>
     </div>
@@ -18,7 +18,14 @@
   </body>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const router = useRouter()
+const goToLogin = () => {
+  router.push('/login')
+}
+const goToSignup = () => {
+  router.push('/signup')
+}
 
 </script>
 

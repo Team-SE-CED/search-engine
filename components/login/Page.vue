@@ -10,18 +10,18 @@
 
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: email.length > 0 || isEmailFocused }" for="email">Silliman Email</label>
-              <input type="email" id="email" v-model="email" class="form-control" @focus="isEmailFocused = true"
-                @blur="isEmailFocused = email.length > 0" required />
+              <label :class="{ active: isEmailActive }" for="email">Silliman Email</label>
+              <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus"
+                @blur="handleEmailBlur" required />
             </div>
           </div>
 
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: password.length > 0 || isPasswordFocused }" for="password">Password</label>
+              <label :class="{ active: isPasswordActive }" for="password">Password</label>
               <input :type="passwordInputType" id="password" v-model="password" class="form-control"
-                @focus="isPasswordFocused = true" @blur="isPasswordFocused = password.length > 0" required />
-              <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
+                @focus="handlePasswordFocus" @blur="handlePasswordBlur" required />
+              <div class="eye-icon" v-if="hasPassword" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
@@ -59,27 +59,46 @@ const showPassword = ref(false);
 const rememberMe = ref(false);
 const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
+
 async function login() {
   try {
     const { data, error } = await client.auth.signInWithPassword({
       email: email.value,
       password: password.value
     });
-    if (error) throw error;
-    else {
-      console.log(data);
-    }
+    
+    if (error) {
+      alert(error.message);
+    };
+
     router.push("/welcome");
     console.log("Logging in with", email.value, password.value);
     alert("Logged in successfully!");
+
   } catch (error: any) {
     alert("Invalid Login Credentials!");
-    // errorMsg.value = error.message;
   }
 }
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
+const isEmailActive = computed(() => (email.value.length > 0 || isEmailFocused.value))
+const isPasswordActive = computed(() => (password.value.length > 0 || isPasswordFocused.value))
+const hasPassword = computed(() => (password.value.length > 0))
+
+const handleEmailFocus = () => {
+  isEmailFocused.value = true;
+}
+const handleEmailBlur = () => {
+  isEmailFocused.value = false;
+}
+
+const handlePasswordFocus = () => {
+  isPasswordFocused.value = true;
+}
+const handlePasswordBlur = () => {
+  isPasswordFocused.value = false;
+}
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
