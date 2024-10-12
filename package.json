@@ -19,7 +19,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxtjs/supabase": "^1.4.0"
+    "@nuxtjs/supabase": "^1.2.2"
   },
   "overrides": {
     "vue": "latest"
