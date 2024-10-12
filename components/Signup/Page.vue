@@ -4,7 +4,6 @@
     <div class="logo">
       <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
     </div>
-    <div class="error-popup" v-if="errorMessage">{{ errorMessage }}</div>
     <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
         <input type="text" class="input-field" v-model="name" placeholder="Name" />
@@ -24,7 +23,8 @@
           <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
         </div>
       </div>
-
+      <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
+      <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
       <button type="submit" class="signup-btn">SIGN UP</button>
       
     </form>
@@ -45,10 +45,13 @@ const name = ref('');
 const idnum = ref('');
 const course = ref('');
 const errorMessage = ref('');
+const successMessage = ref('');
 const showPassword = ref(false);
+const fadeOut = ref(false);
 
 async function createAccount() {
   try {
+    fadeOut.value = false;
     const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
@@ -63,16 +66,25 @@ async function createAccount() {
     
     if (error) {
       errorMessage.value = "User already registered."
+      setTimeout(() => {
+        fadeOut.value = true;
+        setTimeout(() => {
+          errorMessage.value = "";
+          fadeOut.value = false;
+        }, 500);
+      }, 3000);
       return;
     }
     
     else {
-      alert("Sign up Successful! Check your email for confirmation!");
-      router.push('/login');
+      successMessage.value = "Success! Check your email for confirmation";
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+      
     }
   } catch (error) {
       console.log(error);
-      alert("Something went wrong. Try again.");
       errorMessage.value = "Something went wrong. Try again.";
   }
 }
@@ -198,14 +210,6 @@ const togglePassword = () => {
   width: 24px;
   height: 24px;
 }
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 .error-popup {
   color: white;
@@ -215,6 +219,25 @@ const togglePassword = () => {
   border-radius: 5px;
   text-align: center;
   animation: fadeIn 0.5s ease-in-out;
+}
+
+.success-popup {
+  color: white;
+  background-color: green;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .password-strength-bar {
@@ -244,6 +267,20 @@ const togglePassword = () => {
 
 .strong {
   background-color: #2ecc71;
+}
+
+.fade-out {
+  opacity: 0;
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 
