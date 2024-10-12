@@ -21,7 +21,7 @@
               <label :class="{ active: isPasswordActive }" for="password">Password</label>
               <input :type="passwordInputType" id="password" v-model="password" class="form-control"
                 @focus="handlePasswordFocus" @blur="handlePasswordBlur" required />
-              <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
+              <div class="eye-icon" v-if="hasPassword" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
@@ -84,6 +84,7 @@ const passwordInputType = computed(() => (showPassword.value ? 'text' : 'passwor
 const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
 const isEmailActive = computed(() => (email.value.length > 0 || isEmailFocused.value))
 const isPasswordActive = computed(() => (password.value.length > 0 || isPasswordFocused.value))
+const hasPassword = computed(() => (password.value.length > 0))
 
 const handleEmailFocus = () => {
   isEmailFocused.value = true;
