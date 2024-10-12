@@ -62,19 +62,19 @@ const isPasswordFocused = ref(false);
 
 async function login() {
   try {
-    const { data, error } = await client.auth.signInWithPassword({
+    const { error } = await client.auth.signInWithPassword({
       email: email.value,
       password: password.value
     });
     
     if (error) {
       alert(error.message);
-    };
-
-    router.push("/welcome");
-    console.log("Logging in with", email.value, password.value);
-    alert("Logged in successfully!");
-
+    }
+    else {
+      router.push("/welcome");
+      alert("Logged in successfully!");
+    }
+    
   } catch (error: any) {
     alert("Invalid Login Credentials!");
   }
