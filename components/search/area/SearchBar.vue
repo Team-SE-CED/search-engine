@@ -3,7 +3,7 @@
         <form class="container" @submit.prevent="handleSubmit">
             <div class="position-relative">
                 <!-- Search Icon -->
-                <img class="search-icon" src="/assets/img/search-icon.png" />
+                <img class="search-icon" src="~/assets/static-images/search-eye.png" />
                 <div class="vertical-line"></div>
 
                 <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import "../assets/global_style1/bootstrap.min.css";
+import "../bootstrap/global_style1/bootstrap.min.css";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory()

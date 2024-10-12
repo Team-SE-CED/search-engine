@@ -4,7 +4,7 @@
     <form class="container" action="/search" method="GET">
       <div class="position-relative">
         <!-- Search Icon -->
-        <img class="search-icon" src="/assets/img/search-icon.png" />
+        <img class="search-icon" src="~/assets/static-images/search-eye.png" />
         <div class="vertical-line"></div>
 
         <!-- su-logo -->
@@ -23,7 +23,7 @@
         <!-- Search Suggestions Dropdown -->
         <ul v-if="searchQuery.length" class="suggestions-list">
           <li v-for="suggestion in suggestions" :key="suggestion">
-            <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+            <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
             {{ suggestion }}
           </li>
         </ul>
@@ -31,8 +31,8 @@
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
           <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
-            {{ selectedFilter ? selectedFilter.label : "Filters" }} 
-          
+            {{ selectedFilter ? selectedFilter.label : "Filters" }}
+
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filter in filters" :key="filter.value">
@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 
-import "../assets/global_style1/bootstrap.min.css";
+import "../bootstrap_css/global_style1/bootstrap.min.css";
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
@@ -102,7 +102,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 .container-sm {
   margin-top: 2%;
   padding-left: 8%;
@@ -179,6 +178,7 @@ button.dropdown-toggle:focus {
   padding: 10px 0;
   font-size: 16px;
 }
+
 button.dropdown-toggle {
   font-size: 20px;
 }
@@ -189,9 +189,9 @@ button.dropdown-toggle {
   top: 4%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-family:Segoe UI;
-  font-size:25px; 
-  color: #ffffff; 
+  font-family: Segoe UI;
+  font-size: 25px;
+  color: #ffffff;
 }
 
 .su-logo {
@@ -266,6 +266,4 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
-
-
 </style>
