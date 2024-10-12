@@ -4,7 +4,7 @@
         <form class="container" @submit.prevent="handleSubmit()">
             <div class="position-relative">
                 <!-- Search Icon -->
-                <img class="search-icon" src="/assets/img/search-icon.png" />
+                <img class="search-icon" src="~/assets/static-images/search-eye.png" />
                 <div class="vertical-line"></div>
 
                 <!-- Search Input -->
@@ -16,7 +16,7 @@
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
                     <li v-for="suggestion in filteredSuggestions.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
-                        <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+                        <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
                         {{ suggestion.title }}
                     </li>
                 </ul>
