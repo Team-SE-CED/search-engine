@@ -1,8 +1,8 @@
 <template>
+
   <body>
-<<<<<<< HEAD
     <div class="container">
-      <div class="split left">
+      <div class="split left" @click.native="goToLogin">
         <div class="content">
           <h1 class="login-text">LOG IN</h1>
         </div>
@@ -10,31 +10,12 @@
       <div class="logo">
         <img src="~assets/static-images/su-logo.png" alt="Center Logo" />
       </div>
-      <div class="split right">
+      <div class="split right" @click.native="goToSignup">
         <div class="content">
           <h1 class="signup-text">SIGN UP</h1>
         </div>
       </div>
     </div>
-  </body>
-</template>
-
-=======
-  <div class="container">
-    <div class="split left" @click.native="goToLogin">
-      <div class="content">
-        <h1 class="login-text">LOG IN</h1>
-      </div>
-    </div>
-    <div class="logo">
-      <img src="~assets/static-images/su-logo.png" alt="Center Logo" />
-    </div>
-    <div class="split right" @click.native="goToSignup" >
-      <div class="content" >
-        <h1 class="signup-text">SIGN UP</h1>
-      </div>
-    </div>
-  </div>
   </body>
 </template>
 
@@ -49,10 +30,10 @@ const goToSignup = () => {
 
 </script>
 
->>>>>>> 2b3b388f164f1def97a796e85f506ac5a9fe7a55
 
 <style scoped>
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
 }
@@ -69,7 +50,7 @@ body, html {
 }
 
 .split {
-  width: 50%; 
+  width: 50%;
   height: 100%;
   position: relative;
   display: flex;
@@ -86,7 +67,8 @@ body, html {
   background-color: #f8f8f8;
 }
 
-.login-text, .signup-text {
+.login-text,
+.signup-text {
   font-size: 3rem;
   font-weight: bold;
   transition: transform 0.4s ease, color 0.4s ease;
@@ -139,5 +121,4 @@ body, html {
   height: 100%;
   object-fit: contain;
 }
-
 </style>

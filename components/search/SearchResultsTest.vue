@@ -31,8 +31,8 @@
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
           <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
-            {{ selectedFilter ? selectedFilter.label : "Filters" }} 
-          
+            {{ selectedFilter ? selectedFilter.label : "Filters" }}
+
           </button>
           <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filter in filters" :key="filter.value">
@@ -61,11 +61,7 @@
 
 <script setup lang="ts">
 
-<<<<<<< HEAD
-import "../bootstrap-css/global_style1/bootstrap.min.css";
-=======
 import "../bootstrap_css/global_style1/bootstrap.min.css";
->>>>>>> 2b3b388f164f1def97a796e85f506ac5a9fe7a55
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
@@ -106,7 +102,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 .container-sm {
   margin-top: 2%;
   padding-left: 8%;
@@ -183,6 +178,7 @@ button.dropdown-toggle:focus {
   padding: 10px 0;
   font-size: 16px;
 }
+
 button.dropdown-toggle {
   font-size: 20px;
 }
@@ -193,9 +189,9 @@ button.dropdown-toggle {
   top: 4%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-family:Segoe UI;
-  font-size:25px; 
-  color: #ffffff; 
+  font-family: Segoe UI;
+  font-size: 25px;
+  color: #ffffff;
 }
 
 .su-logo {
@@ -270,6 +266,4 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
-
-
 </style>
