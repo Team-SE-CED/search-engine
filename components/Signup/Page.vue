@@ -4,13 +4,13 @@
     <div class="logo">
       <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
     </div>
-
+    <div class="error-popup" v-if="errorMessage">{{ errorMessage }}</div>
     <form class="signup-form" @submit.prevent="createAccount">
       <div class="form-row">
-        <input type="text" class="input-field" placeholder="Name" />
-        <input type="text" class="input-field" placeholder="ID no." />
+        <input type="text" class="input-field" v-model="name" placeholder="Name" />
+        <input type="text" class="input-field" v-model="idnum" placeholder="ID no." />
       </div>
-      <input type="text" class="input-field" placeholder="Course" />
+      <input type="text" class="input-field" v-model="course" placeholder="Course" />
       <input type="email" class="input-field" v-model="email" placeholder="Email" />
 
       <div class="form-group">
@@ -26,56 +26,55 @@
       </div>
 
       <button type="submit" class="signup-btn">SIGN UP</button>
+      
     </form>
+    
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
 
 const client = useSupabaseClient();
-const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-// const errorMsg = ref("");
-// const successMsg = ref("");
+const name = ref('');
+const idnum = ref('');
+const course = ref('');
+const errorMessage = ref('');
 const showPassword = ref(false);
 
 async function createAccount() {
   try {
-    const { data, error } = await client.auth.signUp({
+    const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
-    // options: {
-    //   data: {
-    //     first_name: name.value
-    //   }
-    // }
+    options: {
+      data: {
+         name: name.value,
+         idnum: idnum.value,
+         course: course.value,
+       }
+     }
     })
-    if (error) throw error;
-    // else if (data.user?.id == client.auth.admin.getUserById()) {
-    //   alert("Email already exists!");
-    // }
-    else {
-      console.log(user.value?.email);
-      alert("Sign up Successful! Check your email for confirmation!");
-      getUser();
+    
+    if (error) {
+      errorMessage.value = "User already registered."
+      return;
     }
-  } catch (error: any) {
+    
+    else {
+      alert("Sign up Successful! Check your email for confirmation!");
+      router.push('/login');
+    }
+  } catch (error) {
       console.log(error);
-      alert(error);
+      alert("Something went wrong. Try again.");
+      errorMessage.value = "Something went wrong. Try again.";
   }
-
-}
-
-async function getUser() {
-  const { data, error } = await client.auth.admin.getUserById('c96ae603-e9ea-49db-92ae-af176aabd164');
-  console.log(data);
-
 }
 
 const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
@@ -199,6 +198,24 @@ const togglePassword = () => {
   width: 24px;
   height: 24px;
 }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.error-popup {
+  color: white;
+  background-color: red;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
 
 .password-strength-bar {
   background-color: #ffffff;
@@ -228,4 +245,6 @@ const togglePassword = () => {
 .strong {
   background-color: #2ecc71;
 }
+
+
 </style>
