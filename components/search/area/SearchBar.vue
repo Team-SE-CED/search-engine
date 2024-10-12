@@ -1,19 +1,10 @@
 <template>
-<<<<<<< HEAD
   <main>
     <form class="container" @submit.prevent="handleSubmit">
       <div class="position-relative">
         <!-- Search Icon -->
-        <img class="search-icon" src="/assets/img/search-icon.png" />
+        <img class="search-icon" src="~/assets/static-images/search-eye.png" />
         <div class="vertical-line"></div>
-=======
-    <main>
-        <form class="container" @submit.prevent="handleSubmit">
-            <div class="position-relative">
-                <!-- Search Icon -->
-                <img class="search-icon" src="~/assets/static-images/search-eye.png" />
-                <div class="vertical-line"></div>
->>>>>>> 0dbd44ba3802ef5981de631fe95b924e13c5780b
 
         <!-- Search Input -->
         <input
@@ -28,7 +19,6 @@
           @keydown.enter="handleSubmit"
         />
 
-<<<<<<< HEAD
         <!-- Search Suggestions Dropdown -->
         <ul v-if="hasSearchSuggestions" class="suggestions-list">
           <li
@@ -38,21 +28,11 @@
           >
             <img
               class="suggestion-search-icon"
-              src="/assets/img/search-icon.png"
+              src="~/assets/static-images/search-eye.png"
             />
             {{ suggestion.title }}
           </li>
         </ul>
-=======
-                <!-- Search Suggestions Dropdown -->
-                <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
-                        @click="redirectTo(suggestion.id)">
-                        <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
-                        {{ suggestion.title }}
-                    </li>
-                </ul>
->>>>>>> 0dbd44ba3802ef5981de631fe95b924e13c5780b
 
         <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
