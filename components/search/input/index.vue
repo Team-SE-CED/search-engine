@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import "../assets/global_style1/bootstrap.min.css";
+import "../bootstrap-css/global_style1/bootstrap.min.css";
 
 const props = defineProps({
     searchQuery: String

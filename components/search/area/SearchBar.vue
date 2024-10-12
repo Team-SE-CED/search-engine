@@ -13,7 +13,7 @@
                 <ul v-if="hasSearchSuggestions" class="suggestions-list">
                     <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
                         @click="redirectTo(suggestion.id)">
-                        <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+                        <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
                         {{ selectedSuggestion(suggestion) }}
                     </li>
                 </ul>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import "../bootstrap/global_style1/bootstrap.min.css";
+import "../bootstrap-css/global_style1/bootstrap.min.css";
 import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory()

@@ -12,7 +12,7 @@
         <!-- Search Suggestions Dropdown -->
         <ul v-if="hasSearchSuggestions" class="suggestions-list">
           <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id" @click="redirectTo(suggestion.id)">
-            <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+            <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
             {{ selectedSuggestion(suggestion) }}
           </li>
         </ul>
