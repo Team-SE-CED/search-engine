@@ -26,11 +26,7 @@
         </div>
   
         <div class="right-content">
-          <div class="menu-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <LineMdMenu/>
         </div>
       </header>
   
@@ -94,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+import LineMdMenu from '~/assets/svg-images/LineMdMenu.vue'; 
 import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue'; 
 </script>
 
@@ -108,7 +105,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
 }
   
 .header {
-  background-color: #b70000;
+  background-color: #B70536;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -187,12 +184,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   .search-input:focus {
     outline: none;
   }
-  
-  .filter-container {
-    display: flex;
-    align-items: center;
-  }
-  
+ 
   .separator {
     width: 1px;
     height: 20px;
@@ -202,8 +194,9 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   
   .filter {
     font-size: 14px;
-    color: #333;
+    color: #8d8d8d; 
     cursor: pointer;
+    margin-left: 2px;
   }
   
   .right-content {
@@ -216,12 +209,15 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
     flex-direction: column;
     cursor: pointer;
   }
-  
-  .menu-icon span {
-    height: 3px;
-    width: 25px;
-    background-color: white;
-    margin: 3px 0;
+
+  .arrow-down {
+    margin-left: 30px;
+    border: solid #B70536;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
   }
   
   .main-content {
@@ -311,23 +307,6 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
     padding-left: 10px;
   }
   
-  .filter {
-    font-size: 14px;
-    color: #8d8d8d; 
-    cursor: pointer;
-    margin-left: 2px;
-  }
-  
-  .arrow-down {
-    margin-left: 30px;
-    border: solid #B70536; /* Red color for arrow */
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 2px;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-  }
-  
   .paper-details-row {
     display: flex;
     justify-content: space-between;
@@ -379,7 +358,6 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
 .btn:hover {
   background-color: #900000; 
 }
-  
 
   .abstract p {
     font-size: 14px;

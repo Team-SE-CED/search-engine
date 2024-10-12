@@ -31,10 +31,10 @@ defineComponent({
 
 <style scoped>
 .btn-icon1 {
-  margin-right:5px; /* Adjusts spacing between icon and text */
-  display: inline-block; /* Ensure it behaves as an inline element */
-  vertical-align: middle; /* Center vertically with text */ 
-  width: 25px;  /* Size of the icon */
+  margin-right:5px; 
+  display: inline-block; 
+  vertical-align: middle; 
+  width: 25px;  
   height: 25px;
 }
 </style>

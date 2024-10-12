@@ -4,7 +4,7 @@
     <form class="container" action="/search" method="GET">
       <div class="position-relative">
         <!-- Search Icon -->
-        <img class="search-icon" src="/assets/img/search-icon.png" />
+        <img class="search-icon" src="~/assets/static-images/search-eye.png" />
         <div class="vertical-line"></div>
 
         <!-- su-logo -->
@@ -23,7 +23,7 @@
         <!-- Search Suggestions Dropdown -->
         <ul v-if="searchQuery.length" class="suggestions-list">
           <li v-for="suggestion in suggestions" :key="suggestion">
-            <img class="suggestion-search-icon" src="/assets/img/search-icon.png" />
+            <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
             {{ suggestion }}
           </li>
         </ul>
@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 
-import "../assets/global_style1/bootstrap.min.css";
+import "../bootstrap-css/global_style1/bootstrap.min.css";
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
