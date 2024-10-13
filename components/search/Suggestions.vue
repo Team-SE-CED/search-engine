@@ -9,7 +9,6 @@
 
 <script setup lang="ts">
 import "../bootstrap-css/global_style1/bootstrap.min.css";
-import { defineProps, defineEmits, computed } from 'vue';
 import type { PaperUI } from '~/types/research-paper-ui';
 
 // Props definition

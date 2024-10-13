@@ -1,7 +1,7 @@
 <template>
     <div class="filter-dropdown dropdown">
         <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
-            {{ selectedFilter ? selectedFilter.label : "Filters" }}
+            {{ filterLabel }}
         </button>
         <ul class="dropdown-menu" :class="{ show: isOpen }">
             <li v-for="filterItem in filter" :key="filterItem.value" @click="selectFilter(filterItem)">
@@ -31,6 +31,10 @@ const selectedYear = ref<number>()
 function toggleFilterDropdown() {
     isOpen.value = !isOpen.value;
 };
+
+const filterLabel = computed(() => {
+    return selectedFilter.value ? selectedFilter.value.label : "Filters";
+})
 
 function selectFilter(filterItem: Filters) {
     toggleFilterDropdown();
