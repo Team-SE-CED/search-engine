@@ -10,13 +10,9 @@
                     @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
                 <!-- Search Suggestions Dropdown -->
-                <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredPapers.slice(0, 8)" :key="suggestion.id"
-                        @click="redirectTo(suggestion.id)">
-                        <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
-                        {{ selectedSuggestion(suggestion) }}
-                    </li>
-                </ul>
+                <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
+                    :searchField="selectedSearchField" :showSuggestions="showSuggestions"
+                    @suggestion-click="redirectTo" />
 
                 <!-- Filter Dropdown -->
                 <SearchFilters class="search-filters" :filterDropdownState="isOpen"
@@ -44,7 +40,7 @@ const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const researchPaper = ref<PaperUI[]>([]);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const test = ref<string>("title")
+const selectedSearchField = ref<string>("title")
 const isOpen = ref<boolean>(false)
 const selectedYear = ref<string>()
 const selectedDepartment = ref<string>()
@@ -57,7 +53,7 @@ async function fetchPaper() {
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-    return filterPapersFactory(researchPaper.value, searchQuery.value, test.value, selectedYear.value, selectedDepartment.value);
+    return filterPapersFactory(researchPaper.value, searchQuery.value, selectedSearchField.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -108,7 +104,7 @@ function handleSelectedDepartment(selectedDepartmentValue: string) {
 }
 
 function handleSelectedFilter(selectedFilter: string) {
-    test.value = selectedFilter
+    selectedSearchField.value = selectedFilter
 }
 
 function redirectTo(id: number) {
@@ -122,24 +118,11 @@ function handleSubmit() {
     }
 }
 
-function selectedSuggestion(suggestion: PaperUI) {
-    if (test.value === "title") return suggestion.title
-    if (test.value === "Author") return suggestion.author
-    if (test.value === "Date") return suggestion.title
-    if (test.value === "Department") return suggestion.title
-
-    return "No Display"
-}
-
-const hasSearchSuggestions = computed(() => {
-    return showSuggestions.value && filteredPapers.value.length > 0;
-});
-
 onMounted(() => {
     fetchPaper().catch((error) => console.error(error));
     document.addEventListener("click", handleClickOutside);
     document.addEventListener("click", handleClickOutsideFilter);
-    test.value = "title"
+    selectedSearchField.value = "title"
 });
 
 onBeforeUnmount(() => {

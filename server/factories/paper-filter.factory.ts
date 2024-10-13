@@ -1,8 +1,8 @@
 import { PaperUI } from "~/types/research-paper-ui";
 
 export function searchAndFilterPapers(
-  products: PaperUI[],
-  query: string,
+  suggestions: PaperUI[],
+  searchQuery: string,
   selectedFilter: string | null,
   selectedYear?: string,
   selectedDepartment?: string
@@ -11,24 +11,40 @@ export function searchAndFilterPapers(
 
   const selectedFilterModified = selectedFilter.toLowerCase();
 
-  const queryWords = query.trim().split(" ").filter(Boolean);
+  // Check for the special case of the search query being "#"
+  if (searchQuery.trim() === "#") {
+    switch (selectedFilterModified) {
+      case "department":
+        return suggestions.filter((p) => p.department === selectedDepartment);
+      case "date":
+        return suggestions.filter((p) => {
+          const paperYear = new Date(p.date).getFullYear();
+          return !isNaN(paperYear) && paperYear.toString() === selectedYear;
+        });
+
+      default:
+        return suggestions;
+    }
+  }
+
+  const queryWords = searchQuery.trim().split(" ").filter(Boolean);
   if (queryWords.length === 0) return [];
 
   const regexWords = queryWords.map((word) => new RegExp(word, "i")); // 'i' for case-insensitive
 
   switch (selectedFilterModified) {
     case "author":
-      return products.filter((p) =>
+      return suggestions.filter((p) =>
         regexWords.every((regex) => regex.test(p.author?.toLowerCase() || ""))
       );
     case "title":
-      return products.filter((p) =>
+      return suggestions.filter((p) =>
         regexWords.every((regex) => regex.test(p.title?.toLowerCase() || ""))
       );
     case "date":
-      let filteredPapersYear = products;
+      let filteredPapersYear = suggestions;
       if (selectedYear) {
-        filteredPapersYear = products.filter((p) => {
+        filteredPapersYear = suggestions.filter((p) => {
           const paperYear = new Date(p.date).getFullYear().toString();
           return paperYear === selectedYear;
         });
@@ -38,9 +54,9 @@ export function searchAndFilterPapers(
         regexWords.every((regex) => regex.test(p.title?.toLowerCase() || ""))
       );
     case "department":
-      let filteredPapersDepartment = products;
+      let filteredPapersDepartment = suggestions;
       if (selectedDepartment) {
-        filteredPapersDepartment = products.filter((p) => {
+        filteredPapersDepartment = suggestions.filter((p) => {
           return p.department === selectedDepartment;
         });
       }
