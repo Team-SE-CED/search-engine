@@ -4,7 +4,6 @@ enum FilterList {
   None = "None",
   Department = "Department",
   Date = "Date",
-  Author = "Author",
 }
 
 // Store FilterList in filters for easy updating and scalability without re-exporting each filter.
