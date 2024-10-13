@@ -23,11 +23,27 @@
         </li>
         <li>
           <div class="number">05.</div>
-          <div class="menu-text">Logout</div>
+          <div class="menu-text" @click="logout">Logout</div>
         </li>
       </ul>
     </div>
 </template>
+<script setup lang="ts">
+const client = useSupabaseClient();
+const router = useRouter();
+async function logout() {
+  try {
+    const { error } = await client.auth.signOut();
+    if (error) throw error;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+  finally {
+    alert("Logged Out Successfully!");
+    router.push('/login');
+  }
+}
+</script>
   
 <style scoped>
 
