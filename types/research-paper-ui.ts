@@ -3,4 +3,6 @@ export type PaperUI = {
   date: string;
   imgUrl: string;
   title: string;
+  author: string;
+  department: string;
 };
