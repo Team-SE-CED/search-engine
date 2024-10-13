@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="password-strength-bar">
-          <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage + '%' }"></div>
+          <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage }"></div>
         </div>
       </div>
       <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
@@ -102,10 +102,23 @@ const length = password.value.length;
 
 const passwordStrengthPercentage = computed(() => {
 const length = password.value.length;
-  if (length > 16) return 100;
-  if (length > 12) return 75;
-  if (length > 8) return 50;
-  return length > 0 ? 25 : 0;
+let percentage;
+  if (length > 16) {
+    percentage = 100;
+  }
+  else if (length > 12) {
+    percentage = 75;
+  }
+  else if (length > 8) {
+    percentage = 50;
+  }
+  else if (length > 0) {
+    percentage = 25;
+  }
+  else {
+    percentage = 0;
+  }
+  return percentage + '%';
 });
 
 const passwordStrengthClass = computed(() => passwordStrength.value);
