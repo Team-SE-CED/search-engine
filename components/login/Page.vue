@@ -36,7 +36,8 @@
               <a href="#">Forgot password?</a>
             </div>
           </div>
-
+          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
+          <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -59,24 +60,37 @@ const showPassword = ref(false);
 const rememberMe = ref(false);
 const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
+const errorMessage = ref('');
+const fadeOut = ref(false);
+const successMessage = ref('');
 
 async function login() {
   try {
-    const { data, error } = await client.auth.signInWithPassword({
+    fadeOut.value = false;
+    const { error } = await client.auth.signInWithPassword({
       email: email.value,
       password: password.value
     });
     
     if (error) {
-      alert(error.message);
-    };
-
-    router.push("/welcome");
-    console.log("Logging in with", email.value, password.value);
-    alert("Logged in successfully!");
-
-  } catch (error: any) {
-    alert("Invalid Login Credentials!");
+      errorMessage.value = "Incorrect Email or Password. Please Try again.";
+      setTimeout(() => {
+        fadeOut.value = true;
+        setTimeout(() => {
+          errorMessage.value = "";
+          fadeOut.value = false;
+        }, 500);
+      }, 3000);
+    }
+    else {
+      successMessage.value = "Logged In Successfully";
+      setTimeout(() => {
+        router.push('/welcome');
+      }, 3000);
+    }
+    
+  } catch (error) {
+    errorMessage.value = "Something went wrong. Try again.";
   }
 }
 
@@ -275,5 +289,49 @@ label.active {
 
 .login-button:hover {
   background-color: #a00025;
+}
+
+.error-popup {
+  color: white;
+  background-color: red;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.success-popup {
+  color: white;
+  background-color: green;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  opacity: 1;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 </style>
