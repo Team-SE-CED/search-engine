@@ -1,75 +1,55 @@
 <template>
-    <!-- search bar div -->
+  <main>
     <div class="fixed-search-bar">
-        <form class="container" @submit.prevent="handleSubmit()">
-            <div class="position-relative">
-                <!-- Search Icon -->
-                <img class="search-icon" src="~/assets/static-images/search-eye.png" />
-                <div class="vertical-line"></div>
+      <form class="container" @submit.prevent="handleSubmit()">
+        <div class="position-relative">
+          <!-- Search Icon -->
+          <img class="search-icon" src="~/assets/static-images/search-eye.png" />
+          <div class="vertical-line"></div>
 
-        <!-- Search Input -->
-        <input
-          class="form-control form-control-lg pl-5 search-input"
-          type="text"
-          name="search"
-          placeholder="Search..."
-          autocomplete="off"
-          v-model="searchQuery"
-          @input="filteredKeywords"
-          @focus="showSuggestions = true"
-          @keydown.enter="handleSubmit"
-        />
+          <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
+            @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
-                <!-- Search Suggestions Dropdown -->
-                <ul v-if="hasSearchSuggestions" class="suggestions-list">
-                    <li v-for="suggestion in filteredSuggestions.slice(0, 8)" :key="suggestion.id"
-                        @click="redirectTo(suggestion.id)">
-                        <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
-                        {{ suggestion.title }}
-                    </li>
-                </ul>
+          <!-- Search Suggestions Dropdown -->
+          <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
+            :searchField="selectedSearchField" :showSuggestions="showSuggestions" @suggestion-click="redirectTo" />
 
-        <!-- Filter Dropdown -->
-        <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button">
-            <!-- {{ selectedFilter ? selectedFilter.label : "Filters" }} -->
-            {{ "Filters" }}
-          </button>
-          <ul class="dropdown-menu" :class="{ show: isOpen }">
-            <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#">{{ filter.label }}</a>
-            </li>
-          </ul>
+          <!-- Filter Dropdown -->
+          <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
+            @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
+            @selectedDepartment="handleSelectedDepartment" />
         </div>
-      </div>
 
-      <!-- Hidden input to include selected filter in form submission -->
-      <input type="hidden" name="filter" :value="selectedFilter?.value" />
-    </form>
-  </div>
+        <!-- Hidden input to include selected filter in form submission -->
+        <input type="hidden" name="filter" :value="selectedFilter?.value" />
+      </form>
+    </div>
+  </main>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
-const { getResearchPaper } = usePaper();
-const { filterPapers, filterLastKeyword } = usePaperFactory();
-const { setSuggestedPaperStore } = usePaperStores();
+const { getResearchPaper } = usePaper()
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory()
+const { setSuggestedPaperStore } = usePaperStores()
 const router = useRouter();
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
-const filters = ref<{ value: string; label: string }[]>([]);
-const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
+const selectedSearchField = ref<string>("title")
+const isOpen = ref<boolean>(false)
+const selectedYear = ref<string>()
+const selectedDepartment = ref<string>()
 
 // Functions
 
 // Search Engine Algorithm
-const filteredSuggestions = computed((): PaperUI[] => {
-  return filterPapers(researchPaper.value, searchQuery.value);
+const filteredPapers = computed((): PaperUI[] => {
+  return filterPapersFactory(researchPaper.value, searchQuery.value, selectedSearchField.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -101,7 +81,44 @@ const hasSearchSuggestions = computed(() => {
 });
 
 function redirectTo(id: number) {
-  router.push(`/search-result/${id}`);
+  router.push(`/result/${id}`);
+}
+
+function selectedSuggestion(suggestion: PaperUI) {
+  if (selectedSearchField.value === "title") return suggestion.title
+  if (selectedSearchField.value === "Author") return suggestion.author
+  if (selectedSearchField.value === "Date") return suggestion.title
+  if (selectedSearchField.value === "Department") return suggestion.title
+
+  return "No Display"
+}
+
+const handleClickOutsideFilter = (event: MouseEvent) => {
+  const filtersElement = document.querySelector(".search-filters"); // Assuming you add a class to your SearchFilters component
+
+  if (
+    isOpen.value &&
+    filtersElement &&
+    !filtersElement.contains(event.target as Node)
+  ) {
+    isOpen.value = false; // or any other logic to close your filters
+  }
+};
+
+function handleFilterDropdownState(isOpenValue: boolean) {
+  isOpen.value = isOpenValue
+}
+
+function handleSelectedYear(selectedYearValue: string) {
+  selectedYear.value = selectedYearValue
+}
+
+function handleSelectedDepartment(selectedDepartmentValue: string) {
+  selectedDepartment.value = selectedDepartmentValue
+}
+
+function handleSelectedFilter(selectedFilter: string) {
+  selectedSearchField.value = selectedFilter
 }
 
 async function fetchPaper() {
@@ -110,10 +127,11 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
+
   showSuggestions.value = false;
 
   if (searchQuery.value) {
-    setSuggestedPaperStore(filteredSuggestions.value);
+    setSuggestedPaperStore(filteredPapers.value)
   }
 
   const queryParams: any = {
@@ -125,8 +143,8 @@ function handleSubmit() {
   }
 
   router.push({
-    path: "/search-result",
-    query: queryParams,
+    path: '/result',
+    query: queryParams
   });
 }
 
@@ -139,12 +157,15 @@ watch(
 );
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
   fetchPaper().catch((error) => console.error(error));
+  document.addEventListener("click", handleClickOutside);
+  document.addEventListener("click", handleClickOutsideFilter);
+  selectedSearchField.value = "title"
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleClickOutsideFilter);
 });
 </script>
 
@@ -193,9 +214,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   z-index: 1000;
-  /* Ensure it appears above other content */
-  padding: 1.5vh;
-  /* Optional: padding for visual space */
+  padding: 4px;
 }
 
 .container {
@@ -207,14 +226,6 @@ onBeforeUnmount(() => {
   border-color: gray;
   border-radius: 50px;
   height: 40px;
-}
-
-.filter-dropdown {
-  position: absolute;
-  right: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
 }
 
 button.dropdown-toggle:focus {
@@ -260,7 +271,6 @@ input.form-control {
   background-color: #484848;
 }
 
-/* Suggestions List Styles */
 .suggestions-list {
   position: absolute;
   top: 40px;
@@ -268,8 +278,9 @@ input.form-control {
   width: 100%;
   background-color: white;
   border: 1px solid gray;
-  border-radius: 30px;
-  overflow: hidden;
+  border-radius: 50px;
+  z-index: 10;
+  overflow-y: auto;
   list-style: none;
   padding-top: 10px;
   padding-left: 0;

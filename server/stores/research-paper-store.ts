@@ -25,7 +25,7 @@ export const useItemStore = defineStore("papers", () => {
   return {
     getPaperStores,
     setPaperStores,
-    setSuggestedPaperStores,
     getSuggestedPaperStores,
+    setSuggestedPaperStores,
   };
 });

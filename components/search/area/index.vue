@@ -1,3 +1,4 @@
 <template>
+    <SearchAreaMainTitle />
     <SearchAreaSearchBar />
 </template>

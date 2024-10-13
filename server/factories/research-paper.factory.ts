@@ -1,13 +1,15 @@
 import { PaperUI } from "~/types/research-paper-ui";
 import { Paper } from "../types/research-paper-server";
 
-function convertPapersToPaperUI(expense: Paper[]): PaperUI[] {
-  return expense.map((expense) => {
+function convertPapersToPaperUI(paper: Paper[]): PaperUI[] {
+  return paper.map((paper) => {
     return {
-      id: expense.id,
-      date: new Date(expense.created_at).toUTCString(),
-      imgUrl: expense.img_url,
-      title: expense.title,
+      id: paper.id,
+      date: new Date(paper.created_at).toUTCString(),
+      imgUrl: paper.img_url,
+      title: paper.title,
+      author: paper.author,
+      department: paper.department,
     };
   });
 }
