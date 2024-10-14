@@ -9,7 +9,7 @@ export function setSessionData(papers: PaperUI[]) {
 
 export function getSessionData() {
   if (typeof window !== "undefined") {
-    return sessionStorage.getItem("reserachPaperStored");
+    return sessionStorage.getItem("researchPaperStored");
   }
   return null;
 }

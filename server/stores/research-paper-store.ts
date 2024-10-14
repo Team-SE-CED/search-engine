@@ -8,6 +8,7 @@ export const useItemStore = defineStore("papers", () => {
   const suggestedPapers = ref<PaperUI[]>([]);
 
   const getSession = getSessionData();
+
   if (getSession !== null) {
     suggestedPapers.value = JSON.parse(getSession);
   }

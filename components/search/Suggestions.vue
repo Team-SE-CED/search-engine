@@ -1,6 +1,7 @@
 <template>
     <ul v-if="hasSearchSuggestions" :class="suggestionsClass">
-        <li v-for="suggestion in suggestions.slice(0, 8)" :key="suggestion.id" @click="handleClick(suggestion.id)">
+        <li v-for="suggestion in suggestions.slice(0, 8)" :key="suggestion.id" @click="handleClick(suggestion.id)"
+            class="suggestion-item">
             <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
             {{ selectedSuggestion(suggestion) }}
         </li>
@@ -56,48 +57,6 @@ function selectedSuggestion(suggestion: PaperUI) {
 </script>
 
 <style scoped>
-.container {
-    width: 60vw;
-}
-
-.form-control {
-    border-color: gray;
-    border-radius: 50vh;
-    height: 10vh;
-}
-
-button.dropdown-toggle:focus {
-    border: none;
-}
-
-button.dropdown-toggle {
-    font-size: 20px;
-}
-
-.search-icon {
-    position: absolute;
-    left: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 50px;
-    pointer-events: none;
-}
-
-input.form-control {
-    padding-left: 100px;
-    padding-right: 150px;
-}
-
-.vertical-line {
-    position: absolute;
-    right: 130px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 40px;
-    width: 1px;
-    background-color: #484848;
-}
-
 /* Suggestions List Styles */
 .suggestions-list {
     position: absolute;
@@ -110,9 +69,7 @@ input.form-control {
     border-radius: 50px;
     overflow: hidden;
     list-style: none;
-    padding-top: 10px;
-    padding-left: 0;
-    padding-bottom: 10px;
+    padding: 10px 0;
     margin-top: 20px;
 }
 
@@ -128,5 +85,9 @@ input.form-control {
     position: relative;
     height: 50px;
     padding-right: 15px;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
 }
 </style>
