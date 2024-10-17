@@ -112,6 +112,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   justify-content: space-between;
   color: white;
   width: 100%;
+  z-index: 1;
 }
   
 .left-content {
@@ -164,7 +165,12 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
   margin-right: 100px;
   background-color: white;
   width: 550px; 
-  position: relative; 
+  position: relative;
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
   
 .search-icon {
@@ -336,6 +342,7 @@ import LineMdDownloadingLoop from '~/assets/svg-images/LineMdDownloadingLoop.vue
     border-radius: 4px;
     cursor: pointer;
     font-family: Verdana;
+    font-size: 14px;
   }
   
   .actions .btn:hover {

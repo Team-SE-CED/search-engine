@@ -1,5 +1,4 @@
 <template>
-
   <body>
     <div class="container">
       <div class="split left" @click.native="goToLogin">
@@ -7,9 +6,9 @@
           <h1 class="login-text">LOG IN</h1>
         </div>
       </div>
-      <div class="logo">
+      <!-- <div class="logo">
         <img src="~assets/static-images/su-logo.png" alt="Center Logo" />
-      </div>
+      </div> -->
       <div class="split right" @click.native="goToSignup">
         <div class="content">
           <h1 class="signup-text">SIGN UP</h1>
@@ -27,9 +26,7 @@ const goToLogin = () => {
 const goToSignup = () => {
   router.push('/signup')
 }
-
 </script>
-
 
 <style scoped>
 body,
@@ -47,6 +44,7 @@ html {
   font-family: Segoe UI;
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .split {
@@ -56,11 +54,11 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: width 0.4s ease, background-color 0.4s ease;
+  transition: width 0.5s ease, background-color 0.5s ease;
 }
 
 .left {
-  background-color: #B70536;
+  background-color: #99012c;
 }
 
 .right {
@@ -71,7 +69,7 @@ html {
 .signup-text {
   font-size: 3rem;
   font-weight: bold;
-  transition: transform 0.4s ease, color 0.4s ease;
+  transition: transform 0.5s ease, color 0.5s ease;
   font-family: Segoe UI;
 }
 
@@ -84,21 +82,21 @@ html {
 }
 
 .left:hover {
-  width: 70%;
+  width: 80%;
 }
 
 .right:hover {
-  width: 70%;
+  width: 80%;
 }
 
 .left:hover .login-text {
-  transform: scale(1.3);
-  transition: transform 0.4s ease;
+  transform: scale(1.5);
+  transition: transform 0.5s ease;
 }
 
 .right:hover .signup-text {
-  transform: scale(1.3);
-  transition: transform 0.4s ease;
+  transform: scale(1.5);
+  transition: transform 0.5s ease;
 }
 
 .content {
@@ -113,12 +111,22 @@ html {
   z-index: 10;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-210%, -130%);
+  transition: transform 0.4s ease;
 }
 
 .logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+
+.left:hover ~ .logo {
+  transform: translate(-50%, -50%);
+}
+
+.right:hover ~ .logo {
+  transform: translate(500%, -50%);
 }
 </style>

@@ -49,8 +49,8 @@ onMounted(() => {
   margin-right: 20px;
   opacity: 0;
   transform: scale(0.8);
-  animation: morphLogo 2.5s ease-out forwards;
-  animation-delay: 2s;
+  animation: morphLogo 2.2s ease-out forwards;
+  animation-delay: 0.8s;
 }
 
 .animate-separator {
@@ -60,8 +60,8 @@ onMounted(() => {
   margin-left: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   opacity: 0;
-  animation: morphSeparator 2s ease-in forwards;
-  animation-delay: 0s;
+  animation: morphSeparator 1s ease-out forwards;
+  animation-delay: 0.2s;
 }
 
 .animate-text {
@@ -69,8 +69,8 @@ onMounted(() => {
   text-align: left;
   opacity: 0;
   transform: scale(0.9);
-  animation: morphText 2.5s ease-out forwards;
-  animation-delay: 2s;
+  animation: morphText 2.2s ease-out forwards;
+  animation-delay: 0.8s;
 }
 
 h1 {
@@ -82,7 +82,7 @@ h1 {
 @keyframes morphLogo {
   0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateX(30px);
   }
 
   100% {
@@ -97,11 +97,6 @@ h1 {
     transform: scaleY(0);
   }
 
-  50% {
-    opacity: 0.5;
-    transform: scaleY(1.2);
-  }
-
   100% {
     opacity: 1;
     transform: scaleY(1);
@@ -111,7 +106,7 @@ h1 {
 @keyframes morphText {
   0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateX(-30px);
   }
 
   100% {

@@ -101,7 +101,7 @@ async function logout() {
   }
   
   .menu li:hover .menu-text {
-    color: rgb(0, 0, 0); 
+    color: rgb(230, 50, 18); 
     transform: translate(5px, -5px) scale(1.1); 
     transition: transform 0.5s ease, color 0.5s ease; 
   }
