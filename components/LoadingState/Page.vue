@@ -38,7 +38,8 @@
       <div class="cup-handle"></div>
     </div>
     <div class="text">
-         <!-- <h1> KAPE BOSS? </h1> -->
+         <h2> You're offline. </h2>
+         <h2> Have a coffee break! </h2>
       </div>
   </body>
 </template>
@@ -58,7 +59,7 @@ import LineMdMenu from '~/assets/svg-images/LineMdMenu.vue';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: rgb(255, 255, 255);
     overflow-x: hidden;
   }
 
@@ -197,7 +198,7 @@ import LineMdMenu from '~/assets/svg-images/LineMdMenu.vue';
     background-repeat: repeat-x;
     background-position: 0 130px;
     animation: filling 10s infinite;
-    margin: 350px auto 0;
+    margin: 290px auto 0;
     
   }
 
@@ -267,10 +268,12 @@ import LineMdMenu from '~/assets/svg-images/LineMdMenu.vue';
   .text {
     font-family: Segoe UI;
     font-size: 15px;
-    color: #352a22;
+    color: #a0a0a0;
     text-align: center;
     line-height: 3.5; 
     letter-spacing: 2.5px;
+    margin-top: 30px;
+    margin-left: 15px;
 
   }
 </style>

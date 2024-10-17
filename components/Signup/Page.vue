@@ -1,10 +1,16 @@
 <template>
   <div class="header"></div>
   <div class="container">
-    <div class="logo">
-      <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
+    <div class="header-section">
+      <div class="logo">
+        <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
+      </div>
+      <div class="separator"></div>
+      <div class="header-text">CREATE AN ACCOUNT</div>
     </div>
     <form class="signup-form" @submit.prevent="createAccount">
+      <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
+      <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
       <div class="form-row">
         <input type="text" class="input-field" v-model="name" placeholder="Name" />
         <input type="text" class="input-field" v-model="idnum" placeholder="ID no." />
@@ -23,8 +29,6 @@
           <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage }"></div>
         </div>
       </div>
-      <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
-      <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
       <button type="submit" class="signup-btn">SIGN UP</button>
       
     </form>
@@ -140,7 +144,7 @@ const togglePassword = () => {
   color: white;
   padding: 1.5%;
   text-align: center;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .container {
@@ -152,14 +156,31 @@ const togglePassword = () => {
   background-color: #f5f5f5;
 }
 
-.logo {
+.header-section {
+  display: flex;
+  align-items: center;
   margin-bottom: 30px;
 }
 
 .logo-img {
-  width: 250px;
-  height: 250px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
+}
+
+.separator {
+  width: 2.5px;
+  height: 60px;
+  background-color: #B70536;
+  margin: 0 15px;
+}
+
+.header-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #B70536;
+  text-transform: uppercase;
+  font-family: Segoe UI;
 }
 
 .signup-form {
@@ -168,6 +189,11 @@ const togglePassword = () => {
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
+  transition: box-shadow 0.5s ease-in-out; 
+}
+
+.signup-form:focus-within {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
 }
 
 .form-row {
@@ -226,22 +252,27 @@ const togglePassword = () => {
 
 .error-popup {
   color: white;
-  background-color: red;
+  background-color: #d60000;
   padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+  width: 383.5px;
+  border-radius: 4px;
   text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 8px;
+  font-family: Verdana;
+  font-size: 14px;
 }
 
 .success-popup {
   color: white;
   background-color: green;
   padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+  width: 383.5px;
+  border-radius: 4px;
   text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 8px;
+  font-family: Verdana;
 }
 
 @keyframes fadeIn {
@@ -295,6 +326,4 @@ const togglePassword = () => {
     opacity: 0;
   }
 }
-
-
 </style>
