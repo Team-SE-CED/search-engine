@@ -2,14 +2,14 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/supabase",'@nuxt/ui'],
+  modules: ["@nuxtjs/supabase", "@pinia/nuxt","@nuxt/ui"],
   supabase: {
     redirect: true,
     redirectOptions: {
-      login: "/login",
+      login: "/selector",
       callback: "/confirm",
       include: undefined,
-      exclude: [],
+      exclude: ["/signup", "/login"],
       cookieRedirect: false,
     },
   },
