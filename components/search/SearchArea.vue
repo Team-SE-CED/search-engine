@@ -17,20 +17,16 @@
             {{ suggestion.title }}
           </li>
         </ul>
-
-        <!-- Filter Dropdown -->
+      
+          <!-- Filter Dropdown -->
         <div class="filter-dropdown dropdown">
-          <button class="btn dropdown-toggle" type="button" @click="toggleDropdown">
-            {{ selectedFilter ? selectedFilter.label : "Filters" }}
-          </button>
-          <ul class="dropdown-menu" :class="{ show: isOpen }">
-            <li v-for="filter in filters" :key="filter.value">
-              <a class="dropdown-item" href="#" @click.prevent="selectFilter(filter)">{{ filter.label }}</a>
-            </li>
-          </ul>
+          <DropdownFilter/> 
         </div>
+       
+          
       </div>
-
+      
+             
       <!-- Hidden input to include selected filter in form submission -->
       <input type="hidden" name="filter" :value="selectedFilter?.value" />
     </form>
@@ -41,24 +37,17 @@
 import "../assets/global_style1/bootstrap.min.css";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
+import DropdownFilter from "./DropdownFilter.vue";
 const { getResearchPaper } = usePaper();
 
-// Declarations
-const filters = ref<{ value: string; label: string }[]>([
-  { value: "relevance", label: "Relevance" },
-  { value: "date", label: "Date" },
-  { value: "popularity", label: "Popularity" }
-]);
+
 const isOpen = ref(false);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const products = ref<PaperUI[]>([]);
 const searchQuery = ref("");
 const showSuggestions = ref<boolean>(false);
 
-// Toggle dropdown
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
-};
+
 
 // Select filter
 const selectFilter = (filter: { value: string; label: string }) => {
@@ -168,10 +157,6 @@ button.dropdown-toggle:focus {
 .dropdown-menu {
   padding: 10px 0;
   font-size: 16px;
-}
-
-button.dropdown-toggle {
-  font-size: 20px;
 }
 
 .search-icon {
