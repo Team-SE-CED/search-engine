@@ -6,9 +6,6 @@
           <h1 class="login-text">LOG IN</h1>
         </div>
       </div>
-      <!-- <div class="logo">
-        <img src="~assets/static-images/su-logo.png" alt="Center Logo" />
-      </div> -->
       <div class="split right" @click.native="goToSignup">
         <div class="content">
           <h1 class="signup-text">SIGN UP</h1>
@@ -19,13 +16,13 @@
 </template>
 
 <script setup lang="ts">
-const router = useRouter()
+const router = useRouter();
 const goToLogin = () => {
-  router.push('/login')
-}
+  router.push("/login");
+};
 const goToSignup = () => {
-  router.push('/signup')
-}
+  router.push("/signup");
+};
 </script>
 
 <style scoped>
@@ -78,7 +75,7 @@ html {
 }
 
 .signup-text {
-  color: #B70536;
+  color: #b70536;
 }
 
 .left:hover {
@@ -101,32 +98,5 @@ html {
 
 .content {
   position: relative;
-}
-
-.logo {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  z-index: 10;
-  top: 50%;
-  left: 50%;
-  transform: translate(-210%, -130%);
-  transition: transform 0.4s ease;
-}
-
-.logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
-.left:hover ~ .logo {
-  transform: translate(-50%, -50%);
-}
-
-.right:hover ~ .logo {
-  transform: translate(500%, -50%);
 }
 </style>
