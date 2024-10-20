@@ -6,17 +6,25 @@ export function usePaper() {
   const itemStore = useItemStore();
 
   async function getResearchPaper() {
-    const response = await fetch("/api/get-research-paper");
-    if (!response.ok) {
-      throw new Error("Failed to fetch research paper");
+    try {
+      const response = await fetch("/api/get-research-paper");
+      if (!response.ok) {
+        const errorMessage = `API responded with status: ${response.status} - ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+      const data = await response.json();
+      const paper = data as Paper[];
+      const paperFactory = researchPaperFactory.convertPapersToPaperUI(paper);
+
+      itemStore.setPaperStores(paperFactory);
+
+      return paperFactory;
+    } catch (error) {
+      console.error(
+        `${error}. Unable to fetch research papers at this time. Please try again later.`
+      );
+      return [] as Paper[];
     }
-    const data = await response.json();
-    const paper = data as Paper[];
-    const paperFactory = researchPaperFactory.convertPapersToPaperUI(paper);
-
-    itemStore.setPaperStores(paperFactory);
-
-    return paperFactory;
   }
 
   return { getResearchPaper };
