@@ -9,6 +9,8 @@
         <form @submit.prevent="login">
 
           <div class="form-group">
+            <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
+            <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
             <div class="input-wrapper">
               <label :class="{ active: isEmailActive }" for="email">Silliman Email</label>
               <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus"
@@ -36,8 +38,6 @@
               <a href="#">Forgot password?</a>
             </div>
           </div>
-          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
-          <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -73,7 +73,7 @@ async function login() {
     });
     
     if (error) {
-      errorMessage.value = "Incorrect Email or Password. Please Try again.";
+      errorMessage.value = "Incorrect Email or Password. Please try again.";
       setTimeout(() => {
         fadeOut.value = true;
         setTimeout(() => {
@@ -171,6 +171,11 @@ const togglePassword = () => {
   text-align: center;
   max-width: 400px;
   width: 100%;
+  transition: box-shadow 0.5s ease-in-out; 
+}
+
+.login-box:focus-within {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .form-group {
@@ -293,12 +298,15 @@ label.active {
 
 .error-popup {
   color: white;
-  background-color: red;
+  background-color: #d60000;
   padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 8px;
+  font-family: Verdana;
+  font-size: 12px;
+  margin-bottom: 40px;
 }
 
 @keyframes fadeIn {
@@ -314,11 +322,13 @@ label.active {
   color: white;
   background-color: green;
   padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   text-align: center;
-  opacity: 1;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 8px;
+  font-family: Verdana;
+  font-size: 12px;
+  margin-bottom: 40px;
 }
 
 .fade-out {
