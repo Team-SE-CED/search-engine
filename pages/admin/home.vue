@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AdminDashboard/>
+    <AdminHome/>
   </div>
 </template>
 
