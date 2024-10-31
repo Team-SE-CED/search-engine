@@ -1,4 +1,5 @@
 <template>
+  <title>{{ showPaperTitle }}</title>
   <div class="container-sm">
     <div class="img-wrapper" v-if="isLoading">
       <div class="shimmer-loader"></div>
@@ -49,7 +50,11 @@
           <LineMdDownloadingLoop />
           Request full-text PDF
         </button>
-        <button class="action-button copy-citation" @click="copyCitation">
+        <button
+          class="action-button copy-citation"
+          @click="copyCitation"
+          :disabled="!hasAuthors"
+        >
           <img
             src="~assets/static-images/copy.png"
             alt="Copy Icon"
@@ -63,12 +68,12 @@
       <hr v-if="!isLoading" class="divider" />
 
       <h2 v-if="!isLoading" class="section-title">Abstract</h2>
-      <!-- <div v-else class="shimmer-loader title-shimmer"></div> -->
 
       <p v-if="!isLoading" class="abstract">{{ showPaperAbstract }}</p>
       <div v-else class="shimmer-loader text-shimmer paragraph-shimmer"></div>
     </div>
   </div>
+  <!-- Requested Notification -->
   <ToastRedDialog v-if="isRequested" />
 </template>
 
@@ -109,10 +114,12 @@ const showPaperTitle = computed(() => {
     ? researchPaper.value[0].title
     : "Loading...";
 });
+
 const showPaperDepartment = computed(() => {
   const department = researchPaper.value[0]?.department;
   return department ? department : "N/A";
 });
+
 const showPaperAbstract = computed(() => {
   const abstract = researchPaper.value[0]?.abstract;
   return abstract ? abstract : "N/A";
@@ -137,6 +144,10 @@ const showPaperAuthor = computed(() => {
   return authors ? authors.replace(/,/g, ", ") : "N/A";
 });
 
+const hasAuthors = computed(() => {
+  return showPaperAuthor.value && showPaperAuthor.value !== "N/A";
+});
+
 function requestFullPdf() {
   isRequested.value = true;
 
@@ -145,20 +156,16 @@ function requestFullPdf() {
   }, 10000);
 }
 
-function closeToast() {
-  isRequested.value = false;
-}
-
 function copyCitation() {
   const authors = showPaperAuthor.value;
   const year = showPaperYear.value;
   const title = showPaperTitle.value;
-  const citation = `${authors}. (${year}). ${title}.`;
+  const citation = authors + ". (" + year + "). " + title + ".";
 
   navigator.clipboard.writeText(citation).then(() => {
     copyButtonText.value = "Copied!";
     setTimeout(() => {
-      copyButtonText.value = "Copy Citation"; // Revert back after 4 seconds
+      copyButtonText.value = "Copy Citation";
     }, 4000);
   });
 }
