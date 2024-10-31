@@ -69,7 +69,6 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-danger">+ Add Paper</button>
       </div>
     </div>
 

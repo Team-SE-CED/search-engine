@@ -11,11 +11,15 @@
         </div>
       </div>
       <div class="right-content">
-        <div class="menu-icon">
+        <div class="menu-icon" @click="toggleSidebar">
           <LineMdMenu />
         </div>
       </div>
     </header>
+
+    <div ref="sidebarContainer">
+      <Sidebar v-if="isSidebarVisible" />
+    </div>
 
     <div class="search-bar-container" style="margin-top: 120px">
       <div class="d-flex justify-content-between align-items-center">
@@ -192,9 +196,37 @@
 </template>
 
 <script setup lang="ts">
+import Sidebar from "~/components/Admin/Sidebar.vue";
 import LineMdMenu from "~/assets/svg-images/LineMdMenu.vue";
 import ConfirmationDialog from "~/components/Admin/ConfirmDialog.vue";
 import { ref, onMounted } from "vue";
+
+const isSidebarVisible = ref(false);
+const sidebarContainer = ref<HTMLElement | null>(null);
+
+function toggleSidebar() {
+  isSidebarVisible.value = !isSidebarVisible.value;
+}
+
+const closeSidebar = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    isSidebarVisible.value &&
+    sidebarContainer.value &&
+    !sidebarContainer.value.contains(target) &&
+    !target.closest('.menu-icon') 
+  ) {
+    isSidebarVisible.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", closeSidebar);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", closeSidebar);
+});
 
 const handleConfirm = () => {
   console.log("Item deleted");

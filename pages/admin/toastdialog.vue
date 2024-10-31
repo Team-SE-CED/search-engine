@@ -1,6 +1,8 @@
 <template>
     <div>
-      <AdminToastDialog/>
+      <ToastGreenDialog/>
+      <ToastRedDialog/>
+      <ToastYellowDialog/>
     </div>
   </template>
   

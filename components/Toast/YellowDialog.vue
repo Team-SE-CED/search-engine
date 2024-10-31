@@ -41,6 +41,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
+    margin-bottom: 210px;
     z-index: 1000000;
   }
   
