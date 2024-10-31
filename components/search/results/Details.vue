@@ -45,17 +45,17 @@
       <div v-else class="shimmer-loader text-shimmer"></div>
 
       <div v-if="!isLoading" class="actions">
-        <button class="action-button request-pdf">
+        <button class="action-button request-pdf" @click="requestFullPdf">
           <LineMdDownloadingLoop />
           Request full-text PDF
         </button>
-        <button class="action-button copy-citation">
+        <button class="action-button copy-citation" @click="copyCitation">
           <img
             src="~assets/static-images/copy.png"
-            alt="PDF Icon"
+            alt="Copy Icon"
             class="btn-icon"
           />
-          Copy Citation
+          {{ copyButtonText }}
         </button>
       </div>
       <div v-else class="shimmer-loader button-shimmer"></div>
@@ -69,6 +69,7 @@
       <div v-else class="shimmer-loader text-shimmer paragraph-shimmer"></div>
     </div>
   </div>
+  <ToastRedDialog v-if="isRequested" />
 </template>
 
 <script setup lang="ts">
@@ -77,28 +78,30 @@ import type { PaperUI } from "~/types/research-paper-ui";
 import { useRoute, useRouter } from "vue-router";
 import LineMdDownloadingLoop from "~/assets/svg-images/LineMdDownloadingLoop.vue";
 
-const { id } = useRoute().params; // Get the ID from route params
+const { id } = useRoute().params;
 const { getResearchPaper } = usePaper();
 const router = useRouter();
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
-const isLoading = ref(true); // Loading state
-const paperId = Number(id); // Convert the ID to a number
+const isLoading = ref(true);
+const paperId = Number(id);
+const isRequested = ref(false);
+const copyButtonText = ref("Copy Citation");
 
 onMounted(async () => {
-  await fetchPaper(paperId); // Pass the ID to fetch the specific paper
+  await fetchPaper(paperId);
 });
 
 async function fetchPaper(id: number) {
   const papers = await getResearchPaper();
   const paper = papers.find((p) => p.id === id);
   if (paper) {
-    researchPaper.value = [paper]; // Set to an array with the found paper
+    researchPaper.value = [paper];
   } else {
-    router.push("/not-found"); // Redirect if paper not found
+    router.push("/not-found");
   }
-  isLoading.value = false; // Set loading to false after fetching
+  isLoading.value = false;
 }
 
 const showPaperTitle = computed(() => {
@@ -131,8 +134,34 @@ const showPaperAuthor = computed(() => {
   }
 
   const authors = researchPaper.value[0].author;
-  return authors ? authors.replace(/,/g, " • ") : "N/A";
+  return authors ? authors.replace(/,/g, ", ") : "N/A";
 });
+
+function requestFullPdf() {
+  isRequested.value = true;
+
+  setTimeout(() => {
+    isRequested.value = false;
+  }, 10000);
+}
+
+function closeToast() {
+  isRequested.value = false;
+}
+
+function copyCitation() {
+  const authors = showPaperAuthor.value;
+  const year = showPaperYear.value;
+  const title = showPaperTitle.value;
+  const citation = `${authors}. (${year}). ${title}.`;
+
+  navigator.clipboard.writeText(citation).then(() => {
+    copyButtonText.value = "Copied!";
+    setTimeout(() => {
+      copyButtonText.value = "Copy Citation"; // Revert back after 4 seconds
+    }, 4000);
+  });
+}
 </script>
 
 <style scoped>
