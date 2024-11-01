@@ -2,48 +2,43 @@
   <div class="login-page">
     <div class="header"></div>
     <div class="login-container">
-      <div class="left-content">
-        <img src="~assets/static-images/su-logo.png" class="left-logo" />
-      </div>
       <div class="login-box">
+        <h2 class="olis-title">Welcome to OLIS V2</h2>
         <form @submit.prevent="login">
-
           <div class="form-group">
-            <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
             <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
             <div class="input-wrapper">
               <label :class="{ active: isEmailActive }" for="email">Silliman Email</label>
-              <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus"
-                @blur="handleEmailBlur" required />
+              <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus" @blur="handleEmailBlur" required />
             </div>
           </div>
-
           <div class="form-group">
             <div class="input-wrapper">
               <label :class="{ active: isPasswordActive }" for="password">Password</label>
-              <input :type="passwordInputType" id="password" v-model="password" class="form-control"
-                @focus="handlePasswordFocus" @blur="handlePasswordBlur" required />
+              <input :type="passwordInputType" id="password" v-model="password" class="form-control" @focus="handlePasswordFocus" @blur="handlePasswordBlur" required />
               <div class="eye-icon" v-if="hasPassword" @click="togglePassword">
                 <img :src="eyeIcon" id="eyeicon" />
               </div>
             </div>
           </div>
-
           <div class="form-options">
             <div class="remember-me">
               <input type="checkbox" id="rememberMe" v-model="rememberMe" />
-              <label for="rememberMe"> </label> Remember me
+              <label for="rememberMe"> </label>
             </div>
             <div class="forgot-password">
               <a href="#">Forgot password?</a>
             </div>
           </div>
+          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
     </div>
+    <div class="trademark">2024 © OLIS - Online Library Information System </div>
   </div>
 </template>
+
 
 
 <script setup lang="ts">
@@ -128,50 +123,29 @@ const togglePassword = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f8f8f8;
-}
-
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
   background-color: #B70536;
-  color: white;
-  padding: 1.5%;
-  text-align: center;
-  z-index: 1000;
 }
 
 .login-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   max-width: 1200px;
 }
 
-.left-logo {
-  width: 450px;
-  height: auto;
-  margin-bottom: 20px;
-  margin-left: 30px;
-}
-
-.left-content {
-  flex: 1;
-  padding-right: 30px;
-}
-
 .login-box {
-  background: white;
+  background: rgba(255, 255, 255, 1); /* Semi-transparent white */
+  backdrop-filter: blur(15px); /* Stronger blur for glass effect */
+  -webkit-backdrop-filter: blur(100px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 1); /* Light border for added depth */
   padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Strong shadow for depth */
   text-align: center;
   max-width: 400px;
   width: 100%;
-  transition: box-shadow 0.5s ease-in-out; 
+  transition: box-shadow 0.5s ease-in-out;
 }
 
 .login-box:focus-within {
@@ -224,10 +198,6 @@ label.active {
   color: #B70536;
 }
 
-.password-input-wrapper {
-  position: relative;
-}
-
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -239,15 +209,13 @@ label.active {
 .remember-me {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   font-size: 12px;
   font-family: Segoe UI;
   color: #057fe2;
-
 }
 
 .remember-me input[type="checkbox"] {
-  margin-right: 5px;
+  margin-right: 15px;
 }
 
 .forgot-password {
@@ -282,18 +250,25 @@ label.active {
   background-color: #B70536;
   color: white;
   padding: 10px;
-  width: 40%;
+  width: 35%;
   border: none;
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
-  margin-top: 20px;
-  margin-left: 240px;
   font-family: Verdana;
+  margin-left: 65%;
+  margin-top: 15px;
 }
 
 .login-button:hover {
   background-color: #a00025;
+}
+
+.trademark {
+  font-family: Segoe UI;
+  color: white;
+  font-size: 11px;
+  margin-top: 20px;
 }
 
 .error-popup {
@@ -306,7 +281,7 @@ label.active {
   margin-bottom: 8px;
   font-family: Verdana;
   font-size: 12px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 @keyframes fadeIn {
@@ -328,7 +303,7 @@ label.active {
   margin-bottom: 8px;
   font-family: Verdana;
   font-size: 12px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .fade-out {
@@ -342,6 +317,29 @@ label.active {
   }
   to {
     opacity: 0;
+  }
+}
+
+.olis-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: transparent; /* Make text transparent to show gradient */
+  background: linear-gradient(-45deg, #b5364b, #ff9500, #b5364b);
+  background-size: 200%; /* Set larger than 100% for animation */
+  background-clip: text; /* Use background for text */
+  -webkit-background-clip: text; /* Support for WebKit browsers */
+  animation: rainbowAnimation 2s linear infinite; /* 3-second infinite animation */
+  font-family: Segoe UI;
+  margin-bottom: 40px;
+
+}
+
+@keyframes rainbowAnimation {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: -200%; /* Slide the gradient across the text */
   }
 }
 </style>
