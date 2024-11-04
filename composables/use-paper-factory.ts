@@ -11,14 +11,16 @@ export function usePaperFactory() {
     searchQuery: string,
     selectedFilter: string,
     selectedYear?: string,
-    selectedDepartment?: string
+    selectedDepartment?: string,
+    selectedAbstract?: string
   ) {
     const filteredPaper = searchAndFilterPapers(
       suggestions,
       searchQuery,
       selectedFilter,
       selectedYear,
-      selectedDepartment
+      selectedDepartment,
+      selectedAbstract
     );
 
     return filteredPaper;
