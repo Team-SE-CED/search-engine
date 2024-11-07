@@ -3,7 +3,7 @@
     <div class="header"></div>
     <div class="login-container">
       <div class="login-box">
-        <h2 class="olis-title">Welcome to OLIS V2</h2>
+        <h2 class="olis-title">Login your account</h2>
         <form @submit.prevent="login">
           <div class="form-group">
             <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
@@ -135,13 +135,13 @@ const togglePassword = () => {
 }
 
 .login-box {
-  background: rgba(255, 255, 255, 1); /* Semi-transparent white */
-  backdrop-filter: blur(15px); /* Stronger blur for glass effect */
-  -webkit-backdrop-filter: blur(100px); /* Safari support */
-  border: 1px solid rgba(255, 255, 255, 1); /* Light border for added depth */
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(15px); 
+  -webkit-backdrop-filter: blur(100px); 
+  border: 1px solid rgba(255, 255, 255, 1);
   padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Strong shadow for depth */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); 
   text-align: center;
   max-width: 400px;
   width: 100%;
@@ -323,15 +323,14 @@ label.active {
 .olis-title {
   font-size: 30px;
   font-weight: bold;
-  color: transparent; /* Make text transparent to show gradient */
+  color: transparent; 
   background: linear-gradient(-45deg, #b5364b, #ff9500, #b5364b);
-  background-size: 200%; /* Set larger than 100% for animation */
-  background-clip: text; /* Use background for text */
-  -webkit-background-clip: text; /* Support for WebKit browsers */
-  animation: rainbowAnimation 2s linear infinite; /* 3-second infinite animation */
+  background-size: 200%;
+  background-clip: text; 
+  -webkit-background-clip: text; 
+  animation: rainbowAnimation 2s linear infinite;
   font-family: Segoe UI;
   margin-bottom: 40px;
-
 }
 
 @keyframes rainbowAnimation {
@@ -339,7 +338,7 @@ label.active {
     background-position: 0%;
   }
   100% {
-    background-position: -200%; /* Slide the gradient across the text */
+    background-position: -200%;
   }
 }
 </style>
