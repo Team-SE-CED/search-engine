@@ -5,7 +5,8 @@ export function searchAndFilterPapers(
   searchQuery: string,
   selectedFilter: string | null,
   selectedYear?: string,
-  selectedDepartment?: string
+  selectedDepartment?: string,
+  selectedAbstract?: string
 ): PaperUI[] {
   if (!selectedFilter) return [];
 

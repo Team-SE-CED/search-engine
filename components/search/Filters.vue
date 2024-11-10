@@ -3,7 +3,7 @@
         <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
             {{ filterLabel }}
         </button>
-        <ul class="dropdown-menu" :class="{ show: isOpen }">
+        <ul class="dropdown-menu" :class="{ show: filterDropdownState }">
             <li class="date-slider-container">
                 <div class="title">PUBLISHING YEAR</div>
                 <div class="slider">
@@ -18,33 +18,33 @@
             </li>
             <li class="department-container">
                 <div class="title">DEPARTMENT</div>
-                <div v-for="dept in departments" :key="dept" class="department-item">
-                    <input type="checkbox" :id="dept" v-model="selectedDepartments" :value="dept" @change="emitSelectedDepartments" />
-                    <label :for="dept">{{ dept }}</label>
+                <div v-for="dept in departments" :key="dept.label" class="department-item">
+                    <input type="checkbox" :id="dept.label" v-model="selectedDepartments" :value="dept.value"
+                        @change="emitSelectedDepartments" />
+                    <label :for="dept.label">{{ dept.value }}</label>
                 </div>
             </li>
         </ul>
     </div>
 </template>
 
-
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { filters } from '~/enums/department-filters';
 
 const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear", "selectedDepartment"]);
 const props = defineProps({
     filterDropdownState: Boolean
 });
 
-const isOpen = ref(false);
 const dateRange = ref<[number, number]>([1900, 2099]);
-const departments = ref(["Architecture", "Civil Engineering", "Computer Engineering", "Electrical Engineering", "Mechanical Engineering"]); // Add your departments here
+const departments = ref(filters)
 const selectedDepartments = ref<string[]>([]);
 
 const filterLabel = computed(() => "Filters");
 
 function toggleFilterDropdown() {
-    isOpen.value = !isOpen.value;
+    emit("filterDropdownState", !props.filterDropdownState);
 }
 
 function updateDateRange() {
@@ -57,7 +57,10 @@ function updateDateRange() {
 }
 
 function emitSelectedDepartments() {
+    if (selectedDepartments.value.length === 0) selectedDepartments.value.push("None") //check if empty for better factory handling
+
     emit("selectedDepartment", selectedDepartments.value);
+    console.log("Hello dude my dude my man: " + selectedDepartments.value)
 }
 
 const sliderRangeStyle = computed(() => {

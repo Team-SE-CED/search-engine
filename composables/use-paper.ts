@@ -23,7 +23,7 @@ export function usePaper() {
       console.error(
         `${error}. Unable to fetch research papers at this time. Please try again later.`
       );
-      return [] as Paper[];
+      return [];
     }
   }
 
