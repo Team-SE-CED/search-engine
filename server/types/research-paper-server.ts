@@ -5,4 +5,5 @@ export type Paper = {
   title: string;
   author: string;
   department: string;
+  abstract: string;
 };

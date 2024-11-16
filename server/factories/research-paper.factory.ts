@@ -10,6 +10,7 @@ function convertPapersToPaperUI(paper: Paper[]): PaperUI[] {
       title: paper.title,
       author: paper.author,
       department: paper.department,
+      abstract: paper.abstract,
     };
   });
 }

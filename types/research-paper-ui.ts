@@ -5,4 +5,5 @@ export type PaperUI = {
   title: string;
   author: string;
   department: string;
+  abstract: string;
 };

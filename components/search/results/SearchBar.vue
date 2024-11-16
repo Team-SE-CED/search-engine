@@ -4,20 +4,38 @@
       <form class="container" @submit.prevent="handleSubmit()">
         <div class="position-relative">
           <!-- Search Icon -->
-          <img class="search-icon" src="~/assets/static-images/search-eye.png" />
+          <img
+            class="search-icon"
+            src="~/assets/static-images/search-eye.png"
+          />
           <div class="vertical-line"></div>
 
-          <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
-            @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
+          <SearchInput
+            class="form-control form-control-lg pl-5 search-input"
+            v-model="searchQuery"
+            @input="filteredKeywords"
+            @focus="showSuggestions = true"
+            @enter="handleSubmit"
+          />
 
           <!-- Search Suggestions Dropdown -->
-          <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
-            :searchField="selectedSearchField" :showSuggestions="showSuggestions" @suggestion-click="redirectTo" />
+          <SearchSuggestions
+            :suggestions="filteredPapers"
+            :suggestionsClass="'suggestions-list'"
+            :searchField="selectedSearchField"
+            :showSuggestions="showSuggestions"
+            @suggestion-click="redirectTo"
+          />
 
           <!-- Filter Dropdown -->
-          <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
-            @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
-            @selectedDepartment="handleSelectedDepartment" />
+          <SearchFilters
+            class="search-filters"
+            :filterDropdownState="isOpen"
+            @selectedFilter="handleSelectedFilter"
+            @filterDropdownState="handleFilterDropdownState"
+            @selectedYear="handleSelectedYear"
+            @selectedDepartment="handleSelectedDepartment"
+          />
         </div>
 
         <!-- Hidden input to include selected filter in form submission -->
@@ -30,9 +48,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
-const { getResearchPaper } = usePaper()
-const { filterPapersFactory, filterLastKeyword } = usePaperFactory()
-const { setSuggestedPaperStore } = usePaperStores()
+const { getResearchPaper } = usePaper();
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
+const { setSuggestedPaperStore } = usePaperStores();
 const router = useRouter();
 
 // Declarations
@@ -40,16 +58,22 @@ const researchPaper = ref<PaperUI[]>([]);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const selectedSearchField = ref<string>("title")
-const isOpen = ref<boolean>(false)
-const selectedYear = ref<string>()
-const selectedDepartment = ref<string>()
+const selectedSearchField = ref<string>("title");
+const isOpen = ref<boolean>(false);
+const selectedYear = ref<string>();
+const selectedDepartment = ref<string>();
 
 // Functions
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-  return filterPapersFactory(researchPaper.value, searchQuery.value, selectedSearchField.value, selectedYear.value, selectedDepartment.value);
+  return filterPapersFactory(
+    researchPaper.value,
+    searchQuery.value,
+    selectedSearchField.value,
+    selectedYear.value,
+    selectedDepartment.value
+  );
 });
 
 const filteredKeywords = () => {
@@ -85,12 +109,12 @@ function redirectTo(id: number) {
 }
 
 function selectedSuggestion(suggestion: PaperUI) {
-  if (selectedSearchField.value === "title") return suggestion.title
-  if (selectedSearchField.value === "Author") return suggestion.author
-  if (selectedSearchField.value === "Date") return suggestion.title
-  if (selectedSearchField.value === "Department") return suggestion.title
+  if (selectedSearchField.value === "title") return suggestion.title;
+  if (selectedSearchField.value === "Author") return suggestion.author;
+  if (selectedSearchField.value === "Date") return suggestion.title;
+  if (selectedSearchField.value === "Department") return suggestion.title;
 
-  return "No Display"
+  return "No Display";
 }
 
 const handleClickOutsideFilter = (event: MouseEvent) => {
@@ -106,19 +130,19 @@ const handleClickOutsideFilter = (event: MouseEvent) => {
 };
 
 function handleFilterDropdownState(isOpenValue: boolean) {
-  isOpen.value = isOpenValue
+  isOpen.value = isOpenValue;
 }
 
 function handleSelectedYear(selectedYearValue: string) {
-  selectedYear.value = selectedYearValue
+  selectedYear.value = selectedYearValue;
 }
 
 function handleSelectedDepartment(selectedDepartmentValue: string) {
-  selectedDepartment.value = selectedDepartmentValue
+  selectedDepartment.value = selectedDepartmentValue;
 }
 
 function handleSelectedFilter(selectedFilter: string) {
-  selectedSearchField.value = selectedFilter
+  selectedSearchField.value = selectedFilter;
 }
 
 async function fetchPaper() {
@@ -127,11 +151,10 @@ async function fetchPaper() {
 }
 
 function handleSubmit() {
-
   showSuggestions.value = false;
 
   if (searchQuery.value) {
-    setSuggestedPaperStore(filteredPapers.value)
+    setSuggestedPaperStore(filteredPapers.value);
   }
 
   const queryParams: any = {
@@ -143,8 +166,8 @@ function handleSubmit() {
   }
 
   router.push({
-    path: '/result',
-    query: queryParams
+    path: "/result",
+    query: queryParams,
   });
 }
 
@@ -160,7 +183,7 @@ onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("click", handleClickOutsideFilter);
-  selectedSearchField.value = "title"
+  selectedSearchField.value = "title";
 });
 
 onBeforeUnmount(() => {
@@ -214,7 +237,8 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 4px;
+  /* padding: 4px; */
+  padding-top: 1.5vh;
 }
 
 .container {
