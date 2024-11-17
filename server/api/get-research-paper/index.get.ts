@@ -1,4 +1,4 @@
-import { Paper } from "~/server/types/research-paper-server";
+import { Paper } from "~/types/research-paper-server";
 import { getResearchPaperUseCase } from "~/server/use-case/get-paper";
 
 export default defineEventHandler(async () => {

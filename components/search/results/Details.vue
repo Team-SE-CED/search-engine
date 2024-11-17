@@ -4,24 +4,9 @@
     <div class="img-wrapper" v-if="isLoading">
       <div class="shimmer-loader"></div>
     </div>
-    <div
-      class="img-wrapper"
-      v-else
-      v-for="paper in researchPaper"
-      :key="paper.id"
-    >
-      <img
-        v-if="paper.imgUrl"
-        :src="paper.imgUrl"
-        alt="research_img"
-        class="img-poster"
-      />
-      <img
-        v-else
-        src="https://via.placeholder.com/200x300?text=research"
-        alt="sample poster"
-        class="img-poster"
-      />
+    <div class="img-wrapper" v-else v-for="paper in researchPaper" :key="paper.id">
+      <img v-if="paper.imgUrl" :src="paper.imgUrl" alt="research_img" class="img-poster" />
+      <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
     </div>
 
     <div class="content">
@@ -50,16 +35,8 @@
           <LineMdDownloadingLoop />
           Request full-text PDF
         </button>
-        <button
-          class="action-button copy-citation"
-          @click="copyCitation"
-          :disabled="!hasAuthors"
-        >
-          <img
-            src="~assets/static-images/copy.png"
-            alt="Copy Icon"
-            class="btn-icon"
-          />
+        <button class="action-button copy-citation" @click="copyCitation" :disabled="!hasAuthors">
+          <img src="~assets/static-images/copy.png" alt="Copy Icon" class="btn-icon" />
           {{ copyButtonText }}
         </button>
       </div>
@@ -261,10 +238,12 @@ function copyCitation() {
   height: 24px;
   margin-right: 5px;
 }
+
 .request-pdf {
   background-color: #e4002b;
   color: #fff;
 }
+
 .request-pdf:hover {
   background-color: #900000;
 }
@@ -273,6 +252,7 @@ function copyCitation() {
   background-color: #6c757d;
   color: #fff;
 }
+
 .copy-citation:hover {
   background-color: #474849;
   color: #fff;
@@ -304,7 +284,8 @@ function copyCitation() {
 .button-shimmer,
 .paragraph-shimmer {
   width: 100%;
-  height: 40vh; /* Same height as img-poster */
+  height: 40vh;
+  /* Same height as img-poster */
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -345,6 +326,7 @@ function copyCitation() {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }

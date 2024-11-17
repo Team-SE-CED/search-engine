@@ -1,6 +1,6 @@
 import { researchPaperFactory } from "~/server/factories/research-paper.factory";
-import { useItemStore } from "~/server/stores/research-paper-store";
-import type { Paper } from "~/server/types/research-paper-server";
+import { useItemStore } from "~/server/stores/research-paper.store";
+import type { Paper } from "~/types/research-paper-server";
 
 export function usePaper() {
   const itemStore = useItemStore();

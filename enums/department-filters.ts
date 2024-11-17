@@ -1,4 +1,4 @@
-import type { Filters } from "~/server/types/filters";
+import type { Filters } from "~/types/filters";
 
 enum DepartmentList {
   Architecture = "Architecture",

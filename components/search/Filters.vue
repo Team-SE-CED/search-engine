@@ -7,13 +7,13 @@
             <li class="date-slider-container">
                 <div class="title">PUBLISHING YEAR</div>
                 <div class="slider">
-                    <input type="range" v-model="dateRange[0]" min="1900" max="2099" @input="updateDateRange" />
-                    <input type="range" v-model="dateRange[1]" min="1900" max="2099" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange.lowerYear" min="1900" max="2099" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange.upperYear" min="1900" max="2099" @input="updateDateRange" />
                     <div class="slider-track"></div>
                     <div class="slider-range" :style="sliderRangeStyle"></div>
                 </div>
                 <div class="slider-values">
-                    <span>{{ dateRange[0] }}</span> <span>{{ dateRange[1] }}</span>
+                    <span>{{ dateRange.lowerYear }}</span> <span>{{ dateRange.upperYear }}</span>
                 </div>
             </li>
             <li class="department-container">
@@ -30,14 +30,19 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue';
+import { DateRangeEnum } from '~/enums/date-range';
 import { filters } from '~/enums/department-filters';
+import type { DateRangeType } from '~/types/date-range';
 
 const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear", "selectedDepartment"]);
 const props = defineProps({
     filterDropdownState: Boolean
 });
 
-const dateRange = ref<[number, number]>([1900, 2099]);
+const dateRange = ref<DateRangeType>({
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+});
 const departments = ref(filters)
 const selectedDepartments = ref<string[]>([]);
 
@@ -48,24 +53,21 @@ function toggleFilterDropdown() {
 }
 
 function updateDateRange() {
-    if (dateRange.value[0] > dateRange.value[1]) {
-        const temp = dateRange.value[0];
-        dateRange.value[0] = dateRange.value[1];
-        dateRange.value[1] = temp;
+    if (dateRange.value.lowerYear > dateRange.value.upperYear) {
+        const temp = dateRange.value.upperYear;
+        dateRange.value.lowerYear = dateRange.value.upperYear;
+        dateRange.value.upperYear = temp;
     }
     emit("selectedYear", dateRange.value);
 }
 
 function emitSelectedDepartments() {
-    if (selectedDepartments.value.length === 0) selectedDepartments.value.push("None") //check if empty for better factory handling
-
     emit("selectedDepartment", selectedDepartments.value);
-    console.log("Hello dude my dude my man: " + selectedDepartments.value)
 }
 
 const sliderRangeStyle = computed(() => {
-    const minPercent = ((dateRange.value[0] - 1900) / 199) * 100;
-    const maxPercent = ((dateRange.value[1] - 1900) / 199) * 100;
+    const minPercent = ((dateRange.value.lowerYear - DateRangeEnum.lowerYear) / 199) * 100;
+    const maxPercent = ((dateRange.value.upperYear - DateRangeEnum.lowerYear) / 199) * 100;
     return { left: `${minPercent}%`, right: `${100 - maxPercent}%` };
 });
 </script>

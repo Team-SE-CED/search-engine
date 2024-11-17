@@ -4,38 +4,20 @@
       <form class="container" @submit.prevent="handleSubmit()">
         <div class="position-relative">
           <!-- Search Icon -->
-          <img
-            class="search-icon"
-            src="~/assets/static-images/search-eye.png"
-          />
+          <img class="search-icon" src="~/assets/static-images/search-eye.png" />
           <div class="vertical-line"></div>
 
-          <SearchInput
-            class="form-control form-control-lg pl-5 search-input"
-            v-model="searchQuery"
-            @input="filteredKeywords"
-            @focus="showSuggestions = true"
-            @enter="handleSubmit"
-          />
+          <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
+            @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
           <!-- Search Suggestions Dropdown -->
-          <SearchSuggestions
-            :suggestions="filteredPapers"
-            :suggestionsClass="'suggestions-list'"
-            :searchField="selectedSearchField"
-            :showSuggestions="showSuggestions"
-            @suggestion-click="redirectTo"
-          />
+          <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
+            :searchField="selectedSearchField" :showSuggestions="showSuggestions" @suggestion-click="redirectTo" />
 
           <!-- Filter Dropdown -->
-          <SearchFilters
-            class="search-filters"
-            :filterDropdownState="isOpen"
-            @selectedFilter="handleSelectedFilter"
-            @filterDropdownState="handleFilterDropdownState"
-            @selectedYear="handleSelectedYear"
-            @selectedDepartment="handleSelectedDepartment"
-          />
+          <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
+            @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
+            @selectedDepartment="handleSelectedDepartment" />
         </div>
 
         <!-- Hidden input to include selected filter in form submission -->
@@ -47,6 +29,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { DateRangeEnum } from "~/enums/date-range";
+import type { DateRangeType } from "~/types/date-range";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
@@ -60,8 +44,12 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title");
 const isOpen = ref<boolean>(false);
-const selectedYear = ref<string>();
-const selectedDepartment = ref<string>();
+const selectedYear = ref<DateRangeType>(
+  {
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+  })
+const selectedDepartment = ref<string[]>([])
 
 // Functions
 
@@ -70,7 +58,6 @@ const filteredPapers = computed((): PaperUI[] => {
   return filterPapersFactory(
     researchPaper.value,
     searchQuery.value,
-    selectedSearchField.value,
     selectedYear.value,
     selectedDepartment.value
   );
@@ -133,11 +120,11 @@ function handleFilterDropdownState(isOpenValue: boolean) {
   isOpen.value = isOpenValue;
 }
 
-function handleSelectedYear(selectedYearValue: string) {
+function handleSelectedYear(selectedYearValue: DateRangeType) {
   selectedYear.value = selectedYearValue;
 }
 
-function handleSelectedDepartment(selectedDepartmentValue: string) {
+function handleSelectedDepartment(selectedDepartmentValue: string[]) {
   selectedDepartment.value = selectedDepartmentValue;
 }
 
