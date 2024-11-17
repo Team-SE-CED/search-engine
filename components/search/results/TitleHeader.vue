@@ -16,16 +16,18 @@
 .left-content {
   display: flex;
   align-items: center;
-  gap: 15px;
-  position: relative;
+  gap: 1rem; /* Use rem for responsive gap */
+  position: fixed;
+  top: 1rem; /* Use rem for vertical positioning */
+  left: 1rem; /* Use rem for horizontal positioning */
   z-index: 2;
-  padding-top: 1vh;
+  /* padding-top: 1rem; */
 }
 
 .logo img {
-  width: 55px;
-  height: 55px;
-  margin-left: 20px;
+  width: 3rem; /* Width in rem for responsive image size */
+  height: auto;
+  margin-left: 1rem;
 }
 
 .title {
@@ -36,11 +38,11 @@
 
 .research-title,
 .catalog-title {
-  font-size: 14px;
+  font-size: 1rem; /* Font size in rem for scalability */
   margin: 0;
   line-height: 1.5;
-  letter-spacing: 1.5px;
-  font-family: Segoe UI;
+  letter-spacing: 0.1rem; /* Adjust letter-spacing in rem for responsiveness */
+  font-family: Segoe UI, sans-serif;
   color: white;
 }
 </style>

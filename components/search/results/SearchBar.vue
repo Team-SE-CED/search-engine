@@ -186,23 +186,23 @@ onBeforeUnmount(() => {
 }
 
 .img-card {
-  width: 200px;
-  margin: 10px;
+  width: 12.5rem; /* 200px converted to rem */
+  margin: 0.625rem; /* 10px converted to rem */
   text-align: center;
   z-index: -2;
 }
 
 .img-poster {
-  height: 300px;
-  width: 200px;
-  border-radius: 20px;
+  height: 18.75rem; /* 300px converted to rem */
+  width: 12.5rem; /* 200px converted to rem */
+  border-radius: 1.25rem; /* 20px converted to rem */
 }
 
 .img-title {
-  font-size: 16px;
+  font-size: 1rem; /* 16px converted to rem */
   font-weight: bold;
-  margin-top: 10px;
-  max-width: 200px;
+  margin-top: 0.625rem; /* 10px converted to rem */
+  max-width: 12.5rem; /* 200px converted to rem */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -211,32 +211,33 @@ onBeforeUnmount(() => {
 .img-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: left;
-  gap: 50px;
-  padding: 20px;
+  justify-content: flex-start;
+  gap: 3.125rem; /* 50px converted to rem */
+  padding: 1.25rem; /* 20px converted to rem */
   list-style: none;
 }
 
-/*Search Bar*/
+/* Search Bar */
 .fixed-search-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  /* padding: 4px; */
+  z-index: 4;
   padding-top: 1.5vh;
 }
 
 .container {
-  width: 40%;
+  width: 40vw;
   margin: auto;
 }
 
 .form-control {
   border-color: gray;
   border-radius: 50px;
-  height: 40px;
+  /* height: 3rem;  */
+  max-height: 3rem; /* Matches the intended height */
+  min-width: 100%; /* Ensures it doesn't shrink below container width */
 }
 
 button.dropdown-toggle:focus {
@@ -244,47 +245,47 @@ button.dropdown-toggle:focus {
 }
 
 .dropdown-menu {
-  padding: 10px 0;
-  font-size: 16px;
+  padding: 0.3125rem 0; /* 5px converted to rem */
+  font-size: 1rem; /* 16px converted to rem */
 }
 
 button.dropdown-toggle {
-  font-size: 20px;
+  font-size: 1.2rem; /* 1.2rem for dropdown button font */
 }
 
 .search-icon {
   position: absolute;
-  left: 20px;
+  left: 1.5rem; /* 1.5rem for the distance from the left */
   top: 50%;
   transform: translateY(-50%);
-  height: 30px;
+  height: 1.8rem; /* Scales with zoom */
   pointer-events: none;
 }
 
 input.form-control {
-  padding-left: 60px;
-  padding-right: 150px;
+  padding-left: 4rem; /* 4rem for the padding */
+  padding-right: 10vw; /* Adjust to fit container */
 }
 
 .search-input:focus {
   outline: none;
   border-color: #b70536;
-  box-shadow: 0 0 8px rgba(167, 44, 25, 0.931);
+  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
 }
 
 .vertical-line {
   position: absolute;
-  right: 130px;
+  right: 8vw;
   top: 50%;
   transform: translateY(-50%);
-  height: 30px;
+  height: 1.8rem; /* Similar to the height of the search icon */
   width: 1px;
   background-color: #484848;
 }
 
 .suggestions-list {
   position: absolute;
-  top: 40px;
+  top: 3.5rem; /* Use rem for consistent distance */
   left: 0;
   width: 100%;
   background-color: white;
@@ -293,14 +294,12 @@ input.form-control {
   z-index: 10;
   overflow-y: auto;
   list-style: none;
-  padding-top: 10px;
-  padding-left: 0;
-  padding-bottom: 10px;
-  margin-top: 20px;
+  padding: 0.3125rem 0; /* 5px converted to rem */
+  margin-top: 1rem; /* 1rem for the margin-top */
 }
 
 .suggestions-list li {
-  padding: 10px 30px;
+  padding: 0.3125rem 1.25rem; /* 5px converted to rem */
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
@@ -309,8 +308,8 @@ input.form-control {
 
 .suggestion-search-icon {
   position: relative;
-  height: 50px;
-  padding-right: 15px;
+  height: 2.5rem; /* 40px converted to rem */
+  padding-right: 1rem; /* 1rem for padding */
 }
 
 .suggestions-list li:hover {

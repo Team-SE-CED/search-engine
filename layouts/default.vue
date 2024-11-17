@@ -15,8 +15,17 @@ header {
   width: 100%;
   background-color: #b70536;
   color: white;
-  padding: 2%;
+  padding: 1.5rem; /* Equivalent to 2% padding scaled with rem */
   text-align: center;
   z-index: 1;
+  font-size: 1.2rem; /* Adjust font size with rem for scaling */
+}
+
+/* Optional: Add responsive adjustments for different screen sizes */
+@media (min-width: 768px) {
+  header {
+    padding: 2.4rem 3rem; /* Adjust padding slightly on larger screens */
+    font-size: 1.4rem; /* Adjust font size for larger screens */
+  }
 }
 </style>
