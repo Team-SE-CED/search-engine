@@ -47,13 +47,19 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .right-content {
-  margin-top: 2.5vh;
-  margin-right: 1vw;
-  position: relative;
-  float: right;
-  z-index: 2;
+  position: fixed; /* Position fixed to the viewport */
+  top: 1rem; /* Distance from the top, in rem */
+  right: 1rem; /* Distance from the right, in rem */
+  z-index: 9999;
 }
+
 .menu-icon {
   cursor: pointer;
+  color: white;
+  width: 3rem; /* Adjust the size of the icon */
+  height: 3rem; /* Adjust the size of the icon */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
