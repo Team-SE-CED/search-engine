@@ -145,9 +145,9 @@ onMounted(() => {});
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
-  font-size: 20px;
+  height: 3rem;
+  font-size: 1.5rem;
   color: #888;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 </style>
