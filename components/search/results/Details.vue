@@ -173,26 +173,25 @@ function copyCitation() {
 
 <style scoped>
 .container-sm {
-  margin-top: 5vh;
-  padding: 2vw;
-  width: 60vw;
+  margin-top: 6rem;
+  padding: 2rem;
+  width: 60%;
   border: 1px solid #ddd;
-  border-radius: 1vw;
+  border-radius: 1rem;
   background-color: #fff;
   display: flex;
-  gap: 2vw;
+  gap: 1.5rem;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .img-wrapper {
-  width: 15vw;
-  height: auto;
+  width: 15rem;
 }
 
 .img-poster {
   width: 100%;
-  height: 40vh;
-  border-radius: 1vw;
+  height: 20rem;
+  border-radius: 1rem;
   object-fit: cover;
 }
 
@@ -203,25 +202,25 @@ function copyCitation() {
 .title-section {
   display: flex;
   flex-direction: column;
-  gap: 0.5vh;
+  gap: 0.5rem;
 }
 
 .paperTitle {
-  font-size: 4vh;
+  font-size: 2.5rem;
   font-weight: bold;
   color: #333;
 }
 
 .labels {
   display: flex;
-  gap: 0.5vw;
+  gap: 0.5rem;
 }
 
 .yearLabel,
 .departmentLabel {
-  font-size: 1.8vh;
-  padding: 0.2vh 1vh;
-  border-radius: 0.5vh;
+  font-size: 1rem;
+  padding: 0.2rem 1rem;
+  border-radius: 0.5rem;
   display: inline-block;
 }
 
@@ -236,22 +235,22 @@ function copyCitation() {
 }
 
 .authors {
-  font-size: 1.5vh;
+  font-size: 1rem;
   color: #555;
-  margin: 1vh 0;
+  margin: 0.5rem 0;
 }
 
 .actions {
   display: flex;
-  gap: 1vw;
-  margin-top: 1vh;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .action-button {
-  padding: 0.8vh 1vw;
-  font-size: 1.5vh;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
   border: none;
-  border-radius: 0.5vh;
+  border-radius: 0.5rem;
   cursor: pointer;
   align-items: center;
 }
@@ -279,19 +278,19 @@ function copyCitation() {
 }
 
 .divider {
-  margin: 2vh 0;
+  margin: 1.5rem 0;
   border: none;
   border-top: 1px solid #504e4e;
 }
 
 .section-title {
-  font-size: 2vh;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #333;
 }
 
 .abstract {
-  font-size: 1.6vh;
+  font-size: 1rem;
   color: #444;
   line-height: 1.6;
 }
