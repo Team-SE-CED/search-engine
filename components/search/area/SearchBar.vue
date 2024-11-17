@@ -106,8 +106,6 @@ function handleFilterDropdownState(isOpenValue: boolean) {
 }
 
 function handleSelectedYear(selectedYearValue: DateRangeType) {
-    console.log("selectedYearLower: " + selectedYear.value.lowerYear)
-    console.log("selectedYearHigher: " + selectedYear.value.upperYear)
     selectedYear.value = selectedYearValue
 }
 
