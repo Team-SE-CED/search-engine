@@ -236,7 +236,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 4;
   padding-top: 1.5vh;
 }
 
@@ -248,7 +248,9 @@ onBeforeUnmount(() => {
 .form-control {
   border-color: gray;
   border-radius: 50px;
-  height: 3rem; /* 3rem as the base height for the input */
+  /* height: 3rem;  */
+  max-height: 3rem; /* Matches the intended height */
+  min-width: 100%; /* Ensures it doesn't shrink below container width */
 }
 
 button.dropdown-toggle:focus {
