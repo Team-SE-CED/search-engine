@@ -48,29 +48,29 @@ onMounted(() => {
 <style scoped>
 .toast-container {
   position: fixed;
-  bottom: 2rem; /* Use rem for consistent spacing across zoom levels */
-  right: 2rem;
+  bottom: 20px;
+  right: 20px;
   margin-bottom: 2vh;
   z-index: 3;
 }
 
 .toast {
   width: auto;
-  border-radius: 0.5rem; /* Border radius in rem for scaling */
+  border-radius: 8px;
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
   position: relative;
   opacity: 1;
 }
 
 .toast-body {
-  padding: 1rem; /* Padding in rem */
+  padding: 15px;
 }
 
 .loading-line {
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 0.25rem; /* Height in rem */
+  height: 4px;
   background-color: white;
   width: 100%;
   /* Updated animation to 10s to match the timeout */
