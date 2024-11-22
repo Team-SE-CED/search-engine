@@ -1,5 +1,5 @@
 import { PaperUI } from "~/types/research-paper-ui";
-import { Paper } from "../types/research-paper-server";
+import { Paper } from "../../types/research-paper-server";
 
 function convertPapersToPaperUI(paper: Paper[]): PaperUI[] {
   return paper.map((paper) => {

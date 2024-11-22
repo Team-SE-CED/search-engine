@@ -3,21 +3,21 @@ import {
   searchAndFilterPapers,
   updateResearchPapersByLastKeyword,
 } from "~/server/factories/paper-filter.factory";
+import type { DateRangeType } from "~/types/date-range";
 import type { PaperUI } from "~/types/research-paper-ui";
 
+// Search Engine Algorithm
 export function usePaperFactory() {
   function filterPapersFactory(
     suggestions: PaperUI[],
     searchQuery: string,
-    selectedFilter: string,
-    selectedYear?: string,
-    selectedDepartment?: string,
+    selectedYear: DateRangeType,
+    selectedDepartment: string[],
     selectedAbstract?: string
   ) {
     const filteredPaper = searchAndFilterPapers(
       suggestions,
       searchQuery,
-      selectedFilter,
       selectedYear,
       selectedDepartment,
       selectedAbstract

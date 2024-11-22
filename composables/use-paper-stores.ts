@@ -1,4 +1,4 @@
-import { useItemStore } from "~/server/stores/research-paper-store";
+import { useItemStore } from "~/server/stores/research-paper.store";
 import type { PaperUI } from "~/types/research-paper-ui";
 
 export function usePaperStores() {

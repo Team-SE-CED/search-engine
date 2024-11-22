@@ -3,55 +3,60 @@
         <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
             {{ filterLabel }}
         </button>
-        <ul class="dropdown-menu" :class="{ show: isOpen }">
+        <ul class="dropdown-menu" :class="{ show: filterDropdownState }">
             <li class="date-slider-container">
                 <div class="title">PUBLISHING YEAR</div>
                 <div class="slider">
-                    <input type="range" v-model="dateRange[0]" min="1900" max="2099" @input="updateDateRange" />
-                    <input type="range" v-model="dateRange[1]" min="1900" max="2099" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange.lowerYear" min="1900" max="2099" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange.upperYear" min="1900" max="2099" @input="updateDateRange" />
                     <div class="slider-track"></div>
                     <div class="slider-range" :style="sliderRangeStyle"></div>
                 </div>
                 <div class="slider-values">
-                    <span>{{ dateRange[0] }}</span> <span>{{ dateRange[1] }}</span>
+                    <span>{{ dateRange.lowerYear }}</span> <span>{{ dateRange.upperYear }}</span>
                 </div>
             </li>
             <li class="department-container">
                 <div class="title">DEPARTMENT</div>
-                <div v-for="dept in departments" :key="dept" class="department-item">
-                    <input type="checkbox" :id="dept" v-model="selectedDepartments" :value="dept" @change="emitSelectedDepartments" />
-                    <label :for="dept">{{ dept }}</label>
+                <div v-for="dept in departments" :key="dept.label" class="department-item">
+                    <input type="checkbox" :id="dept.label" v-model="selectedDepartments" :value="dept.value"
+                        @change="emitSelectedDepartments" />
+                    <label :for="dept.label">{{ dept.value }}</label>
                 </div>
             </li>
         </ul>
     </div>
 </template>
 
-
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { DateRangeEnum } from '~/enums/date-range';
+import { filters } from '~/enums/department-filters';
+import type { DateRangeType } from '~/types/date-range';
 
 const emit = defineEmits(["selectedFilter", "filterDropdownState", "selectedYear", "selectedDepartment"]);
 const props = defineProps({
     filterDropdownState: Boolean
 });
 
-const isOpen = ref(false);
-const dateRange = ref<[number, number]>([1900, 2099]);
-const departments = ref(["Architecture", "Civil Engineering", "Computer Engineering", "Electrical Engineering", "Mechanical Engineering"]); // Add your departments here
+const dateRange = ref<DateRangeType>({
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+});
+const departments = ref(filters)
 const selectedDepartments = ref<string[]>([]);
 
 const filterLabel = computed(() => "Filters");
 
 function toggleFilterDropdown() {
-    isOpen.value = !isOpen.value;
+    emit("filterDropdownState", !props.filterDropdownState);
 }
 
 function updateDateRange() {
-    if (dateRange.value[0] > dateRange.value[1]) {
-        const temp = dateRange.value[0];
-        dateRange.value[0] = dateRange.value[1];
-        dateRange.value[1] = temp;
+    if (dateRange.value.lowerYear > dateRange.value.upperYear) {
+        const temp = dateRange.value.upperYear;
+        dateRange.value.lowerYear = dateRange.value.upperYear;
+        dateRange.value.upperYear = temp;
     }
     emit("selectedYear", dateRange.value);
 }
@@ -61,8 +66,8 @@ function emitSelectedDepartments() {
 }
 
 const sliderRangeStyle = computed(() => {
-    const minPercent = ((dateRange.value[0] - 1900) / 199) * 100;
-    const maxPercent = ((dateRange.value[1] - 1900) / 199) * 100;
+    const minPercent = ((dateRange.value.lowerYear - DateRangeEnum.lowerYear) / 199) * 100;
+    const maxPercent = ((dateRange.value.upperYear - DateRangeEnum.lowerYear) / 199) * 100;
     return { left: `${minPercent}%`, right: `${100 - maxPercent}%` };
 });
 </script>
