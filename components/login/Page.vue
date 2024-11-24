@@ -186,7 +186,7 @@ label {
   left: 10px;
   font-family: Segoe UI;
   font-size: 15px;
-  color: #474747;
+  color: #a1a1a1;
   pointer-events: none;
   transform: translateY(-50%);
   transition: 0.3s ease all;
