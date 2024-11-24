@@ -7,7 +7,9 @@
         <form @submit.prevent="login">
           <!-- Name Input -->
           <div class="form-group">
-            <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
+            <div class="success-popup" v-if="successMessage">
+              {{ successMessage }}
+            </div>
             <div class="input-wrapper">
               <label :class="{ active: isNameActive }" for="name">Name</label>
               <input
@@ -25,7 +27,9 @@
           <!-- ID Number Input -->
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: isIdNumActive }" for="idnum">ID No.</label>
+              <label :class="{ active: isIdNumActive }" for="idnum"
+                >ID No.</label
+              >
               <input
                 type="text"
                 id="idnum"
@@ -41,7 +45,9 @@
           <!-- Course Input -->
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: isCourseActive }" for="course">Course</label>
+              <label :class="{ active: isCourseActive }" for="course"
+                >Course</label
+              >
               <input
                 type="text"
                 id="course"
@@ -57,7 +63,9 @@
           <!-- Email Input -->
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: isEmailActive }" for="email">Email</label>
+              <label :class="{ active: isEmailActive }" for="email"
+                >Email</label
+              >
               <input
                 type="email"
                 id="email"
@@ -73,7 +81,9 @@
           <!-- Password Input -->
           <div class="form-group">
             <div class="input-wrapper">
-              <label :class="{ active: isPasswordActive }" for="password">Password</label>
+              <label :class="{ active: isPasswordActive }" for="password"
+                >Password</label
+              >
               <input
                 :type="showPassword ? 'text' : 'password'"
                 id="password"
@@ -84,7 +94,10 @@
                 required
               />
               <div class="eye-icon" v-if="hasPassword" @click="togglePassword">
-                <img :src="showPassword ? eyeOpen : eyeClose" alt="Toggle Password" />
+                <img
+                  :src="showPassword ? eyeOpen : eyeClose"
+                  alt="Toggle Password"
+                />
               </div>
             </div>
             <div class="password-strength-bar">
@@ -96,7 +109,10 @@
           </div>
 
           <!-- Error Message -->
-          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">
+          <div
+            :class="{ 'error-popup': true, 'fade-out': fadeOut }"
+            v-if="errorMessage"
+          >
             {{ errorMessage }}
           </div>
 
@@ -166,11 +182,21 @@ const passwordStrengthPercentage = computed(() => {
 const passwordStrengthClass = computed(() => passwordStrength.value);
 
 // Field Active/Focus States
-const isNameActive = computed(() => name.value.length > 0 || isNameFocused.value);
-const isIdNumActive = computed(() => idnum.value.length > 0 || isIdNumFocused.value);
-const isCourseActive = computed(() => course.value.length > 0 || isCourseFocused.value);
-const isEmailActive = computed(() => email.value.length > 0 || isEmailFocused.value);
-const isPasswordActive = computed(() => password.value.length > 0 || isPasswordFocused.value);
+const isNameActive = computed(
+  () => name.value.length > 0 || isNameFocused.value
+);
+const isIdNumActive = computed(
+  () => idnum.value.length > 0 || isIdNumFocused.value
+);
+const isCourseActive = computed(
+  () => course.value.length > 0 || isCourseFocused.value
+);
+const isEmailActive = computed(
+  () => email.value.length > 0 || isEmailFocused.value
+);
+const isPasswordActive = computed(
+  () => password.value.length > 0 || isPasswordFocused.value
+);
 const hasPassword = computed(() => password.value.length > 0);
 
 // Login Logic
@@ -215,7 +241,6 @@ const togglePassword = () => {
   align-items: center;
   height: 100vh;
   background-color: #800000;
- 
 }
 
 .login-container {
@@ -229,12 +254,12 @@ const togglePassword = () => {
 
 .login-box {
   background: rgba(255, 255, 255, 1);
-  backdrop-filter: blur(15px); 
-  -webkit-backdrop-filter: blur(100px); 
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(100px);
   border: 1px solid rgba(255, 255, 255, 1);
   padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); 
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   text-align: center;
   max-width: 400px;
   width: 100%;
@@ -276,7 +301,7 @@ label {
   left: 10px;
   font-family: Segoe UI;
   font-size: 10px;
-  color: #a1a1a1;
+  color: #838282;
   pointer-events: none;
   transform: translateY(-50%);
   transition: 0.3s ease all;
@@ -286,7 +311,7 @@ label {
 label.active {
   top: -10px;
   font-size: 12px;
-  color: #B70536;
+  color: #b70536;
 }
 
 .form-options {
@@ -338,7 +363,7 @@ label.active {
 }
 
 .login-button {
-  background-color: #B70536;
+  background-color: #b70536;
   color: white;
   padding: 10px;
   width: 100%;
@@ -413,11 +438,11 @@ label.active {
 .olis-title {
   font-size: 30px;
   font-weight: bold;
-  color: transparent; 
+  color: transparent;
   background: linear-gradient(-45deg, #b5364b, #ff9500, #b5364b);
   background-size: 200%;
-  background-clip: text; 
-  -webkit-background-clip: text; 
+  background-clip: text;
+  -webkit-background-clip: text;
   animation: rainbowAnimation 2s linear infinite;
   font-family: Segoe UI;
   margin-bottom: 40px;
@@ -434,7 +459,7 @@ label.active {
 
 .register {
   margin-top: 15px;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   font-size: 14px;
   text-align: center;
   color: #474747;
