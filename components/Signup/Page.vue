@@ -1,75 +1,186 @@
 <template>
-  <div class="header"></div>
-  <div class="container">
-    <div class="header-section">
-      <div class="logo">
-        <img src="~assets/static-images/su-logo.png" alt="Logo" class="logo-img" />
-      </div>
-      <div class="separator"></div>
-      <div class="header-text">CREATE AN ACCOUNT</div>
-    </div>
-    <form class="signup-form" @submit.prevent="createAccount">
-      <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
-      <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
-      <div class="form-row">
-        <input type="text" class="input-field" v-model="name" placeholder="Name" />
-        <input type="text" class="input-field" v-model="idnum" placeholder="ID no." />
-      </div>
-      <input type="text" class="input-field" v-model="course" placeholder="Course" />
-      <input type="email" class="input-field" v-model="email" placeholder="Email" />
-
-      <div class="form-group">
-        <div class="password-input-wrapper">
-          <input :type="passwordInputType" id="password" v-model="password" class="input-field" placeholder="Password" required />
-          <div class="eye-icon" v-if="password.length > 0" @click="togglePassword">
-            <img :src="eyeIcon" id="eyeicon" />
+  <div class="login-page">
+    <div class="header"></div>
+    <div class="login-container">
+      <div class="login-box">
+        <h2 class="olis-title">Create an account</h2>
+        <form @submit.prevent="login">
+          <!-- Name Input -->
+          <div class="form-group">
+            <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
+            <div class="input-wrapper">
+              <label :class="{ active: isNameActive }" for="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                v-model="name"
+                class="form-control"
+                @focus="isNameFocused = true"
+                @blur="isNameFocused = false"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div class="password-strength-bar">
-          <div :class="['strength-indicator', passwordStrengthClass]" :style="{ width: passwordStrengthPercentage }"></div>
-        </div>
+
+          <!-- ID Number Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label :class="{ active: isIdNumActive }" for="idnum">ID No.</label>
+              <input
+                type="text"
+                id="idnum"
+                v-model="idnum"
+                class="form-control"
+                @focus="isIdNumFocused = true"
+                @blur="isIdNumFocused = false"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Course Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label :class="{ active: isCourseActive }" for="course">Course</label>
+              <input
+                type="text"
+                id="course"
+                v-model="course"
+                class="form-control"
+                @focus="isCourseFocused = true"
+                @blur="isCourseFocused = false"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label :class="{ active: isEmailActive }" for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                v-model="email"
+                class="form-control"
+                @focus="isEmailFocused = true"
+                @blur="isEmailFocused = false"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label :class="{ active: isPasswordActive }" for="password">Password</label>
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="password"
+                class="form-control"
+                @focus="isPasswordFocused = true"
+                @blur="isPasswordFocused = false"
+                required
+              />
+              <div class="eye-icon" v-if="hasPassword" @click="togglePassword">
+                <img :src="showPassword ? eyeOpen : eyeClose" alt="Toggle Password" />
+              </div>
+            </div>
+            <div class="password-strength-bar">
+              <div
+                :class="['strength-indicator', passwordStrengthClass]"
+                :style="{ width: passwordStrengthPercentage }"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="login-button">Sign Up</button>
+
+          <!-- Login Link -->
+          <div class="register">
+            <span>Already have an account?</span>
+            <a href="#">Log In</a>
+          </div>
+        </form>
       </div>
-      <button type="submit" class="signup-btn">SIGN UP</button>
-      
-    </form>
-    
+    </div>
+    <div class="trademark">2024 © OLIS - Online Library Information System</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import eyeOpen from '@/assets/static-images/eye-open.png';
-import eyeClose from '@/assets/static-images/eye-close.png';
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import eyeOpen from "@/assets/static-images/eye-open.png";
+import eyeClose from "@/assets/static-images/eye-close.png";
 
+// Initialize Supabase and Router
 const client = useSupabaseClient();
 const router = useRouter();
-const email = ref('');
-const password = ref('');
-const name = ref('');
-const idnum = ref('');
-const course = ref('');
-const errorMessage = ref('');
-const successMessage = ref('');
-const showPassword = ref(false);
-const fadeOut = ref(false);
 
-async function createAccount() {
+// Form State Variables
+const name = ref("");
+const idnum = ref("");
+const course = ref("");
+const email = ref("");
+const password = ref("");
+const showPassword = ref(false);
+
+// Focus State Variables
+const isNameFocused = ref(false);
+const isIdNumFocused = ref(false);
+const isCourseFocused = ref(false);
+const isEmailFocused = ref(false);
+const isPasswordFocused = ref(false);
+
+// Feedback Messages
+const errorMessage = ref("");
+const fadeOut = ref(false);
+const successMessage = ref("");
+
+// Password Strength Computed Properties
+const passwordStrength = computed(() => {
+  const length = password.value.length;
+  if (length > 16) return "strong";
+  if (length > 12) return "medium";
+  if (length > 8) return "weak";
+  return "very-weak";
+});
+
+const passwordStrengthPercentage = computed(() => {
+  const length = password.value.length;
+  if (length > 16) return "100%";
+  if (length > 12) return "75%";
+  if (length > 8) return "50%";
+  if (length > 0) return "25%";
+  return "0%";
+});
+
+const passwordStrengthClass = computed(() => passwordStrength.value);
+
+// Field Active/Focus States
+const isNameActive = computed(() => name.value.length > 0 || isNameFocused.value);
+const isIdNumActive = computed(() => idnum.value.length > 0 || isIdNumFocused.value);
+const isCourseActive = computed(() => course.value.length > 0 || isCourseFocused.value);
+const isEmailActive = computed(() => email.value.length > 0 || isEmailFocused.value);
+const isPasswordActive = computed(() => password.value.length > 0 || isPasswordFocused.value);
+const hasPassword = computed(() => password.value.length > 0);
+
+// Login Logic
+async function login() {
   try {
     fadeOut.value = false;
-    const { error } = await client.auth.signUp({
-    email: email.value,
-    password: password.value,
-    options: {
-      data: {
-         name: name.value,
-         idnum: idnum.value,
-         course: course.value,
-       }
-     }
-    })
-    
-    if (error) {
-      errorMessage.value = "User already registered."
+
+    // Validate Input
+    if (!email.value || !password.value) {
+      errorMessage.value = "Please fill in all required fields.";
       setTimeout(() => {
         fadeOut.value = true;
         setTimeout(() => {
@@ -79,165 +190,133 @@ async function createAccount() {
       }, 3000);
       return;
     }
-    
-    else {
-      successMessage.value = "Success! Check your email for confirmation";
-      setTimeout(() => {
-        router.push('/login');
-      }, 3000);
-      
-    }
+
+    // Simulate Successful Login
+    successMessage.value = "Success! Check your email for confirmation.";
+    setTimeout(() => {
+      router.push("/welcome");
+    }, 3000);
   } catch (error) {
-      console.log(error);
-      errorMessage.value = "Something went wrong. Try again.";
+    errorMessage.value = "An error occurred. Please try again.";
   }
 }
 
-const passwordInputType = computed(() => (showPassword.value ? 'text' : 'password'));
-const eyeIcon = computed(() => (showPassword.value ? eyeOpen : eyeClose));
-
-const passwordStrength = computed(() => {
-const length = password.value.length;
-  if (length > 16) return 'strong';
-  if (length > 12) return 'medium';
-  if (length > 8) return 'weak';
-  return 'very-weak';
-});
-
-const passwordStrengthPercentage = computed(() => {
-const length = password.value.length;
-let percentage;
-  if (length > 16) {
-    percentage = 100;
-  }
-  else if (length > 12) {
-    percentage = 75;
-  }
-  else if (length > 8) {
-    percentage = 50;
-  }
-  else if (length > 0) {
-    percentage = 25;
-  }
-  else {
-    percentage = 0;
-  }
-  return percentage + '%';
-});
-
-const passwordStrengthClass = computed(() => passwordStrength.value);
-
+// Toggle Password Visibility
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 </script>
 
-
 <style scoped>
-
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #B70536;
-  color: white;
-  padding: 1.5%;
-  text-align: center;
-  z-index: 1;
-}
-
-.container {
+.login-page {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
-
-.header-section {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.logo-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-.separator {
-  width: 2.5px;
-  height: 60px;
+  height: 100vh;
   background-color: #B70536;
-  margin: 0 15px;
+ 
 }
 
-.header-text {
-  font-size: 24px;
-  font-weight: bold;
-  color: #B70536;
-  text-transform: uppercase;
-  font-family: Segoe UI;
-}
-
-.signup-form {
-  background-color: white;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  transition: box-shadow 0.5s ease-in-out; 
-}
-
-.signup-form:focus-within {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
-}
-
-.form-row {
+.login-container {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  width: 101%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  z-index: 10;
 }
 
-.input-field {
+.login-box {
+  background: rgba(255, 255, 255, 1);
+  backdrop-filter: blur(15px); 
+  -webkit-backdrop-filter: blur(100px); 
+  border: 1px solid rgba(255, 255, 255, 1);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); 
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+.form-group {
+  margin-bottom: -10px;
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 38px;
+}
+
+input.form-control {
   width: 95%;
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1.5px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: Segoe UI;
-}
-
-.signup-btn {
-  background-color: #c40030;
-  color: white;
-  padding: 10px;
-  width: 101%;
-  border: none;
+  border: 1px solid #e0e0e0;
   border-radius: 5px;
-  cursor: pointer;
   font-size: 16px;
-  font-family: Verdana;
+  font-family: Segoe UI;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  transition: background-color 0.3s ease;
 }
 
-.signup-btn:hover {
-  background-color: #a00025;
+input.form-control:focus {
+  color: rgba(0, 0, 0, 1);
 }
 
-.password-input-wrapper {
-  position: relative;
+input.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 
-.eye-icon img {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
-  margin-top: -1px;
+label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  color: #474747;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: 0.3s ease all;
+}
+
+label.active {
+  top: -10px;
+  font-size: 12px;
+  color: #B70536;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-family: Segoe UI;
+  color: #057fe2;
+}
+
+.remember-me input[type="checkbox"] {
+  margin-right: 15px;
+}
+
+.forgot-password {
+  font-size: 12px;
+  font-family: Segoe UI;
+  color: #057fe2;
+}
+
+.forgot-password a {
+  color: #057fe2;
+  text-decoration: none;
 }
 
 .eye-icon {
@@ -250,29 +329,48 @@ const togglePassword = () => {
   height: 24px;
 }
 
+.eye-icon img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  margin-top: 4px;
+}
+
+.login-button {
+  background-color: #B70536;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  font-family: Verdana;
+  margin-top: 5px;
+}
+
+.login-button:hover {
+  background-color: #a00025;
+}
+
+.trademark {
+  font-family: Segoe UI;
+  color: white;
+  font-size: 11px;
+  margin-top: 20px;
+}
+
 .error-popup {
   color: white;
   background-color: #d60000;
   padding: 10px;
-  width: 383.5px;
   border-radius: 4px;
   text-align: center;
   animation: fadeIn 1s ease-in-out;
   margin-bottom: 8px;
   font-family: Verdana;
-  font-size: 14px;
-}
-
-.success-popup {
-  color: white;
-  background-color: green;
-  padding: 10px;
-  width: 383.5px;
-  border-radius: 4px;
-  text-align: center;
-  animation: fadeIn 1s ease-in-out;
-  margin-bottom: 8px;
-  font-family: Verdana;
+  font-size: 12px;
+  margin-bottom: 20px;
 }
 
 @keyframes fadeIn {
@@ -284,12 +382,84 @@ const togglePassword = () => {
   }
 }
 
+.success-popup {
+  color: white;
+  background-color: green;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+  margin-bottom: 8px;
+  font-family: Verdana;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.fade-out {
+  opacity: 0;
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.olis-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: transparent; 
+  background: linear-gradient(-45deg, #b5364b, #ff9500, #b5364b);
+  background-size: 200%;
+  background-clip: text; 
+  -webkit-background-clip: text; 
+  animation: rainbowAnimation 2s linear infinite;
+  font-family: Segoe UI;
+  margin-bottom: 40px;
+}
+
+@keyframes rainbowAnimation {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: -200%;
+  }
+}
+
+.register {
+  margin-top: 15px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  text-align: center;
+  color: #474747;
+}
+
+.register span {
+  color: #6c6c6c;
+}
+
+.register a {
+  color: #b70536;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.3s ease;
+}
+
+.register a:hover {
+  color: #a00025;
+}
 .password-strength-bar {
   background-color: #ffffff;
   height: 5px;
   border-radius: 5px;
-  margin-top: -5px;
-  margin-bottom: 20px;
+  margin-top: -38px;
+  margin-bottom: 25px;
 }
 
 .strength-indicator {

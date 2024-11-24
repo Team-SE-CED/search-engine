@@ -3,7 +3,7 @@
     <div class="header"></div>
     <div class="login-container">
       <div class="login-box">
-        <h2 class="olis-title">Login your account</h2>
+        <h2 class="olis-title">Welcome to OLIS!</h2>
         <form @submit.prevent="login">
           <div class="form-group">
             <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
@@ -23,15 +23,19 @@
           </div>
           <div class="form-options">
             <div class="remember-me">
-              <input type="checkbox" id="rememberMe" v-model="rememberMe" />
-              <label for="rememberMe"> </label>
+              <!-- <input type="checkbox" id="rememberMe" v-model="rememberMe" />
+              <label for="rememberMe"> </label> -->
             </div>
             <div class="forgot-password">
               <a href="#">Forgot password?</a>
             </div>
           </div>
           <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
-          <button type="submit" class="login-button">LOG IN</button>
+          <button type="submit" class="login-button">Log In</button>
+          <div class="register">
+            <span>Don't have an account?</span>
+            <a href="#">Sign Up</a>
+          </div>
         </form>
       </div>
     </div>
@@ -123,7 +127,7 @@ const togglePassword = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #B70536;
+  background-color: #800000;
 }
 
 .login-container {
@@ -148,12 +152,8 @@ const togglePassword = () => {
   transition: box-shadow 0.5s ease-in-out;
 }
 
-.login-box:focus-within {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .input-wrapper {
@@ -185,7 +185,7 @@ label {
   top: 50%;
   left: 10px;
   font-family: Segoe UI;
-  font-size: 10px;
+  font-size: 15px;
   color: #474747;
   pointer-events: none;
   transform: translateY(-50%);
@@ -247,17 +247,16 @@ label.active {
 }
 
 .login-button {
-  background-color: #B70536;
+  background-color: #800000;
   color: white;
   padding: 10px;
-  width: 35%;
+  width: 100%;
   border: none;
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
   font-family: Verdana;
-  margin-left: 65%;
-  margin-top: 15px;
+  margin-top: 5px;
 }
 
 .login-button:hover {
@@ -340,5 +339,29 @@ label.active {
   100% {
     background-position: -200%;
   }
+}
+
+.register {
+  margin-top: 15px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  text-align: center;
+  color: #474747;
+}
+
+.register span {
+  color: #6c6c6c;
+}
+
+.register a {
+  color: #b70536;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.3s ease;
+}
+
+.register a:hover {
+  color: #a00025;
 }
 </style>

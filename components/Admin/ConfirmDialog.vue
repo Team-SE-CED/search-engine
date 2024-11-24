@@ -111,4 +111,14 @@ const abort = () => {
   margin-top: 20px;
   margin-left: 100px;
 }
+.form-control:focus {
+  border-color: #000000 !important; /* Change to a custom border color if needed */
+  box-shadow: none !important; /* Remove the box-shadow */
+}
+
+/* Optional: Change border color on hover */
+.form-control:hover {
+  border-color: #000000; /* Change hover border color if needed */
+}
 </style>
+  

@@ -138,8 +138,8 @@ onBeforeUnmount(() => {
 
 .form-control {
     border-color: gray;
-    border-radius: 50vh;
-    height: 10vh;
+    border-radius: 3vh;
+    height: 8vh;
 }
 
 button.dropdown-toggle:focus {
@@ -152,16 +152,17 @@ button.dropdown-toggle {
 
 .search-icon {
     position: absolute;
-    left: 30px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    height: 50px;
+    height: 30px;
     pointer-events: none;
 }
 
 input.form-control {
-    padding-left: 100px;
+    padding-left: 70px;
     padding-right: 150px;
+    font-size: 1.1rem;
 }
 
 .vertical-line {
@@ -169,7 +170,7 @@ input.form-control {
     right: 130px;
     top: 50%;
     transform: translateY(-50%);
-    height: 40px;
+    height: 1.3rem;
     width: 1px;
     background-color: #484848;
 }
@@ -208,5 +209,16 @@ input.form-control {
 
 .suggestions-list li:hover {
     background-color: #f0f0f0;
+}
+.form-control:focus {
+  outline: none;
+  border-color: #b70536;
+  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
+}
+
+.form-control:hover {
+  outline: none;
+  border-color: #b70536;
+  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
 }
 </style>
