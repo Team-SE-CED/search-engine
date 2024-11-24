@@ -214,7 +214,7 @@ const togglePassword = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #B70536;
+  background-color: #800000;
  
 }
 
