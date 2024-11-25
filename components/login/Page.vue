@@ -6,7 +6,7 @@
         <h2 class="olis-title">Login your account</h2>
         <form @submit.prevent="login">
           <div class="form-group">
-            <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
+            
             <div class="input-wrapper">
               <label :class="{ active: isEmailActive }" for="email">Silliman Email</label>
               <input type="email" id="email" v-model="email" class="form-control" @focus="handleEmailFocus" @blur="handleEmailBlur" required />
@@ -30,7 +30,8 @@
               <a href="#">Forgot password?</a>
             </div>
           </div>
-          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="errorMessage">{{ errorMessage }}</div>
+          <div :class="{'error-popup': true, 'fade-out': fadeOut}" v-if="error">{{ error }}</div>
+          <div class="success-popup" v-if="successMessage"> {{ successMessage }} </div>
           <button type="submit" class="login-button">LOG IN</button>
         </form>
       </div>
@@ -46,8 +47,10 @@
 import { ref, computed } from 'vue';
 import eyeOpen from '@/assets/static-images/eye-open.png';
 import eyeClose from '@/assets/static-images/eye-close.png';
+import type { UserRole } from '@/server/types/roles';
 
 const client = useSupabaseClient();
+const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
@@ -55,37 +58,62 @@ const showPassword = ref(false);
 const rememberMe = ref(false);
 const isEmailFocused = ref(false);
 const isPasswordFocused = ref(false);
-const errorMessage = ref('');
+const error = ref<string | null>(null);
 const fadeOut = ref(false);
 const successMessage = ref('');
 
 async function login() {
   try {
     fadeOut.value = false;
-    const { error } = await client.auth.signInWithPassword({
+    const { data: session, error: signInError } = await client.auth.signInWithPassword({
       email: email.value,
       password: password.value
     });
+
+    if (!session?.user) {
+      throw new Error('User session is not available.');
+    } // ensure that session.user is not null
+
+    // const { data: userDetails, error: roleError } = await client
+    //   .from('auth.users')
+    //   .select('role')
+    //   .eq('id', session.user.id)
+    //   .single();
     
-    if (error) {
-      errorMessage.value = "Incorrect Email or Password. Please try again.";
+    // if (roleError) throw new Error(roleError.message);
+
+    // if (userDetails?.role === 'admin') {
+    //   router.push('/admin/home');
+    // } else {
+    //   router.push('/');
+    // }
+
+    if (signInError) {
+      error.value = "Incorrect Email or Password. Please try again.";
       setTimeout(() => {
         fadeOut.value = true;
         setTimeout(() => {
-          errorMessage.value = "";
+          error.value = "";
           fadeOut.value = false;
         }, 500);
       }, 3000);
     }
+
     else {
       successMessage.value = "Logged In Successfully";
+
+      
       setTimeout(() => {
         router.push('/welcome');
       }, 3000);
     }
     
-  } catch (error) {
-    errorMessage.value = "Something went wrong. Try again.";
+  } catch (err) {
+  if (err instanceof Error) {
+      error.value = err.message;
+    } else {
+      error.value = 'An unknown error occurred.';
+    }
   }
 }
 
