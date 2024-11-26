@@ -1,56 +1,34 @@
 <template>
-  <div class="filter-dropdown dropdown">
-    <button class="btn" type="button" @click="toggleFilterDropdown">
-      {{ filterLabel }}
-      <img
-        class="filter-arrowdown-icon"
-        src="~/assets/static-images/arrow-down.png"
-      />
-    </button>
-    <ul class="dropdown-menu" :class="{ show: isOpen }">
-      <li class="date-slider-container">
-        <div class="title">PUBLISHING YEAR</div>
-        <div class="slider">
-          <input
-            type="range"
-            v-model="dateRange[0]"
-            min="1900"
-            max="2099"
-            @input="updateDateRange"
-          />
-          <input
-            type="range"
-            v-model="dateRange[1]"
-            min="1900"
-            max="2099"
-            @input="updateDateRange"
-          />
-          <div class="slider-track"></div>
-          <div class="slider-range" :style="sliderRangeStyle"></div>
-        </div>
-        <div class="slider-values">
-          <span>{{ dateRange[0] }}</span> <span>{{ dateRange[1] }}</span>
-        </div>
-      </li>
-      <li class="department-container">
-        <div class="title">DEPARTMENT</div>
-        <div v-for="dept in departments" :key="dept" class="department-item">
-          <input
-            type="checkbox"
-            :id="dept"
-            v-model="selectedDepartments"
-            :value="dept"
-            @change="emitSelectedDepartments"
-          />
-          <label :for="dept">{{ dept }}</label>
-        </div>
-      </li>
-    </ul>
-  </div>
+    <div class="filter-dropdown dropdown">
+        <button class="btn dropdown-toggle" type="button" @click="toggleFilterDropdown">
+            {{ filterLabel }}
+        </button>
+        <ul class="dropdown-menu" :class="{ show: isOpen }">
+            <li class="date-slider-container">
+                <div class="title">PUBLISHING YEAR</div>
+                <div class="slider">
+                    <input type="range" v-model="dateRange[0]" min="1900" max="2099" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange[1]" min="1900" max="2099" @input="updateDateRange" />
+                    <div class="slider-track"></div>
+                    <div class="slider-range" :style="sliderRangeStyle"></div>
+                </div>
+                <div class="slider-values">
+                    <span>{{ dateRange[0] }}</span> <span>{{ dateRange[1] }}</span>
+                </div>
+            </li>
+            <li class="department-container">
+                <div class="title">DEPARTMENT</div>
+                <div v-for="dept in departments" :key="dept" class="department-item">
+                    <input type="checkbox" :id="dept" v-model="selectedDepartments" :value="dept" @change="emitSelectedDepartments" />
+                    <label :for="dept">{{ dept }}</label>
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 
 const emit = defineEmits([
   "selectedFilter",
@@ -64,28 +42,22 @@ const props = defineProps({
 
 const isOpen = ref(false);
 const dateRange = ref<[number, number]>([1900, 2099]);
-const departments = ref([
-  "Architecture",
-  "Civil Engineering",
-  "Computer Engineering",
-  "Electrical Engineering",
-  "Mechanical Engineering",
-]); // Add your departments here
+const departments = ref(["Architecture", "Civil Engineering", "Computer Engineering", "Electrical Engineering", "Mechanical Engineering"]); // Add your departments here
 const selectedDepartments = ref<string[]>([]);
 
 const filterLabel = computed(() => "Filters");
 
 function toggleFilterDropdown() {
-  isOpen.value = !isOpen.value;
+    isOpen.value = !isOpen.value;
 }
 
 function updateDateRange() {
-  if (dateRange.value[0] > dateRange.value[1]) {
-    const temp = dateRange.value[0];
-    dateRange.value[0] = dateRange.value[1];
-    dateRange.value[1] = temp;
-  }
-  emit("selectedYear", dateRange.value);
+    if (dateRange.value[0] > dateRange.value[1]) {
+        const temp = dateRange.value[0];
+        dateRange.value[0] = dateRange.value[1];
+        dateRange.value[1] = temp;
+    }
+    emit("selectedYear", dateRange.value);
 }
 
 function emitSelectedDepartments() {
@@ -93,9 +65,9 @@ function emitSelectedDepartments() {
 }
 
 const sliderRangeStyle = computed(() => {
-  const minPercent = ((dateRange.value[0] - 1900) / 199) * 100;
-  const maxPercent = ((dateRange.value[1] - 1900) / 199) * 100;
-  return { left: `${minPercent}%`, right: `${100 - maxPercent}%` };
+    const minPercent = ((dateRange.value[0] - 1900) / 199) * 100;
+    const maxPercent = ((dateRange.value[1] - 1900) / 199) * 100;
+    return { left: `${minPercent}%`, right: `${100 - maxPercent}%` };
 });
 </script>
 

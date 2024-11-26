@@ -41,8 +41,9 @@
 </template>
 
 <script setup lang="ts">
+import { DateRangeEnum } from "~/enums/date-range";
 import "../bootstrap-css/global_style1/bootstrap.min.css";
-import type { PaperUI } from "~/types/research-paper-ui";
+import type { PaperUI } from "~/types/research-paper-ui"
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
@@ -53,10 +54,10 @@ const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const researchPaper = ref<PaperUI[]>([]);
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
-const selectedSearchField = ref<string>("title");
-const isOpen = ref<boolean>(false);
-const selectedYear = ref<string>();
-const selectedDepartment = ref<string>();
+const selectedSearchField = ref<string>("title")
+const isOpen = ref<boolean>(false)
+const selectedYear = ref<string>()
+const selectedDepartment = ref<string>()
 
 // Functions
 async function fetchPaper() {
@@ -66,13 +67,7 @@ async function fetchPaper() {
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-  return filterPapersFactory(
-    researchPaper.value,
-    searchQuery.value,
-    selectedSearchField.value,
-    selectedYear.value,
-    selectedDepartment.value
-  );
+    return filterPapersFactory(researchPaper.value, searchQuery.value, selectedSearchField.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -85,18 +80,19 @@ const filteredKeywords = () => {
 // Search Engine Algorithm
 
 const handleClickOutside = (event: MouseEvent) => {
-  const searchInput = document.querySelector(".search-input");
-  const suggestionsElement = document.querySelector(".suggestions-list");
+    const searchInput = document.querySelector(".search-input");
+    const suggestionsElement = document.querySelector(".suggestions-list");
 
-  if (
-    searchInput &&
-    !searchInput.contains(event.target as Node) &&
-    suggestionsElement &&
-    !suggestionsElement.contains(event.target as Node)
-  ) {
-    showSuggestions.value = false;
-  }
+    if (
+        searchInput &&
+        !searchInput.contains(event.target as Node) &&
+        suggestionsElement &&
+        !suggestionsElement.contains(event.target as Node)
+    ) {
+        showSuggestions.value = false;
+    }
 };
+
 
 const handleClickOutsideFilter = (event: MouseEvent) => {
   const filtersElement = document.querySelector(".search-filters"); // Assuming you add a class to your SearchFilters component
@@ -115,11 +111,11 @@ function handleFilterDropdownState(isOpenValue: boolean) {
 }
 
 function handleSelectedYear(selectedYearValue: string) {
-  selectedYear.value = selectedYearValue;
+    selectedYear.value = selectedYearValue
 }
 
 function handleSelectedDepartment(selectedDepartmentValue: string) {
-  selectedDepartment.value = selectedDepartmentValue;
+    selectedDepartment.value = selectedDepartmentValue
 }
 
 function handleSelectedFilter(selectedFilter: string) {

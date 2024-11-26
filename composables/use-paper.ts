@@ -1,6 +1,6 @@
 import { researchPaperFactory } from "~/server/factories/research-paper.factory";
-import { useItemStore } from "~/server/stores/research-paper-store";
-import type { Paper } from "~/server/types/research-paper-server";
+import { useItemStore } from "~/server/stores/research-paper.store";
+import type { Paper } from "~/types/research-paper-server";
 
 export function usePaper() {
   const itemStore = useItemStore();
@@ -23,7 +23,7 @@ export function usePaper() {
       console.error(
         `${error}. Unable to fetch research papers at this time. Please try again later.`
       );
-      return [] as Paper[];
+      return [];
     }
   }
 
