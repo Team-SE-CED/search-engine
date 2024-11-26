@@ -186,13 +186,13 @@
       </div>
     </div>
   </div>
-  <!-- <div>
+  <div>
     <ConfirmationDialog
       confirmationText="OLIS"
       @confirm="handleConfirm"
       @abort="handleAbort"
     />
-  </div> -->
+  </div>
 </template>
 
 <script setup lang="ts">

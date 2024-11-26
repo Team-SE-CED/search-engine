@@ -13,7 +13,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #b70536;
+  background-color: #800000;
   color: white;
   padding: 1.5rem; /* Equivalent to 2% padding scaled with rem */
   text-align: center;
