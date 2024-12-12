@@ -43,7 +43,8 @@
 <script setup lang="ts">
 import { DateRangeEnum } from "~/enums/date-range";
 import "../bootstrap-css/global_style1/bootstrap.min.css";
-import type { PaperUI } from "~/types/research-paper-ui"
+import type { PaperUI } from "~/types/research-paper-ui";
+import type { DateRangeType } from "~/types/date-range";
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
@@ -56,8 +57,13 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title")
 const isOpen = ref<boolean>(false)
-const selectedYear = ref<string>()
-const selectedDepartment = ref<string>()
+const selectedYear = ref<DateRangeType>(
+    {
+        lowerYear: DateRangeEnum.lowerYear,
+        upperYear: DateRangeEnum.upperYear
+    })
+
+const selectedDepartment = ref<string[]>([])
 
 // Functions
 async function fetchPaper() {
@@ -67,7 +73,7 @@ async function fetchPaper() {
 
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-    return filterPapersFactory(researchPaper.value, searchQuery.value, selectedSearchField.value, selectedYear.value, selectedDepartment.value);
+    return filterPapersFactory(researchPaper.value, searchQuery.value, selectedYear.value, selectedDepartment.value);
 });
 
 const filteredKeywords = () => {
@@ -110,11 +116,11 @@ function handleFilterDropdownState(isOpenValue: boolean) {
   isOpen.value = isOpenValue;
 }
 
-function handleSelectedYear(selectedYearValue: string) {
+function handleSelectedYear(selectedYearValue: DateRangeType) {
     selectedYear.value = selectedYearValue
 }
 
-function handleSelectedDepartment(selectedDepartmentValue: string) {
+function handleSelectedDepartment(selectedDepartmentValue: string[]) {
     selectedDepartment.value = selectedDepartmentValue
 }
 
