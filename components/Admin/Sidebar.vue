@@ -50,7 +50,7 @@
   .sidebar {
     width: 400px;
     height: 100vh;
-    background-color: #A2042F;
+    background-color: #800000;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
