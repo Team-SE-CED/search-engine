@@ -4,7 +4,7 @@
     <div class="login-container">
       <div class="login-box">
         <h2 class="olis-title">Create an account</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="signUp">
           <!-- Name Input -->
           <div class="form-group">
             <div class="success-popup" v-if="successMessage">
@@ -199,10 +199,21 @@ const isPasswordActive = computed(
 );
 const hasPassword = computed(() => password.value.length > 0);
 
-// Login Logic
-async function login() {
+// Signup Logic
+async function signUp() {
   try {
     fadeOut.value = false;
+    const { data, error } = await client.auth.signUp({
+      email: email.value,
+      password: password.value,
+      options: {
+        data: {
+          name: name.value,
+          id_number: idnum.value,
+          course: course.value,
+        }
+      }
+    })
 
     // Validate Input
     if (!email.value || !password.value) {
@@ -220,7 +231,7 @@ async function login() {
     // Simulate Successful Login
     successMessage.value = "Success! Check your email for confirmation.";
     setTimeout(() => {
-      router.push("/welcome");
+      router.push("/login");
     }, 3000);
   } catch (error) {
     errorMessage.value = "An error occurred. Please try again.";
