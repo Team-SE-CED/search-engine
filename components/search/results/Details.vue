@@ -42,10 +42,7 @@
       </div>
       <div v-else class="shimmer-loader button-shimmer"></div>
 
-      <hr v-if="!isLoading" class="divider" />
-
-      <h2 v-if="!isLoading" class="section-title">Abstract</h2>
-
+      <hr v-if="!isLoading" class="divider" />sendEmail
       <p v-if="!isLoading" class="abstract">{{ showPaperAbstract }}</p>
       <div v-else class="shimmer-loader text-shimmer paragraph-shimmer"></div>
     </div>
@@ -70,6 +67,7 @@ const isLoading = ref(true);
 const paperId = Number(id);
 const isRequested = ref(false);
 const copyButtonText = ref("Copy Citation");
+const response = ref();
 
 onMounted(async () => {
   await fetchPaper(paperId);
@@ -125,12 +123,23 @@ const hasAuthors = computed(() => {
   return showPaperAuthor.value && showPaperAuthor.value !== "N/A";
 });
 
-function requestFullPdf() {
+async function requestFullPdf() {
   isRequested.value = true;
 
   setTimeout(() => {
     isRequested.value = false;
   }, 10000);
+
+  try {
+    const res = await $fetch("/api/send-email", {
+      method: "POST",
+      body: { email: "inigopgonzalez@su.edu.ph" }, 
+    });
+    response.value = res;
+  } catch (error) {
+    console.error(error);
+    response.value = { message: "Failed to send email." };
+  }
 }
 
 function copyCitation() {
