@@ -5,6 +5,6 @@ export type Paper = {
   title: string;
   author: string;
   department: string;
+  year_published: number;
   abstract: string;
-  year_published: string;
 };

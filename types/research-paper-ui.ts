@@ -5,6 +5,6 @@ export type PaperUI = {
   title: string;
   author: string;
   department: string;
+  yearPublished: number;
   abstract: string;
-  year_published: string;
 };

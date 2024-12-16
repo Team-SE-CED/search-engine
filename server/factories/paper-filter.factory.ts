@@ -14,7 +14,7 @@ export function searchAndFilterPapers(
   // Special case for the "#" query: return all filtered by year and department
   if (searchQuery.trim() === "#") {
     return suggestions.filter((p) => {
-      const paperYear = p.publishing_year;
+      const paperYear = p.yearPublished;
       const matchesYear =
         !isNaN(paperYear) &&
         paperYear >= yearRange.lowerYear &&
