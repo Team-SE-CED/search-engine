@@ -1,6 +1,6 @@
 <template>
   <div class="h-overflow">
-    <h1>Silliman University College of Engineering and Design</h1>
+    <h1>COLLEGE OF ENGINEERING AND DESIGN</h1>
     <h2>RESEARCH CATALOG</h2>
   </div>
 </template>
@@ -11,7 +11,12 @@
 .h-overflow {
   z-index: -5;
 }
+h1 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.5rem;
+}
 h2 {
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.5rem; 
 }
 </style>

@@ -273,7 +273,7 @@ label.active {
 }
 
 .login-button {
-  background-color: #800000;
+  background-color: #b70536;
   color: white;
   padding: 10px;
   width: 100%;

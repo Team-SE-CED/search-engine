@@ -24,7 +24,7 @@ header {
 /* Optional: Add responsive adjustments for different screen sizes */
 @media (min-width: 768px) {
   header {
-    padding: 2.4rem 3rem; /* Adjust padding slightly on larger screens */
+    padding: 1.8rem 3rem; /* Adjust padding slightly on larger screens */
     font-size: 1.4rem; /* Adjust font size for larger screens */
   }
 }

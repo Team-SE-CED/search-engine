@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
 }
 
 .form-control {
-  border-color: gray;
+  border-color: rgb(182, 182, 182);
   border-radius: 1rem;
   height: 8vh;
 }
@@ -226,15 +226,19 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
-.form-control:focus {
+.form-control {
   outline: none;
-  border-color: #b70536;
-  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
+  border-color: rgb(182, 182, 182);
+  transition: box-shadow 0.6s ease-out, border-color 0.6s ease-out;
+}
+
+.form-control:focus {
+  box-shadow: 0 10px 12px #800000;
+  border-color: rgb(182, 182, 182);
 }
 
 .form-control:hover {
-  outline: none;
-  border-color: #b70536;
-  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
+  box-shadow: 0 10px 12px #800000;
+  border-color: rgb(182, 182, 182);
 }
 </style>
