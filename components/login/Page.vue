@@ -273,7 +273,11 @@ label.active {
 }
 
 .login-button {
+<<<<<<< HEAD
   background-color: #b70536;
+=======
+  background-color: #800000;
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
   color: white;
   padding: 10px;
   width: 100%;

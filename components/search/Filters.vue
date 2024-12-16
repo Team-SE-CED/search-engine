@@ -7,8 +7,15 @@
             <li class="date-slider-container">
                 <div class="title">PUBLISHING YEAR</div>
                 <div class="slider">
+<<<<<<< HEAD
                     <input type="range" v-model="dateRange[0]" min="1900" max="2099" @input="updateDateRange" />
                     <input type="range" v-model="dateRange[1]" min="1900" max="2099" @input="updateDateRange" />
+=======
+                    <input type="range" v-model="dateRange.lowerYear" :min="DateRangeEnum.lowerYear"
+                        :max="DateRangeEnum.upperYear" @input="updateDateRange" />
+                    <input type="range" v-model="dateRange.upperYear" :min="DateRangeEnum.lowerYear"
+                        :max="DateRangeEnum.upperYear" @input="updateDateRange" />
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
                     <div class="slider-track"></div>
                     <div class="slider-range" :style="sliderRangeStyle"></div>
                 </div>

@@ -43,7 +43,12 @@
 <script setup lang="ts">
 import { DateRangeEnum } from "~/enums/date-range";
 import "../bootstrap-css/global_style1/bootstrap.min.css";
+<<<<<<< HEAD
 import type { PaperUI } from "~/types/research-paper-ui"
+=======
+import type { PaperUI } from "~/types/research-paper-ui";
+import type { DateRangeType } from "~/types/date-range";
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
 const { getResearchPaper } = usePaper();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
@@ -56,8 +61,18 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title")
 const isOpen = ref<boolean>(false)
+<<<<<<< HEAD
 const selectedYear = ref<string>()
 const selectedDepartment = ref<string>()
+=======
+const selectedYear = ref<DateRangeType>(
+    {
+        lowerYear: DateRangeEnum.lowerYear,
+        upperYear: DateRangeEnum.upperYear
+    })
+
+const selectedDepartment = ref<string[]>([])
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
 
 // Functions
 async function fetchPaper() {
@@ -153,7 +168,11 @@ onBeforeUnmount(() => {
 }
 
 .form-control {
+<<<<<<< HEAD
   border-color: rgb(182, 182, 182);
+=======
+  border-color: gray;
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
   border-radius: 1rem;
   height: 8vh;
 }
@@ -226,6 +245,7 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+<<<<<<< HEAD
 .form-control {
   outline: none;
   border-color: rgb(182, 182, 182);
@@ -240,5 +260,17 @@ input.form-control {
 .form-control:hover {
   box-shadow: 0 10px 12px #800000;
   border-color: rgb(182, 182, 182);
+=======
+.form-control:focus {
+  outline: none;
+  border-color: #b70536;
+  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
+}
+
+.form-control:hover {
+  outline: none;
+  border-color: #b70536;
+  box-shadow: 0 0 0.5rem rgba(167, 44, 25, 0.931);
+>>>>>>> d138d045c83f952d29e7637c5d1c408b6eeb7643
 }
 </style>
