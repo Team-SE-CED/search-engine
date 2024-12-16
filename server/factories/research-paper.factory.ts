@@ -11,6 +11,7 @@ function convertPapersToPaperUI(paper: Paper[]): PaperUI[] {
       author: paper.author,
       department: paper.department,
       abstract: paper.abstract,
+      year_published: paper.year_published,
     };
   });
 }

@@ -4,9 +4,24 @@
     <div class="img-wrapper" v-if="isLoading">
       <div class="shimmer-loader"></div>
     </div>
-    <div class="img-wrapper" v-else v-for="paper in researchPaper" :key="paper.id">
-      <img v-if="paper.imgUrl" :src="paper.imgUrl" alt="research_img" class="img-poster" />
-      <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
+    <div
+      class="img-wrapper"
+      v-else
+      v-for="paper in researchPaper"
+      :key="paper.id"
+    >
+      <img
+        v-if="paper.imgUrl"
+        :src="paper.imgUrl"
+        alt="research_img"
+        class="img-poster"
+      />
+      <img
+        v-else
+        src="https://via.placeholder.com/200x300?text=research"
+        alt="sample poster"
+        class="img-poster"
+      />
     </div>
 
     <div class="content">
@@ -35,8 +50,16 @@
           <LineMdDownloadingLoop />
           Request full-text PDF
         </button>
-        <button class="action-button copy-citation" @click="copyCitation" :disabled="!hasAuthors">
-          <img src="~assets/static-images/copy.png" alt="Copy Icon" class="btn-icon" />
+        <button
+          class="action-button copy-citation"
+          @click="copyCitation"
+          :disabled="!hasAuthors"
+        >
+          <img
+            src="~assets/static-images/copy.png"
+            alt="Copy Icon"
+            class="btn-icon"
+          />
           {{ copyButtonText }}
         </button>
       </div>
@@ -107,7 +130,7 @@ const showPaperYear = computed(() => {
     return "Loading...";
   }
 
-  const date = researchPaper.value[0].date;
+  const date = researchPaper.value[0].year_published;
   const year = date ? new Date(date).getFullYear() : "N/A";
   return year;
 });
