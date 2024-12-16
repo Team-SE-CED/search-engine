@@ -23,6 +23,8 @@ export function usePaperFactory() {
       selectedAbstract
     );
 
+    console.log("Oh man!: " + JSON.stringify(filteredPaper));
+
     return filteredPaper;
   }
 

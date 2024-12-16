@@ -18,6 +18,7 @@ export function usePaper() {
 
       itemStore.setPaperStores(paperFactory);
 
+      console.log("Hello man: " + JSON.stringify(paperFactory));
       return paperFactory;
     } catch (error) {
       console.error(
