@@ -1,15 +1,8 @@
 <template>
   <ul v-if="hasSearchSuggestions" :class="suggestionsClass">
-    <li
-      v-for="suggestion in suggestions.slice(0, 8)"
-      :key="suggestion.id"
-      @click="handleClick(suggestion.id)"
-      class="suggestion-item"
-    >
-      <img
-        class="suggestion-search-icon"
-        src="~/assets/static-images/search-eye.png"
-      />
+    <li v-for="suggestion in suggestions.slice(0, 8)" :key="suggestion.id" @click="handleClick(suggestion.id)"
+      class="suggestion-item">
+      <img class="suggestion-search-icon" src="~/assets/static-images/search-eye.png" />
       {{ selectedSuggestion(suggestion) }}
     </li>
   </ul>

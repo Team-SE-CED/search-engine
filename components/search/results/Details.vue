@@ -4,24 +4,9 @@
     <div class="img-wrapper" v-if="isLoading">
       <div class="shimmer-loader"></div>
     </div>
-    <div
-      class="img-wrapper"
-      v-else
-      v-for="paper in researchPaper"
-      :key="paper.id"
-    >
-      <img
-        v-if="paper.imgUrl"
-        :src="paper.imgUrl"
-        alt="research_img"
-        class="img-poster"
-      />
-      <img
-        v-else
-        src="https://via.placeholder.com/200x300?text=research"
-        alt="sample poster"
-        class="img-poster"
-      />
+    <div class="img-wrapper" v-else v-for="paper in researchPaper" :key="paper.id">
+      <img v-if="paper.imgUrl" :src="paper.imgUrl" alt="research_img" class="img-poster" />
+      <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
     </div>
 
     <div class="content">
@@ -30,10 +15,10 @@
         <div v-else class="shimmer-loader title-shimmer"></div>
 
         <div class="labels">
-          <div v-if="!isLoading" class="yearLabel">{{ showPaperYear }}</div>
+          <div v-if="!isLoading" @click="showRelevantYear" class="yearLabel">{{ showPaperYear }}</div>
           <div v-else class="shimmer-loader label-shimmer"></div>
 
-          <div v-if="!isLoading" class="departmentLabel">
+          <div v-if="!isLoading" @click="showRelevantDepartment" class="departmentLabel">
             {{ showPaperDepartment }}
           </div>
           <div v-else class="shimmer-loader label-shimmer"></div>
@@ -50,16 +35,8 @@
           <LineMdDownloadingLoop />
           Request full-text PDF
         </button>
-        <button
-          class="action-button copy-citation"
-          @click="copyCitation"
-          :disabled="!hasAuthors"
-        >
-          <img
-            src="~assets/static-images/copy.png"
-            alt="Copy Icon"
-            class="btn-icon"
-          />
+        <button class="action-button copy-citation" @click="copyCitation" :disabled="!hasAuthors">
+          <img src="~assets/static-images/copy.png" alt="Copy Icon" class="btn-icon" />
           {{ copyButtonText }}
         </button>
       </div>
@@ -82,10 +59,17 @@ import { ref, computed, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 import { useRoute, useRouter } from "vue-router";
 import LineMdDownloadingLoop from "~/assets/svg-images/LineMdDownloadingLoop.vue";
+import { NuxtLink } from "#build/components";
+import type { DateRangeType } from "~/types/date-range";
+import { DateRangeEnum } from "~/enums/date-range";
 
 const { id } = useRoute().params;
 const { getResearchPaper } = usePaper();
 const router = useRouter();
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
+const { setSuggestedPaperStore, getSuggestedPaperStore } = usePaperStores();
+
+const emit = defineEmits(["searchQuery", "yearClicked", "department"])
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
@@ -93,10 +77,35 @@ const isLoading = ref(true);
 const paperId = Number(id);
 const isRequested = ref(false);
 const copyButtonText = ref("Copy Citation");
+const selectedDepartment = ref<string[]>([])
+const searchQuery = ref<string>("");
+const selectedYear = ref<DateRangeType>(
+  {
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+  })
 
 onMounted(async () => {
   await fetchPaper(paperId);
 });
+
+function showRelevantYear() {
+  const date = researchPaper.value[0].yearPublished;
+
+  const yearClicked = ref<DateRangeType>({
+    lowerYear: date,
+    upperYear: date,
+  })
+  emit("searchQuery", "#")
+  emit("yearClicked", yearClicked.value)
+}
+
+function showRelevantDepartment() {
+  const department = researchPaper.value[0]?.department;
+
+  emit("searchQuery", "#")
+  emit("department", department)
+}
 
 async function fetchPaper(id: number) {
   const papers = await getResearchPaper();
@@ -130,7 +139,7 @@ const showPaperYear = computed(() => {
     return "Loading...";
   }
 
-  const date = researchPaper.value[0].year_published;
+  const date = researchPaper.value[0].yearPublished;
   const year = date ? new Date(date).getFullYear() : "N/A";
   return year;
 });
@@ -227,11 +236,13 @@ function copyCitation() {
 .yearLabel {
   background-color: #e4002b;
   color: #fff;
+  cursor: pointer;
 }
 
 .departmentLabel {
   background-color: #007bff;
   color: #fff;
+  cursor: pointer;
 }
 
 .authors {

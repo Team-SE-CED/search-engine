@@ -1,31 +1,18 @@
 <template>
   <div class="container-sm">
     <ul class="img-grid">
-      <li
-        class="img-card"
-        v-for="researchPaper in filteredPapers"
-        :key="researchPaper.id"
-        @click="redirectTo(researchPaper.id)"
-      >
+      <li class="img-card" v-for="researchPaper in filteredPapers" :key="researchPaper.id"
+        @click="redirectTo(researchPaper.id)">
         <div class="img-wrapper">
-          <img
-            v-if="researchPaper.imgUrl"
-            :src="researchPaper.imgUrl"
-            alt="research_img"
-            class="img-poster"
-          />
-          <img
-            v-else
-            src="https://via.placeholder.com/200x300?text=research"
-            alt="sample poster"
-            class="img-poster"
-          />
+          <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
+          <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
         </div>
         <div class="img-overlay">
           <div class="img-title">{{ researchPaper.title }}</div>
           <div class="img-author">{{ researchPaper.author }}</div>
           <div class="img-department">{{ researchPaper.department }}</div>
         </div>
+        <!-- {{ researchPaper.title }} -->
       </li>
     </ul>
   </div>
@@ -53,7 +40,7 @@ function redirectTo(id: number) {
   router.push(`/result/${id}`);
 }
 
-onMounted(() => {});
+onMounted(() => { });
 </script>
 
 <style scoped>

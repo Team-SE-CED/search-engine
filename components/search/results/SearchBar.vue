@@ -37,6 +37,13 @@ const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
 const router = useRouter();
 
+const props = defineProps({
+  searchQueryProps: String,
+  yearClickedPropsLow: Number,
+  yearClickedPropsUp: Number,
+  departmentProps: String,
+})
+
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
@@ -166,6 +173,42 @@ watch(
   }
 );
 
+watch(
+  () => props.searchQueryProps,
+  (newValue) => {
+    if (newValue) searchQuery.value = newValue;
+  }
+);
+
+watch(
+  () => props.yearClickedPropsLow,
+  (newValue) => {
+    if (newValue) selectedYear.value.lowerYear = newValue;
+  }
+);
+
+watch(
+  () => props.yearClickedPropsUp,
+  (newValue) => {
+    if (newValue) {
+      selectedYear.value.upperYear = newValue
+      handleSubmit()
+    }
+  }
+);
+
+watch(
+  () => props.departmentProps,
+  (newValue) => {
+    if (newValue) {
+      const receivedDepartment = ref<string[]>([])
+      receivedDepartment.value.push(newValue)
+      selectedDepartment.value = receivedDepartment.value
+      handleSubmit()
+    }
+  }
+);
+
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
   document.addEventListener("click", handleClickOutside);
@@ -186,23 +229,31 @@ onBeforeUnmount(() => {
 }
 
 .img-card {
-  width: 12.5rem; /* 200px converted to rem */
-  margin: 0.625rem; /* 10px converted to rem */
+  width: 12.5rem;
+  /* 200px converted to rem */
+  margin: 0.625rem;
+  /* 10px converted to rem */
   text-align: center;
   z-index: -2;
 }
 
 .img-poster {
-  height: 18.75rem; /* 300px converted to rem */
-  width: 12.5rem; /* 200px converted to rem */
-  border-radius: 1.25rem; /* 20px converted to rem */
+  height: 18.75rem;
+  /* 300px converted to rem */
+  width: 12.5rem;
+  /* 200px converted to rem */
+  border-radius: 1.25rem;
+  /* 20px converted to rem */
 }
 
 .img-title {
-  font-size: 1rem; /* 16px converted to rem */
+  font-size: 1rem;
+  /* 16px converted to rem */
   font-weight: bold;
-  margin-top: 0.625rem; /* 10px converted to rem */
-  max-width: 12.5rem; /* 200px converted to rem */
+  margin-top: 0.625rem;
+  /* 10px converted to rem */
+  max-width: 12.5rem;
+  /* 200px converted to rem */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -212,8 +263,10 @@ onBeforeUnmount(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 3.125rem; /* 50px converted to rem */
-  padding: 1.25rem; /* 20px converted to rem */
+  gap: 3.125rem;
+  /* 50px converted to rem */
+  padding: 1.25rem;
+  /* 20px converted to rem */
   list-style: none;
 }
 
@@ -236,8 +289,10 @@ onBeforeUnmount(() => {
   border-color: gray;
   border-radius: 50px;
   /* height: 3rem;  */
-  max-height: 3rem; /* Matches the intended height */
-  min-width: 100%; /* Ensures it doesn't shrink below container width */
+  max-height: 3rem;
+  /* Matches the intended height */
+  min-width: 100%;
+  /* Ensures it doesn't shrink below container width */
 }
 
 button.dropdown-toggle:focus {
@@ -245,26 +300,33 @@ button.dropdown-toggle:focus {
 }
 
 .dropdown-menu {
-  padding: 0.3125rem 0; /* 5px converted to rem */
-  font-size: 1rem; /* 16px converted to rem */
+  padding: 0.3125rem 0;
+  /* 5px converted to rem */
+  font-size: 1rem;
+  /* 16px converted to rem */
 }
 
 button.dropdown-toggle {
-  font-size: 1.2rem; /* 1.2rem for dropdown button font */
+  font-size: 1.2rem;
+  /* 1.2rem for dropdown button font */
 }
 
 .search-icon {
   position: absolute;
-  left: 1.5rem; /* 1.5rem for the distance from the left */
+  left: 1.5rem;
+  /* 1.5rem for the distance from the left */
   top: 50%;
   transform: translateY(-50%);
-  height: 1.8rem; /* Scales with zoom */
+  height: 1.8rem;
+  /* Scales with zoom */
   pointer-events: none;
 }
 
 input.form-control {
-  padding-left: 4rem; /* 4rem for the padding */
-  padding-right: 10vw; /* Adjust to fit container */
+  padding-left: 4rem;
+  /* 4rem for the padding */
+  padding-right: 10vw;
+  /* Adjust to fit container */
 }
 
 .search-input:focus {
@@ -278,14 +340,16 @@ input.form-control {
   right: 8vw;
   top: 50%;
   transform: translateY(-50%);
-  height: 1.8rem; /* Similar to the height of the search icon */
+  height: 1.8rem;
+  /* Similar to the height of the search icon */
   width: 1px;
   background-color: #484848;
 }
 
 .suggestions-list {
   position: absolute;
-  top: 3.5rem; /* Use rem for consistent distance */
+  top: 3.5rem;
+  /* Use rem for consistent distance */
   left: 0;
   width: 100%;
   background-color: white;
@@ -294,12 +358,15 @@ input.form-control {
   z-index: 10;
   overflow-y: auto;
   list-style: none;
-  padding: 0.3125rem 0; /* 5px converted to rem */
-  margin-top: 1rem; /* 1rem for the margin-top */
+  padding: 0.3125rem 0;
+  /* 5px converted to rem */
+  margin-top: 1rem;
+  /* 1rem for the margin-top */
 }
 
 .suggestions-list li {
-  padding: 0.3125rem 1.25rem; /* 5px converted to rem */
+  padding: 0.3125rem 1.25rem;
+  /* 5px converted to rem */
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
@@ -308,8 +375,10 @@ input.form-control {
 
 .suggestion-search-icon {
   position: relative;
-  height: 2.5rem; /* 40px converted to rem */
-  padding-right: 1rem; /* 1rem for padding */
+  height: 2.5rem;
+  /* 40px converted to rem */
+  padding-right: 1rem;
+  /* 1rem for padding */
 }
 
 .suggestions-list li:hover {
