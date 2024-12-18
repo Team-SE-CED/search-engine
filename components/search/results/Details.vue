@@ -42,7 +42,7 @@
       </div>
       <div v-else class="shimmer-loader button-shimmer"></div>
 
-      <hr v-if="!isLoading" class="divider" />sendEmail
+      <hr v-if="!isLoading" class="divider" />Abstract
       <p v-if="!isLoading" class="abstract">{{ showPaperAbstract }}</p>
       <div v-else class="shimmer-loader text-shimmer paragraph-shimmer"></div>
     </div>
@@ -67,6 +67,7 @@ const isLoading = ref(true);
 const paperId = Number(id);
 const isRequested = ref(false);
 const copyButtonText = ref("Copy Citation");
+const client = useSupabaseClient();
 const response = ref();
 
 onMounted(async () => {
@@ -124,6 +125,7 @@ const hasAuthors = computed(() => {
 });
 
 async function requestFullPdf() {
+  const user = await client.auth.getUser();
   isRequested.value = true;
 
   setTimeout(() => {
@@ -133,7 +135,7 @@ async function requestFullPdf() {
   try {
     const res = await $fetch("/api/send-email", {
       method: "POST",
-      body: { email: "inigopgonzalez@su.edu.ph" }, 
+      body: { email: user.data.user?.email }, 
     });
     response.value = res;
   } catch (error) {

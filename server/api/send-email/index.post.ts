@@ -29,9 +29,15 @@ export default defineEventHandler(async (event: H3Event) => {
     await transporter.sendMail({
       from: process.env.SMTP_FROM as string, // Sender address
       to: body.email, // Recipient address
-      subject: "Hello from Nuxt 3!", // Subject line
-      text: "Hello, student. Your request has been approved. Please get your soft copy below.", // Plain text body
-      html: "<b>Hello, student. Your request has been approved. Please get your soft copy below.</b>", // HTML body
+      subject: "Your Request Has Been Approved", // Subject line
+      text: "Hello, student. Your request has been approved. Please get your soft copy below. Thank you for using CED-OLIS!", // Plain text body
+      html: "<b>Hello, student. Your request has been approved. Please get your soft copy below. Thank you for using CED-OLIS!</b>", // HTML body
+      attachments: [
+        {
+          filename: 'Anti Theft Control and Tracking System for Motorcycles.pdf',
+          path: 'https://supabase.cedolis.online/storage/v1/object/sign/search-engine-papers/2.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzZWFyY2gtZW5naW5lLXBhcGVycy8yLnBkZiIsImlhdCI6MTczNDUyMTMyMiwiZXhwIjoxNzY2MDU3MzIyfQ.k6Fz0pG0H9yL3hYAAPtLBLjKliQ__vidcqjZlYBnsn0&t=2024-12-18T11%3A28%3A29.875Z'
+        }
+      ]
     });
 
     return { success: true, message: "Email sent successfully!" };
