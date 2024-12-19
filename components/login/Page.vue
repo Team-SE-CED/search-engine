@@ -61,7 +61,7 @@
           <button type="submit" class="login-button">Log In</button>
           <div class="register">
             <span>Don't have an account?</span>
-            <a href="#">Sign Up</a>
+            <a href="/signup">Sign Up</a>
           </div>
         </form>
       </div>
