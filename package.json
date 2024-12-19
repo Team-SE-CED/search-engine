@@ -10,10 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.714.0",
+    "@aws-sdk/s3-request-presigner": "^3.714.0",
     "@iconify-json/mdi": "^1.2.1",
     "@iconify/iconify": "^3.1.1",
     "@pinia/nuxt": "^0.5.5",
     "@supabase/supabase-js": "^2.45.4",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "bootstrap-vue": "^2.23.1",
     "datatables.net-bs5": "^2.1.8",
@@ -26,7 +29,9 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxtjs/supabase": "^1.4.3"
+    "@nuxtjs/supabase": "^1.4.3",
+    "@types/nodemailer": "^6.4.17",
+    "nodemailer": "^6.9.16"
   },
   "overrides": {
     "vue": "latest"

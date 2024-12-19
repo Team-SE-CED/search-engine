@@ -84,7 +84,8 @@ import { DateRangeEnum } from "~/enums/date-range";
 import type { Author } from "~/types/research-author-server";
 import { useAuthorStore } from "~/server/stores/research-author-store";
 
-const { id } = useRoute().params;
+const route = useRoute();
+const id = route.params.id;
 const { getResearchPaper } = usePaper();
 const { getAuthor } = useAuthor();
 const router = useRouter();
@@ -102,6 +103,8 @@ const paperId = Number(id);
 const authorId = Number(id);
 const isRequested = ref(false);
 const copyButtonText = ref("Copy Citation");
+const client = useSupabaseClient();
+const response = ref();
 const selectedDepartment = ref<string[]>([])
 const searchQuery = ref<string>("");
 const isAuthorMode = ref(false)
@@ -205,12 +208,27 @@ const hasAuthors = computed(() => {
   return showPaperAuthor.value && showPaperAuthor.value !== "N/A";
 });
 
-function requestFullPdf() {
+async function requestFullPdf() {
+  const user = await client.auth.getUser();
   isRequested.value = true;
 
   setTimeout(() => {
     isRequested.value = false;
   }, 10000);
+
+  try {
+    const res = await $fetch("/api/send-email", {
+      method: "POST",
+      body: { 
+        email: user.data.user?.email,
+        id: id
+       }, 
+    });
+    response.value = res;
+  } catch (error) {
+    console.error(error);
+    response.value = { message: "Failed to send email." };
+  }
 }
 
 function copyCitation() {
