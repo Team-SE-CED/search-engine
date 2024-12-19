@@ -1,25 +1,24 @@
 <template>
   <div class="container-sm">
     <ul class="img-grid">
-      <li
-        class="img-card"
-        v-for="researchPaper in filteredPapers"
-        :key="researchPaper.id"
-        @click="redirectTo(researchPaper.id)"
-      >
+
+      <!-- Author Mode -->
+      <li class="img-card" v-if="isAuthorMode" v-for="author in filteredAuthors" :key="author.id"
+        @click="redirectTo(author.id)">
         <div class="img-wrapper">
-          <img
-            v-if="researchPaper.imgUrl"
-            :src="researchPaper.imgUrl"
-            alt="research_img"
-            class="img-poster"
-          />
-          <img
-            v-else
-            src="https://via.placeholder.com/200x300?text=research"
-            alt="sample poster"
-            class="img-poster"
-          />
+          <img v-if="author.profile_pic" :src="author.profile_pic" alt="research_img" class="img-poster" />
+        </div>
+        <div class="img-overlay">
+          <div class="img-title">{{ author.author_name }}</div>
+        </div>
+      </li>
+
+      <!-- Research Paper Mode -->
+      <li class="img-card" v-if="!isAuthorMode" v-for="researchPaper in filteredPapers" :key="researchPaper.id"
+        @click="redirectTo(researchPaper.id)">
+        <div class="img-wrapper">
+          <img v-if="researchPaper.imgUrl" :src="researchPaper.imgUrl" alt="research_img" class="img-poster" />
+          <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
         </div>
         <div class="img-overlay">
           <div class="img-title">{{ researchPaper.title }}</div>
@@ -29,31 +28,52 @@
       </li>
     </ul>
   </div>
-  <div v-if="!numberOfResults" class="no-results-found">No results found</div>
+  <div v-if="!numberOfPaperResults" class="no-results-found">No results found</div>
   <div v-else class="no-results-found">
-    Loaded {{ numberOfResults }} results
+    Loaded&nbsp;
+    <span v-if="isAuthorMode"> {{ numberOfAuthorResults }} </span>
+    <span v-else> {{ numberOfPaperResults }} </span>
+    &nbsp;results
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { useAuthorStore } from "~/server/stores/research-author-store";
 
 const { getSuggestedPaperStore } = usePaperStores();
+const { getSuggestedAuthorStores, getIsAuthorMode } = useAuthorStore()
 const router = useRouter();
-
+const isAuthorMode = ref(false)
 const filteredPapers = computed(() => {
   return getSuggestedPaperStore();
 });
 
-const numberOfResults = computed(() => {
+const filteredAuthors = computed(() => {
+  return getSuggestedAuthorStores()
+})
+
+const numberOfPaperResults = computed(() => {
   return filteredPapers.value.length;
+});
+
+const numberOfAuthorResults = computed(() => {
+  return filteredAuthors.value.length;
 });
 
 function redirectTo(id: number) {
   router.push(`/result/${id}`);
 }
 
-onMounted(() => {});
+watch(
+  () => getIsAuthorMode(),
+  (newValue) => {
+    isAuthorMode.value = newValue
+    console.log("Is detected: " + newValue)
+  }
+);
+
+onMounted(() => { });
 </script>
 
 <style scoped>
