@@ -2,14 +2,17 @@
   <SearchResultsTitleHeader />
   <SearchResultsSearchBar :searchQueryProps="searchQuery" :yearClickedPropsLow="yearClicked?.lowerYear"
     :yearClickedPropsUp="yearClicked?.upperYear" :departmentProps="department" />
+
   <div class="right-content">
     <div class="menu-icon" @click="toggleSidebar">
       <LineMdMenu />
     </div>
   </div>
+
   <div ref="sidebarContainer">
     <Sidebar v-if="isSidebarVisible" />
   </div>
+
   <SearchResultsDetails @searchQuery="handleSearchQuery" @yearClicked="handleYearClicked"
     @department="handleDepartment" />
 </template>
@@ -44,17 +47,14 @@ const closeSidebar = (event: MouseEvent) => {
 
 function handleSearchQuery(receivedQuery: string) {
   searchQuery.value = receivedQuery
-  console.log("Received Query: " + searchQuery.value)
 }
 
 function handleYearClicked(receivedYearClicked: DateRangeType) {
   yearClicked.value = receivedYearClicked
-  console.log("Received Year CLicked: " + JSON.stringify(yearClicked.value))
 }
 
 function handleDepartment(receivedDepartment: string) {
   department.value = receivedDepartment
-  console.log("Received Department: " + JSON.stringify(department.value))
 }
 
 onMounted(() => {

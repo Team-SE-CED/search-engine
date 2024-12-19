@@ -48,15 +48,20 @@ export function searchAndFilterPapers(
     );
   }
 
-  // If a search query is provided, filter papers based on query
+  // If a search query is provided, filter papers based on title and authors
   if (queryWords.length > 0) {
-    filteredPapers = filteredPapers.filter((p) =>
-      regexWords.every(
+    filteredPapers = filteredPapers.filter((p) => {
+      // Split authors by commas and trim each name
+      const authorList =
+        p.author?.split(",").map((a) => a.trim().toLowerCase()) || [];
+      const title = p.title?.toLowerCase() || "";
+
+      // Check if all query words match either the title or any author's name
+      return regexWords.every(
         (regex) =>
-          regex.test(p.title?.toLowerCase() || "") ||
-          regex.test(p.author?.toLowerCase() || "")
-      )
-    );
+          regex.test(title) || authorList.some((author) => regex.test(author))
+      );
+    });
   }
 
   return filteredPapers;

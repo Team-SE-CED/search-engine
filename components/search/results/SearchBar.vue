@@ -11,13 +11,14 @@
             @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
           <!-- Search Suggestions Dropdown -->
-          <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
-            :searchField="selectedSearchField" :showSuggestions="showSuggestions" @suggestion-click="redirectTo" />
+          <SearchSuggestions :suggestionsPaper="filteredPapers" :suggestionsAuthor="filteredAuthors"
+            :suggestionsClass="'suggestions-list'" :searchField="selectedSearchField" :showSuggestions="showSuggestions"
+            :isAuthorModeProp="isAuthorMode" @suggestion-click="redirectTo" />
 
           <!-- Filter Dropdown -->
           <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
             @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
-            @selectedDepartment="handleSelectedDepartment" />
+            @selectedDepartment="handleSelectedDepartment" @isAuthorMode="handleIsAuthorMode" />
         </div>
 
         <!-- Hidden input to include selected filter in form submission -->
@@ -30,11 +31,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { DateRangeEnum } from "~/enums/date-range";
+import { searchAndFilterAuthors } from "~/server/factories/author-filter.factory";
+import { useAuthorStore } from "~/server/stores/research-author-store";
 import type { DateRangeType } from "~/types/date-range";
+import type { Author } from "~/types/research-author-server";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
+const { getAuthor } = useAuthor();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
+const { setSuggestedAuthorStores, setIsAuthorMode } = useAuthorStore();
 const router = useRouter();
 
 const props = defineProps({
@@ -44,6 +50,8 @@ const props = defineProps({
   departmentProps: String,
 })
 
+const emit = defineEmits(["isAuthorMode"])
+
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
@@ -51,12 +59,14 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title");
 const isOpen = ref<boolean>(false);
+const isAuthorMode = ref(false)
 const selectedYear = ref<DateRangeType>(
   {
     lowerYear: DateRangeEnum.lowerYear,
     upperYear: DateRangeEnum.upperYear
   })
 const selectedDepartment = ref<string[]>([])
+const authors = ref<Author[]>([])
 
 // Functions
 
@@ -68,6 +78,15 @@ const filteredPapers = computed((): PaperUI[] => {
     selectedYear.value,
     selectedDepartment.value
   );
+});
+
+async function fetchAuthors() {
+  const fetchedAuthors = await getAuthor();
+  authors.value = fetchedAuthors
+}
+
+const filteredAuthors = computed((): Author[] => {
+  return searchAndFilterAuthors(authors.value, searchQuery.value);
 });
 
 const filteredKeywords = () => {
@@ -139,6 +158,11 @@ function handleSelectedFilter(selectedFilter: string) {
   selectedSearchField.value = selectedFilter;
 }
 
+function handleIsAuthorMode(isAuthorModeReceived: boolean) {
+  isAuthorMode.value = isAuthorModeReceived
+  setIsAuthorMode(isAuthorMode.value)
+}
+
 async function fetchPaper() {
   const paper = await getResearchPaper();
   researchPaper.value = paper;
@@ -149,6 +173,7 @@ function handleSubmit() {
 
   if (searchQuery.value) {
     setSuggestedPaperStore(filteredPapers.value);
+    setSuggestedAuthorStores(filteredAuthors.value);
   }
 
   const queryParams: any = {
@@ -209,8 +234,16 @@ watch(
   }
 );
 
+watch(
+  () => isAuthorMode.value,
+  (newValue) => {
+    emit("isAuthorMode", newValue)
+  }
+);
+
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
+  fetchAuthors()
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("click", handleClickOutsideFilter);
   selectedSearchField.value = "title";
