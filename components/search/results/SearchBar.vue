@@ -11,13 +11,14 @@
             @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
           <!-- Search Suggestions Dropdown -->
-          <SearchSuggestions :suggestions="filteredPapers" :suggestionsClass="'suggestions-list'"
-            :searchField="selectedSearchField" :showSuggestions="showSuggestions" @suggestion-click="redirectTo" />
+          <SearchSuggestions :suggestionsPaper="filteredPapers" :suggestionsAuthor="filteredAuthors"
+            :suggestionsClass="'suggestions-list'" :searchField="selectedSearchField" :showSuggestions="showSuggestions"
+            :isAuthorModeProp="isAuthorMode" @suggestion-click="redirectTo" />
 
           <!-- Filter Dropdown -->
           <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
             @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
-            @selectedDepartment="handleSelectedDepartment" />
+            @selectedDepartment="handleSelectedDepartment" @isAuthorMode="handleIsAuthorMode" />
         </div>
 
         <!-- Hidden input to include selected filter in form submission -->
@@ -30,12 +31,26 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { DateRangeEnum } from "~/enums/date-range";
+import { searchAndFilterAuthors } from "~/server/factories/author-filter.factory";
+import { useAuthorStore } from "~/server/stores/research-author-store";
 import type { DateRangeType } from "~/types/date-range";
+import type { Author } from "~/types/research-author-server";
 import type { PaperUI } from "~/types/research-paper-ui";
 const { getResearchPaper } = usePaper();
+const { getAuthor } = useAuthor();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
+const { setSuggestedAuthorStores, setIsAuthorMode } = useAuthorStore();
 const router = useRouter();
+
+const props = defineProps({
+  searchQueryProps: String,
+  yearClickedPropsLow: Number,
+  yearClickedPropsUp: Number,
+  departmentProps: String,
+})
+
+const emit = defineEmits(["isAuthorMode"])
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
@@ -44,12 +59,14 @@ const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title");
 const isOpen = ref<boolean>(false);
+const isAuthorMode = ref(false)
 const selectedYear = ref<DateRangeType>(
   {
     lowerYear: DateRangeEnum.lowerYear,
     upperYear: DateRangeEnum.upperYear
   })
 const selectedDepartment = ref<string[]>([])
+const authors = ref<Author[]>([])
 
 // Functions
 
@@ -61,6 +78,15 @@ const filteredPapers = computed((): PaperUI[] => {
     selectedYear.value,
     selectedDepartment.value
   );
+});
+
+async function fetchAuthors() {
+  const fetchedAuthors = await getAuthor();
+  authors.value = fetchedAuthors
+}
+
+const filteredAuthors = computed((): Author[] => {
+  return searchAndFilterAuthors(authors.value, searchQuery.value);
 });
 
 const filteredKeywords = () => {
@@ -132,6 +158,11 @@ function handleSelectedFilter(selectedFilter: string) {
   selectedSearchField.value = selectedFilter;
 }
 
+function handleIsAuthorMode(isAuthorModeReceived: boolean) {
+  isAuthorMode.value = isAuthorModeReceived
+  setIsAuthorMode(isAuthorMode.value)
+}
+
 async function fetchPaper() {
   const paper = await getResearchPaper();
   researchPaper.value = paper;
@@ -142,6 +173,7 @@ function handleSubmit() {
 
   if (searchQuery.value) {
     setSuggestedPaperStore(filteredPapers.value);
+    setSuggestedAuthorStores(filteredAuthors.value);
   }
 
   const queryParams: any = {
@@ -166,8 +198,52 @@ watch(
   }
 );
 
+watch(
+  () => props.searchQueryProps,
+  (newValue) => {
+    if (newValue) searchQuery.value = newValue;
+  }
+);
+
+watch(
+  () => props.yearClickedPropsLow,
+  (newValue) => {
+    if (newValue) selectedYear.value.lowerYear = newValue;
+  }
+);
+
+watch(
+  () => props.yearClickedPropsUp,
+  (newValue) => {
+    if (newValue) {
+      selectedYear.value.upperYear = newValue
+      handleSubmit()
+    }
+  }
+);
+
+watch(
+  () => props.departmentProps,
+  (newValue) => {
+    if (newValue) {
+      const receivedDepartment = ref<string[]>([])
+      receivedDepartment.value.push(newValue)
+      selectedDepartment.value = receivedDepartment.value
+      handleSubmit()
+    }
+  }
+);
+
+watch(
+  () => isAuthorMode.value,
+  (newValue) => {
+    emit("isAuthorMode", newValue)
+  }
+);
+
 onMounted(() => {
   fetchPaper().catch((error) => console.error(error));
+  fetchAuthors()
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("click", handleClickOutsideFilter);
   selectedSearchField.value = "title";
@@ -186,23 +262,31 @@ onBeforeUnmount(() => {
 }
 
 .img-card {
-  width: 12.5rem; /* 200px converted to rem */
-  margin: 0.625rem; /* 10px converted to rem */
+  width: 12.5rem;
+  /* 200px converted to rem */
+  margin: 0.625rem;
+  /* 10px converted to rem */
   text-align: center;
   z-index: -2;
 }
 
 .img-poster {
-  height: 18.75rem; /* 300px converted to rem */
-  width: 12.5rem; /* 200px converted to rem */
-  border-radius: 1.25rem; /* 20px converted to rem */
+  height: 18.75rem;
+  /* 300px converted to rem */
+  width: 12.5rem;
+  /* 200px converted to rem */
+  border-radius: 1.25rem;
+  /* 20px converted to rem */
 }
 
 .img-title {
-  font-size: 1rem; /* 16px converted to rem */
+  font-size: 1rem;
+  /* 16px converted to rem */
   font-weight: bold;
-  margin-top: 0.625rem; /* 10px converted to rem */
-  max-width: 12.5rem; /* 200px converted to rem */
+  margin-top: 0.625rem;
+  /* 10px converted to rem */
+  max-width: 12.5rem;
+  /* 200px converted to rem */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -212,8 +296,10 @@ onBeforeUnmount(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 3.125rem; /* 50px converted to rem */
-  padding: 1.25rem; /* 20px converted to rem */
+  gap: 3.125rem;
+  /* 50px converted to rem */
+  padding: 1.25rem;
+  /* 20px converted to rem */
   list-style: none;
 }
 
@@ -236,8 +322,10 @@ onBeforeUnmount(() => {
   border-color: gray;
   border-radius: 50px;
   /* height: 3rem;  */
-  max-height: 3rem; /* Matches the intended height */
-  min-width: 100%; /* Ensures it doesn't shrink below container width */
+  max-height: 3rem;
+  /* Matches the intended height */
+  min-width: 100%;
+  /* Ensures it doesn't shrink below container width */
 }
 
 button.dropdown-toggle:focus {
@@ -245,26 +333,33 @@ button.dropdown-toggle:focus {
 }
 
 .dropdown-menu {
-  padding: 0.3125rem 0; /* 5px converted to rem */
-  font-size: 1rem; /* 16px converted to rem */
+  padding: 0.3125rem 0;
+  /* 5px converted to rem */
+  font-size: 1rem;
+  /* 16px converted to rem */
 }
 
 button.dropdown-toggle {
-  font-size: 1.2rem; /* 1.2rem for dropdown button font */
+  font-size: 1.2rem;
+  /* 1.2rem for dropdown button font */
 }
 
 .search-icon {
   position: absolute;
-  left: 1.5rem; /* 1.5rem for the distance from the left */
+  left: 1.5rem;
+  /* 1.5rem for the distance from the left */
   top: 50%;
   transform: translateY(-50%);
-  height: 1.8rem; /* Scales with zoom */
+  height: 1.8rem;
+  /* Scales with zoom */
   pointer-events: none;
 }
 
 input.form-control {
-  padding-left: 4rem; /* 4rem for the padding */
-  padding-right: 10vw; /* Adjust to fit container */
+  padding-left: 4rem;
+  /* 4rem for the padding */
+  padding-right: 10vw;
+  /* Adjust to fit container */
 }
 
 .search-input:focus {
@@ -278,14 +373,16 @@ input.form-control {
   right: 8vw;
   top: 50%;
   transform: translateY(-50%);
-  height: 1.8rem; /* Similar to the height of the search icon */
+  height: 1.8rem;
+  /* Similar to the height of the search icon */
   width: 1px;
   background-color: #484848;
 }
 
 .suggestions-list {
   position: absolute;
-  top: 3.5rem; /* Use rem for consistent distance */
+  top: 3.5rem;
+  /* Use rem for consistent distance */
   left: 0;
   width: 100%;
   background-color: white;
@@ -294,12 +391,15 @@ input.form-control {
   z-index: 10;
   overflow-y: auto;
   list-style: none;
-  padding: 0.3125rem 0; /* 5px converted to rem */
-  margin-top: 1rem; /* 1rem for the margin-top */
+  padding: 0.3125rem 0;
+  /* 5px converted to rem */
+  margin-top: 1rem;
+  /* 1rem for the margin-top */
 }
 
 .suggestions-list li {
-  padding: 0.3125rem 1.25rem; /* 5px converted to rem */
+  padding: 0.3125rem 1.25rem;
+  /* 5px converted to rem */
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
@@ -308,8 +408,10 @@ input.form-control {
 
 .suggestion-search-icon {
   position: relative;
-  height: 2.5rem; /* 40px converted to rem */
-  padding-right: 1rem; /* 1rem for padding */
+  height: 2.5rem;
+  /* 40px converted to rem */
+  padding-right: 1rem;
+  /* 1rem for padding */
 }
 
 .suggestions-list li:hover {

@@ -1,36 +1,51 @@
 <template>
-  <title>{{ showPaperTitle }}</title>
+  <title>{{ showTitle }}</title>
   <div class="container-sm">
+
     <div class="img-wrapper" v-if="isLoading">
       <div class="shimmer-loader"></div>
     </div>
-    <div class="img-wrapper" v-else v-for="paper in researchPaper" :key="paper.id">
+
+    <div class="img-wrapper" v-if="!isLoading && !isAuthorMode" v-for="paper in researchPaper" :key="paper.id">
       <img v-if="paper.imgUrl" :src="paper.imgUrl" alt="research_img" class="img-poster" />
+      <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
+    </div>
+
+    <!-- Author Mode -->
+    <div class="img-wrapper" v-if="!isLoading && isAuthorMode" v-for="author in paperAuthors" :key="author.id">
+      <img v-if="author.profile_pic" :src="author.profile_pic" alt="research_img" class="img-poster" />
       <img v-else src="https://via.placeholder.com/200x300?text=research" alt="sample poster" class="img-poster" />
     </div>
 
     <div class="content">
       <div class="title-section">
-        <h1 v-if="!isLoading" class="paperTitle">{{ showPaperTitle }}</h1>
+        <h1 v-if="!isLoading" class="paperTitle">
+          <span v-if="isAuthorMode">{{ showTitle }}</span>
+          <span v-else>{{ showTitle }}</span>
+        </h1>
         <div v-else class="shimmer-loader title-shimmer"></div>
 
         <div class="labels">
-          <div v-if="!isLoading" class="yearLabel">{{ showPaperYear }}</div>
-          <div v-else class="shimmer-loader label-shimmer"></div>
+          <div v-if="!isLoading && !isAuthorMode" @click="showRelevantYear" class="yearLabel">
+            {{ showPaperYear }}
+          </div>
 
-          <div v-if="!isLoading" class="departmentLabel">
+          <div v-if="isLoading" class="shimmer-loader label-shimmer"></div>
+
+          <div v-if="!isLoading && !isAuthorMode" @click="showRelevantDepartment" class="departmentLabel">
             {{ showPaperDepartment }}
           </div>
-          <div v-else class="shimmer-loader label-shimmer"></div>
+          <div v-if="isLoading" class="shimmer-loader label-shimmer"></div>
         </div>
       </div>
 
       <div v-if="!isLoading" class="authors">
-        Authors: {{ showPaperAuthor }}
+        <span v-if="!isAuthorMode">Authors: {{ showPaperAuthor }}</span>
       </div>
+
       <div v-else class="shimmer-loader text-shimmer"></div>
 
-      <div v-if="!isLoading" class="actions">
+      <div v-if="!isLoading && !isAuthorMode" class="actions">
         <button class="action-button request-pdf" @click="requestFullPdf">
           <LineMdDownloadingLoop />
           Request full-text PDF
@@ -40,12 +55,19 @@
           {{ copyButtonText }}
         </button>
       </div>
-      <div v-else class="shimmer-loader button-shimmer"></div>
 
-      <hr v-if="!isLoading" class="divider" />Abstract
+      <div v-if="isLoading" class="shimmer-loader button-shimmer"></div>
+
+      <hr v-if="!isLoading" class="divider" />
+
+      <h2 v-if="!isLoading && !isAuthorMode" class="section-title">Abstract</h2>
+
       <p v-if="!isLoading" class="abstract">{{ showPaperAbstract }}</p>
+
       <div v-else class="shimmer-loader text-shimmer paragraph-shimmer"></div>
+
     </div>
+
   </div>
   <!-- Requested Notification -->
   <ToastRedDialog v-if="isRequested" />
@@ -56,30 +78,67 @@ import { ref, computed, onMounted } from "vue";
 import type { PaperUI } from "~/types/research-paper-ui";
 import { useRoute, useRouter } from "vue-router";
 import LineMdDownloadingLoop from "~/assets/svg-images/LineMdDownloadingLoop.vue";
+import { NuxtLink } from "#build/components";
+import type { DateRangeType } from "~/types/date-range";
+import { DateRangeEnum } from "~/enums/date-range";
+import type { Author } from "~/types/research-author-server";
+import { useAuthorStore } from "~/server/stores/research-author-store";
 
 const route = useRoute();
 const id = route.params.id;
 const { getResearchPaper } = usePaper();
+const { getAuthor } = useAuthor();
 const router = useRouter();
+const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
+const { setSuggestedPaperStore, getSuggestedPaperStore } = usePaperStores();
+const { getIsAuthorMode } = useAuthorStore();
+
+const emit = defineEmits(["searchQuery", "yearClicked", "department"])
 
 // Declarations
 const researchPaper = ref<PaperUI[]>([]);
+const paperAuthors = ref<Author[]>([]);
 const isLoading = ref(true);
 const paperId = Number(id);
+const authorId = Number(id);
 const isRequested = ref(false);
 const copyButtonText = ref("Copy Citation");
 const client = useSupabaseClient();
 const response = ref();
+const selectedDepartment = ref<string[]>([])
+const searchQuery = ref<string>("");
+const isAuthorMode = ref(false)
+const selectedYear = ref<DateRangeType>(
+  {
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+  })
 
-onMounted(async () => {
-  await fetchPaper(paperId);
-});
 
-console.log(id);
+function showRelevantYear() {
+  const date = researchPaper.value[0].yearPublished;
+
+  const yearClicked = ref<DateRangeType>({
+    lowerYear: date,
+    upperYear: date,
+  })
+  emit("searchQuery", "#")
+  emit("yearClicked", yearClicked.value)
+}
+
+function showRelevantDepartment() {
+  const department = researchPaper.value[0]?.department;
+
+  emit("searchQuery", "#")
+  emit("department", department)
+}
 
 async function fetchPaper(id: number) {
+  if (isAuthorMode.value) return
+  console.log("isAuthor: " + isAuthorMode.value)
   const papers = await getResearchPaper();
   const paper = papers.find((p) => p.id === id);
+
   if (paper) {
     researchPaper.value = [paper];
   } else {
@@ -88,10 +147,31 @@ async function fetchPaper(id: number) {
   isLoading.value = false;
 }
 
-const showPaperTitle = computed(() => {
-  return researchPaper.value.length
-    ? researchPaper.value[0].title
-    : "Loading...";
+async function fetchAuthor(id: number) {
+  if (!isAuthorMode.value) return
+  console.log("isAuthor: " + isAuthorMode.value)
+
+  const authors = await getAuthor();
+  console.log("authors: " + JSON.stringify(authors))
+  const author = authors.find((p) => p.id === id);
+  console.log("author: " + JSON.stringify(author))
+  if (author) {
+    paperAuthors.value = [author];
+  }
+  isLoading.value = false;
+}
+
+const showTitle = computed(() => {
+  if (isAuthorMode.value) {
+    return paperAuthors.value.length
+      ? paperAuthors.value[0].author_name
+      : "Loading...";
+  }
+  else {
+    return researchPaper.value.length
+      ? researchPaper.value[0].title
+      : "Loading...";
+  }
 });
 
 const showPaperDepartment = computed(() => {
@@ -100,6 +180,7 @@ const showPaperDepartment = computed(() => {
 });
 
 const showPaperAbstract = computed(() => {
+  if (isAuthorMode.value) return
   const abstract = researchPaper.value[0]?.abstract;
   return abstract ? abstract : "N/A";
 });
@@ -109,7 +190,7 @@ const showPaperYear = computed(() => {
     return "Loading...";
   }
 
-  const date = researchPaper.value[0].date;
+  const date = researchPaper.value[0].yearPublished;
   const year = date ? new Date(date).getFullYear() : "N/A";
   return year;
 });
@@ -153,7 +234,7 @@ async function requestFullPdf() {
 function copyCitation() {
   const authors = showPaperAuthor.value;
   const year = showPaperYear.value;
-  const title = showPaperTitle.value;
+  const title = showTitle.value;
   const citation = authors + ". (" + year + "). " + title + ".";
 
   navigator.clipboard.writeText(citation).then(() => {
@@ -163,6 +244,18 @@ function copyCitation() {
     }, 4000);
   });
 }
+
+watch(
+  () => getIsAuthorMode(),
+  (newValue) => {
+    isAuthorMode.value = newValue
+  }
+);
+
+onMounted(async () => {
+  await fetchPaper(paperId);
+  await fetchAuthor(authorId)
+});
 </script>
 
 <style scoped>
@@ -221,11 +314,13 @@ function copyCitation() {
 .yearLabel {
   background-color: #e4002b;
   color: #fff;
+  cursor: pointer;
 }
 
 .departmentLabel {
   background-color: #007bff;
   color: #fff;
+  cursor: pointer;
 }
 
 .authors {

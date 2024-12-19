@@ -6,32 +6,18 @@
         <img class="search-icon" src="~/assets/static-images/search-eye.png" />
         <div class="vertical-line"></div>
 
-        <SearchInput
-          class="form-control form-control-lg pl-5 search-input"
-          v-model="searchQuery"
-          @input="filteredKeywords"
-          @focus="showSuggestions = true"
-          @enter="handleSubmit"
-        />
+        <SearchInput class="form-control form-control-lg pl-5 search-input" v-model="searchQuery"
+          @input="filteredKeywords" @focus="showSuggestions = true" @enter="handleSubmit" />
 
         <!-- Search Suggestions Dropdown -->
-        <SearchSuggestions
-          :suggestions="filteredPapers"
-          :suggestionsClass="'suggestions-list'"
-          :searchField="selectedSearchField"
-          :showSuggestions="showSuggestions"
-          @suggestion-click="redirectTo"
-        />
+        <SearchSuggestions :suggestionsPaper="filteredPapers" :suggestionsAuthor="filteredAuthors"
+          :suggestionsClass="'suggestions-list'" :searchField="selectedSearchField" :showSuggestions="showSuggestions"
+          :isAuthorModeProp="isAuthorMode" @suggestion-click="redirectTo" />
 
         <!-- Filter Dropdown -->
-        <SearchFilters
-          class="search-filters"
-          :filterDropdownState="isOpen"
-          @selectedFilter="handleSelectedFilter"
-          @filterDropdownState="handleFilterDropdownState"
-          @selectedYear="handleSelectedYear"
-          @selectedDepartment="handleSelectedDepartment"
-        />
+        <SearchFilters class="search-filters" :filterDropdownState="isOpen" @selectedFilter="handleSelectedFilter"
+          @filterDropdownState="handleFilterDropdownState" @selectedYear="handleSelectedYear"
+          @selectedDepartment="handleSelectedDepartment" @isAuthorMode="handleIsAuthorMode" />
       </div>
 
       <!-- Hidden input to include selected filter in form submission -->
@@ -45,23 +31,32 @@ import { DateRangeEnum } from "~/enums/date-range";
 import "../bootstrap-css/global_style1/bootstrap.min.css";
 import type { PaperUI } from "~/types/research-paper-ui";
 import type { DateRangeType } from "~/types/date-range";
+import { useAuthorStore } from "~/server/stores/research-author-store";
+import type { Author } from "~/types/research-author-server";
+import { searchAndFilterAuthors } from "~/server/factories/author-filter.factory";
 const { getResearchPaper } = usePaper();
+const { getAuthor } = useAuthor();
 const { filterPapersFactory, filterLastKeyword } = usePaperFactory();
 const { setSuggestedPaperStore } = usePaperStores();
+const { setSuggestedAuthorStores, setIsAuthorMode } = useAuthorStore();
 const router = useRouter();
+
+const emit = defineEmits(["isAuthorMode"])
 
 // Declarations
 const selectedFilter = ref<{ value: string; label: string } | null>(null);
 const researchPaper = ref<PaperUI[]>([]);
+const authors = ref<Author[]>([])
 const searchQuery = ref<string>("");
 const showSuggestions = ref<boolean>(false);
 const selectedSearchField = ref<string>("title")
 const isOpen = ref<boolean>(false)
+const isAuthorMode = ref()
 const selectedYear = ref<DateRangeType>(
-    {
-        lowerYear: DateRangeEnum.lowerYear,
-        upperYear: DateRangeEnum.upperYear
-    })
+  {
+    lowerYear: DateRangeEnum.lowerYear,
+    upperYear: DateRangeEnum.upperYear
+  })
 
 const selectedDepartment = ref<string[]>([])
 
@@ -71,9 +66,18 @@ async function fetchPaper() {
   researchPaper.value = fetchedPaper;
 }
 
+async function fetchAuthors() {
+  const fetchedAuthors = await getAuthor();
+  authors.value = fetchedAuthors
+}
+
 // Search Engine Algorithm
 const filteredPapers = computed((): PaperUI[] => {
-    return filterPapersFactory(researchPaper.value, searchQuery.value, selectedYear.value, selectedDepartment.value);
+  return filterPapersFactory(researchPaper.value, searchQuery.value, selectedYear.value, selectedDepartment.value);
+});
+
+const filteredAuthors = computed((): Author[] => {
+  return searchAndFilterAuthors(authors.value, searchQuery.value);
 });
 
 const filteredKeywords = () => {
@@ -86,17 +90,17 @@ const filteredKeywords = () => {
 // Search Engine Algorithm
 
 const handleClickOutside = (event: MouseEvent) => {
-    const searchInput = document.querySelector(".search-input");
-    const suggestionsElement = document.querySelector(".suggestions-list");
+  const searchInput = document.querySelector(".search-input");
+  const suggestionsElement = document.querySelector(".suggestions-list");
 
-    if (
-        searchInput &&
-        !searchInput.contains(event.target as Node) &&
-        suggestionsElement &&
-        !suggestionsElement.contains(event.target as Node)
-    ) {
-        showSuggestions.value = false;
-    }
+  if (
+    searchInput &&
+    !searchInput.contains(event.target as Node) &&
+    suggestionsElement &&
+    !suggestionsElement.contains(event.target as Node)
+  ) {
+    showSuggestions.value = false;
+  }
 };
 
 
@@ -117,15 +121,20 @@ function handleFilterDropdownState(isOpenValue: boolean) {
 }
 
 function handleSelectedYear(selectedYearValue: DateRangeType) {
-    selectedYear.value = selectedYearValue
+  selectedYear.value = selectedYearValue
 }
 
 function handleSelectedDepartment(selectedDepartmentValue: string[]) {
-    selectedDepartment.value = selectedDepartmentValue
+  selectedDepartment.value = selectedDepartmentValue
 }
 
 function handleSelectedFilter(selectedFilter: string) {
   selectedSearchField.value = selectedFilter;
+}
+
+function handleIsAuthorMode(isAuthorModeReceived: boolean) {
+  isAuthorMode.value = isAuthorModeReceived
+  setIsAuthorMode(isAuthorMode.value)
 }
 
 function redirectTo(id: number) {
@@ -134,13 +143,17 @@ function redirectTo(id: number) {
 
 function handleSubmit() {
   setSuggestedPaperStore(filteredPapers.value);
+  setSuggestedAuthorStores(filteredAuthors.value);
+
   if (searchQuery.value.trim()) {
     router.push(`/result?search=${encodeURIComponent(searchQuery.value)}`);
   }
 }
 
 onMounted(() => {
+  setIsAuthorMode(false)
   fetchPaper().catch((error) => console.error(error));
+  fetchAuthors()
   document.addEventListener("click", handleClickOutside);
   document.addEventListener("click", handleClickOutsideFilter);
   selectedSearchField.value = "title";
@@ -232,6 +245,7 @@ input.form-control {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+
 .form-control:focus {
   outline: none;
   border-color: #b70536;
