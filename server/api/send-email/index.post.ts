@@ -59,8 +59,8 @@ export default defineEventHandler(async (event: H3Event) => {
     const fileBuffer = await streamToBuffer(fileStream);
     
     const { data: record, error: recordError } = await supabase
-      .from("research_papers") // Replace with your table name
-      .select("title") // Select only the `name` field
+      .from("research_papers")
+      .select("title") // Select only the `title` field
       .eq("id", id) // Filter by the `id`
       .single();
 
@@ -95,8 +95,6 @@ export default defineEventHandler(async (event: H3Event) => {
       error: (error as Error).message,
     };
   }
-
-  
 });
 
 const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
