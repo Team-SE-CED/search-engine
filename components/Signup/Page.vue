@@ -122,7 +122,7 @@
           <!-- Login Link -->
           <div class="register">
             <span>Already have an account?</span>
-            <a href="#">Log In</a>
+            <a href="/login">Log In</a>
           </div>
         </form>
       </div>
