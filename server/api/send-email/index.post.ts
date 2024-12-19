@@ -1,9 +1,18 @@
 import nodemailer, { TransportOptions } from "nodemailer";
 import { H3Event } from "h3";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { Readable } from "stream";
+import { supabase } from "~/server/db/supabaseClient";
 
 export default defineEventHandler(async (event: H3Event) => {
-  // Read the request body and type it appropriately
-  const body = await readBody<{ email: string }>(event);
+  // Read the request body and type it appropriately 
+  const body = await readBody(event);
+
+  const { email, id } = body;
+
+  if(!email || !id) {
+    return { status: 400, body: { error: "Missing required fields." } };
+  }
 
   // Validate body content
   if (!body?.email) {
@@ -24,7 +33,43 @@ export default defineEventHandler(async (event: H3Event) => {
     },
   } as TransportOptions);
 
+  const s3 = new S3Client({
+    endpoint: process.env.MINIO_ENDPOINT,
+    region: process.env.MINIO_REGION,
+    credentials: {
+      accessKeyId: process.env.MINIO_ACCESS_KEY || "",
+      secretAccessKey: process.env.MINIO_SECRET_KEY || "",
+    },
+    forcePathStyle: true,
+  })
+
+  const fileId = body?.id as string;
+
+  const params = {
+    Bucket: process.env.MINIO_BUCKET_NAME || "",
+    Key: fileId + ".pdf"
+  }
+
   try {
+    const s3Command = new GetObjectCommand(params);
+    const s3Response = await s3.send(s3Command);
+    
+
+    const fileStream = s3Response.Body as Readable;
+    const fileBuffer = await streamToBuffer(fileStream);
+    
+    const { data: record, error: recordError } = await supabase
+      .from("research_papers") // Replace with your table name
+      .select("title") // Select only the `name` field
+      .eq("id", id) // Filter by the `id`
+      .single();
+
+    if (recordError || !record) {
+      throw new Error(`Record with id '${id}' not found: ${recordError?.message}`);
+    }
+
+    const fileName = record.title + '.pdf';
+
     // Sending Email
     await transporter.sendMail({
       from: process.env.SMTP_FROM as string, // Sender address
@@ -34,13 +79,14 @@ export default defineEventHandler(async (event: H3Event) => {
       html: "<b>Hello, student. Your request has been approved. Please get your soft copy below. Thank you for using CED-OLIS!</b>", // HTML body
       attachments: [
         {
-          filename: 'Anti Theft Control and Tracking System for Motorcycles.pdf',
-          path: 'https://supabase.cedolis.online/storage/v1/object/sign/search-engine-papers/2.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzZWFyY2gtZW5naW5lLXBhcGVycy8yLnBkZiIsImlhdCI6MTczNDUyMTMyMiwiZXhwIjoxNzY2MDU3MzIyfQ.k6Fz0pG0H9yL3hYAAPtLBLjKliQ__vidcqjZlYBnsn0&t=2024-12-18T11%3A28%3A29.875Z'
+          filename: fileName,
+          content: fileBuffer,
+          contentType: "application/pdf"
         }
       ]
     });
 
-    return { success: true, message: "Email sent successfully!" };
+    return { status: 200, message: "Email sent successfully!" };
   } catch (error) {
     console.error(error);
     return {
@@ -49,4 +95,14 @@ export default defineEventHandler(async (event: H3Event) => {
       error: (error as Error).message,
     };
   }
+
+  
 });
+
+const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+}

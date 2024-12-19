@@ -57,7 +57,8 @@ import type { PaperUI } from "~/types/research-paper-ui";
 import { useRoute, useRouter } from "vue-router";
 import LineMdDownloadingLoop from "~/assets/svg-images/LineMdDownloadingLoop.vue";
 
-const { id } = useRoute().params;
+const route = useRoute();
+const id = route.params.id;
 const { getResearchPaper } = usePaper();
 const router = useRouter();
 
@@ -73,6 +74,8 @@ const response = ref();
 onMounted(async () => {
   await fetchPaper(paperId);
 });
+
+console.log(id);
 
 async function fetchPaper(id: number) {
   const papers = await getResearchPaper();
@@ -135,7 +138,10 @@ async function requestFullPdf() {
   try {
     const res = await $fetch("/api/send-email", {
       method: "POST",
-      body: { email: user.data.user?.email }, 
+      body: { 
+        email: user.data.user?.email,
+        id: id
+       }, 
     });
     response.value = res;
   } catch (error) {
